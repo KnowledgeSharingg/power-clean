@@ -3,6 +3,7 @@ name: Build and Upload Coverage
 permissions:
     checks: write
     contents: read
+    issues: write
 
 on:
     push:
