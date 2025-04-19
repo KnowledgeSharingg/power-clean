@@ -1,5 +1,9 @@
 name: Build and Upload Coverage
 
+permissions:
+    checks: write
+    contents: read
+
 on:
     push:
         branches: [main]
