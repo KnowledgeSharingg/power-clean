@@ -35,9 +35,6 @@ jobs:
                   fail_ci_if_error: true
                   verbose: true
 
-            - name: 테스트 진행
-              run: ./gradlew --info test
-
             - name: 테스트 결과 Report
               uses: EnricoMi/publish-unit-test-result-action@v2
               if: always() # 테스트가 실패하여도 Report를 보기 위해 `always`로 설정
