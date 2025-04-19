@@ -78,7 +78,7 @@ jacoco {
 
 jacocoTestReport {
     reports {
-        xml.enabled = true // codecov depends on xml format report
-        html.enabled = true
+        xml.required.set(true) // codecov depends on xml format report
+        html.required.set(true)
     }
 }
