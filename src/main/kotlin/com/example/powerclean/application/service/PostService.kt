@@ -18,6 +18,7 @@ import java.util.UUID
 
 @Service
 class PostService(private val postRepository: PostRepository, private val bookRepository: BookRepository) {
+    
     fun createPost(requestDto: CreatePostReqDto): CreatePostResDto {
         val savedPost =
             postRepository.save(
