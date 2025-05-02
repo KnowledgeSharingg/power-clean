@@ -28,7 +28,7 @@ export default async function PostListPage() {
               </div>
             )}
             <Link
-              href={`/posts/${post.id}`}
+              href={`/post/${post.id}`}
               className="inline-block mt-4 text-blue-600 hover:underline text-sm"
             >
               Read more →

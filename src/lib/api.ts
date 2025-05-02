@@ -39,3 +39,14 @@ export async function getPostList(page: number = 1, size: number = 10) {
   if (!res.ok) throw new Error("Failed to fetch posts");
   return res.json();
 }
+
+export async function getPostDetail(postId: string) {
+  try {
+    const response = await fetch(`${serverUrl}/post/${postId}`);
+    if (!response.ok) throw new Error("게시글 조회 실패");
+    return await response.json();
+  } catch (error) {
+    console.error("게시글 상세조회 오류:", error);
+    return null;
+  }
+}
