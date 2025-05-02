@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.Operation
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PatchMapping
+import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
@@ -27,9 +28,9 @@ class PostController(private val postService: PostService) {
     ): CreatePostResDto = postService.createPost(request)
 
     @Operation(summary = "Post 상세 조회 API.", description = "포스트 상세 조회.")
-    @GetMapping()
+    @GetMapping("/{postId}")
     fun getPostDetail(
-        @RequestParam postId: UUID,
+        @PathVariable postId: UUID,
     ): GetPostDetailResDto = postService.getPostDetail(postId)
 
     @Operation(summary = "Post 리스트 조회 API.", description = "포스트 리스트 조회.")
@@ -46,8 +47,8 @@ class PostController(private val postService: PostService) {
     ): String = postService.updatePost(request)
 
     @Operation(summary = "Post 삭제 API.", description = "포스트 삭제.")
-    @DeleteMapping()
+    @DeleteMapping("/{postId}")
     fun deletePost(
-        @RequestParam postId: UUID,
+        @PathVariable postId: UUID,
     ): String = postService.deletePost(postId)
 }
