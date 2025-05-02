@@ -31,9 +31,13 @@ export default function CreatePost() {
     const keys = name.split(".");
 
     setForm((prev) => {
+      // If the name corresponds to a top-level property, update it directly
       if (keys.length === 1) {
         return { ...prev, [name]: value };
-      } else if (keys.length === 2) {
+      } 
+      // If the name corresponds to a second-level property (e.g., "bookInfo.title"),
+      // update the nested object while preserving other properties at the same level
+      else if (keys.length === 2) {
         return {
           ...prev,
           [keys[0]]: {
