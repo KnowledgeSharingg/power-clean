@@ -28,10 +28,34 @@ export default function CreatePost() {
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target;
-    setForm((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    const keys = name.split(".");
+
+    setForm((prev) => {
+      if (keys.length === 1) {
+        return { ...prev, [name]: value };
+      } else if (keys.length === 2) {
+        return {
+          ...prev,
+          [keys[0]]: {
+            ...(prev[keys[0] as keyof typeof prev] as object),
+            [keys[1]]: value,
+          },
+        };
+      } else if (keys.length === 3) {
+        return {
+          ...prev,
+          [keys[0]]: {
+            ...(prev[keys[0] as keyof typeof prev] as object),
+            [keys[1]]: {
+              ...(prev[keys[0] as keyof typeof prev] as any)?.[keys[1]],
+              [keys[2]]: value,
+            },
+          },
+        };
+      }
+
+      return prev;
+    });
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
