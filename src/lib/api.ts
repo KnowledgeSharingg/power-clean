@@ -1,5 +1,5 @@
 // const serverUrl = "http://18.205.151.65:8081";
-const serverUrl = "http://localhost:8080";
+const serverUrl = process.env.SERVER_URL || "http://localhost:8080";
 
 export async function createPost(data: {
   title: string;
