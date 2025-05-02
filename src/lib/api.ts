@@ -1,5 +1,5 @@
-const serverUrl = "http://18.205.151.65:8081";
-// const serverUrl = "http://localhost:8080";
+// const serverUrl = "http://18.205.151.65:8081";
+const serverUrl = process.env.SERVER_URL || "http://localhost:8080";
 
 export async function createPost(data: {
   title: string;
@@ -30,4 +30,18 @@ export async function createPost(data: {
     console.error("게시글 생성 오류:", error);
     return false;
   }
+}
+
+export async function getPostList(page: number = 1, size: number = 10) {
+  const res = await fetch(`${serverUrl}/post/list?page=${page}&size=${size}`, {
+    cache: "no-store",
+  });
+  if (!res.ok) throw new Error("Failed to fetch posts");
+  return res.json();
+}
+
+export async function getPostDetail(postId: string) {
+  const response = await fetch(`${serverUrl}/post/${postId}`);
+  if (!response.ok) throw new Error("게시글 조회 실패");
+  return await response.json();
 }
