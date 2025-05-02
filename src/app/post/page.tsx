@@ -1,3 +1,4 @@
+import { getPostList } from "@/lib/api";
 import Link from "next/link";
 
 export default async function PostListPage() {
@@ -5,7 +6,7 @@ export default async function PostListPage() {
 
   return (
     <div className="max-w-4xl mx-auto p-6">
-      <h1 className="text-3xl font-bold mb-6 text-center">📚 게시글 목록</h1>
+      <h1 className="text-3xl font-bold mb-6 text-center">📚 Post List</h1>
       <ul className="space-y-6">
         {data.postList.map((post: any) => (
           <li
@@ -30,7 +31,7 @@ export default async function PostListPage() {
               href={`/posts/${post.id}`}
               className="inline-block mt-4 text-blue-600 hover:underline text-sm"
             >
-              자세히 보기 →
+              Read more →
             </Link>
           </li>
         ))}
