@@ -9,7 +9,7 @@ export default function Home() {
     <div className="container">
       <h1>📚 Power Clean</h1>
       <p>Share book information and engage in discussions!</p>
-      <button className="btn" onClick={() => router.push("/create")}>
+      <button className="btn" onClick={() => router.push("/post/create")}>
         Add Post ➕
       </button>
     </div>
