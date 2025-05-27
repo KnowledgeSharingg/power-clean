@@ -23,7 +23,7 @@ export default function Home() {
   const router = useRouter();
 
   const toggleList = async () => {
-    if (!showList) {
+    if (!showList && posts.length === 0) {
       setLoading(true);
       try {
         const data = await getPostList();
@@ -32,11 +32,9 @@ export default function Home() {
         console.error("Failed to fetch posts:", error);
       } finally {
         setLoading(false);
-        setShowList(true);
       }
-    } else {
-      setShowList(false);
     }
+    setShowList((prev) => !prev); // 리스트 보여짐 상태 토글
   };
 
   return (
@@ -65,7 +63,7 @@ export default function Home() {
 
       <div
         className={`transition-all duration-500 overflow-hidden w-full max-w-4xl ${
-          showList ? "max-h-[1000px] opacity-100" : "max-h-0 opacity-0"
+          showList ? "max-h-[2000px] opacity-100" : "max-h-0 opacity-0"
         }`}
       >
         {loading ? (
