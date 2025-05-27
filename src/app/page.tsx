@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { getPostList } from "@/lib/api";
+import Link from "next/link";
 
 interface Post {
   id: number;
@@ -91,12 +92,12 @@ export default function Home() {
                     {post.bookInfo.content}
                   </div>
                 )}
-                <a
+                <Link
                   href={`/post/${post.id}`}
                   className="inline-block mt-4 text-blue-600 hover:underline text-sm"
                 >
                   Read more →
-                </a>
+                </Link>{" "}
               </li>
             ))}
           </ul>
