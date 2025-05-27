@@ -1,50 +1,109 @@
 "use client";
 
+import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { getPostList } from "@/lib/api";
+
+interface Post {
+  id: number;
+  title: string;
+  content: string;
+  likeCount: number;
+  createdAt: string;
+  bookInfo?: {
+    title: string;
+    content: string;
+  };
+}
 
 export default function Home() {
+  const [showList, setShowList] = useState(false);
+  const [posts, setPosts] = useState<Post[]>([]);
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
 
+  const toggleList = async () => {
+    if (!showList) {
+      setLoading(true);
+      try {
+        const data = await getPostList();
+        setPosts(data.postList);
+      } catch (error) {
+        console.error("Failed to fetch posts:", error);
+      } finally {
+        setLoading(false);
+        setShowList(true);
+      }
+    } else {
+      setShowList(false);
+    }
+  };
+
   return (
-    // <div className="container mx-auto px-4 py-12 text-center">
-    //   <p className="text-lg mb-8 text-gray-600">
-    //     Share book information and engage in discussions!
-    //   </p>
-    //   <div className="flex justify-center gap-4">
-    //     <button
-    //       className="bg-blue-600 text-white px-6 py-3 rounded-2xl shadow hover:bg-blue-700 transition duration-200"
-    //       onClick={() => router.push("/post/create")}
-    //     >
-    //       Add Post ➕
-    //     </button>
-    //     {/* <button
-    //       className="bg-green-500 text-white px-6 py-3 rounded-2xl shadow hover:bg-green-600 transition duration-200"
-    //       onClick={() => router.push("/post")}
-    //     >
-    //       View Posts 📄
-    //     </button> */}
-    //   </div>
-    // </div>
-    <div className="min-h-screen w-full bg-[#ede4cf] text-[#4b3b2a] font-serif">
-      {/* <div className="container mx-auto px-4 py-12 text-center"> */}
-      <p className="text-lg mb-8 text-[#5c4033]">
+    <div className="min-h-screen w-full bg-[#ede4cf] text-[#4b3b2a] font-serif flex flex-col items-center py-16 px-4 transition-all duration-500">
+      <p className="text-lg mb-8 text-[#5c4033] text-center">
         Share book information and engage in discussions!
       </p>
-      <div className="flex justify-center gap-4">
+
+      <div
+        className={`transition-all duration-500 ${showList ? "mb-2" : "mb-10"}`}
+      >
         <button
-          className="bg-[#ede4cf] text-white px-6 py-3 rounded-2xl shadow hover:bg-[#6a563f] transition duration-200"
+          className="bg-[#6a563f] text-white px-6 py-3 rounded-2xl shadow hover:bg-[#4b3b2a] transition duration-200"
           onClick={() => router.push("/post/create")}
         >
           Add Post ➕
         </button>
-        {/* <button
-          className="bg-[#557153] text-white px-6 py-3 rounded-2xl shadow hover:bg-[#445f43] transition duration-200"
-          onClick={() => router.push("/post")}
-        >
-          View Posts 
-        </button> */}
       </div>
-      {/* </div> */}
+
+      <button
+        className="bg-[#c2b28f] text-[#4b3b2a] px-5 py-2 rounded-xl shadow hover:bg-[#a99977] transition duration-200 mb-4"
+        onClick={toggleList}
+      >
+        {showList ? "Hide Posts ▲" : "View Posts ▼"}
+      </button>
+
+      <div
+        className={`transition-all duration-500 overflow-hidden w-full max-w-4xl ${
+          showList ? "max-h-[1000px] opacity-100" : "max-h-0 opacity-0"
+        }`}
+      >
+        {loading ? (
+          <p className="text-center">Loading...</p>
+        ) : (
+          <ul className="space-y-6 p-6">
+            {posts.map((post) => (
+              <li
+                key={post.id}
+                className="p-6 bg-white rounded-2xl shadow-md hover:shadow-lg transition duration-300"
+              >
+                <h2 className="text-xl font-semibold text-gray-900 mb-2">
+                  {post.title}
+                </h2>
+                <p className="text-gray-700 mb-2 line-clamp-2">
+                  {post.content}
+                </p>
+                <p className="text-sm text-gray-500 mb-1">
+                  👍 {post.likeCount} | 🕒{" "}
+                  {new Date(post.createdAt).toLocaleString()}
+                </p>
+                {post.bookInfo?.title && (
+                  <div className="mt-3 text-sm text-gray-600">
+                    📖 <strong>{post.bookInfo.title}</strong>:{" "}
+                    {post.bookInfo.content}
+                  </div>
+                )}
+                <a
+                  href={`/post/${post.id}`}
+                  className="inline-block mt-4 text-blue-600 hover:underline text-sm"
+                >
+                  Read more →
+                </a>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
     </div>
   );
 }
