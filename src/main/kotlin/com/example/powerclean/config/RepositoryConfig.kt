@@ -1,3 +1,5 @@
+package com.example.powerclean.config
+
 import com.example.powerclean.domain.repository.AccountRepository
 import com.example.powerclean.domain.repository.BookRepository
 import com.example.powerclean.domain.repository.OauthProfileRepository
