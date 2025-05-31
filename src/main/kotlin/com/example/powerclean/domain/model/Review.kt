@@ -12,7 +12,7 @@ import jakarta.persistence.Table
 @Entity
 @Table(name = "review")
 class Review(
-    @Column(name = "content", nullable = false)
+    @Column(name = "content", length=1000, nullable = false)
     var content: String,
     @Column(name = "rating", nullable = false)
     var rating: Int,

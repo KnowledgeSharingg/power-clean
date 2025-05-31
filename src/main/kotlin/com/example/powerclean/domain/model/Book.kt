@@ -16,7 +16,6 @@ import jakarta.persistence.Table
 class Book(
     @Column(name = "title", nullable = false)
     var title: String,
-    // TODO: 길이 늘리기.
     @Column(name = "content", length = 10000, nullable = false)
     var content: String,
     @Column(name = "link", nullable = false)
