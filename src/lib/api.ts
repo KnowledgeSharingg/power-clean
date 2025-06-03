@@ -45,3 +45,35 @@ export async function getPostDetail(postId: string) {
   if (!response.ok) throw new Error("게시글 조회 실패");
   return await response.json();
 }
+
+export async function createReview(data: {
+  content: string;
+  rating: number;
+  postId: string;
+  creatorAccountId: string;
+}) {
+  try {
+    const response = await fetch(`${serverUrl}/review`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
+    });
+    return response.ok;
+  } catch (error) {
+    console.error("리뷰 생성 오류:", error);
+    return false;
+  }
+}
+
+export async function getReviewsByPostId(
+  postId: string,
+  page: number = 0,
+  size: number = 10
+) {
+  const res = await fetch(
+    `${serverUrl}/review/list/post/${postId}?page=${page}&size=${size}`,
+    { cache: "no-store" }
+  );
+  if (!res.ok) throw new Error("리뷰 조회 실패");
+  return await res.json();
+}
