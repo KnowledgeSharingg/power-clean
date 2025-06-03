@@ -13,5 +13,10 @@ public interface ReviewRepository {
 
     fun findAll(pageable: Pageable): Page<Review>
 
+    fun findAllByPostId(
+        postId: UUID,
+        pageable: Pageable,
+    ): Page<Review>
+
     fun deleteById(id: UUID): Unit
 }

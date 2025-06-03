@@ -55,12 +55,13 @@ class ReviewService(
         )
     }
 
-    fun getReviewList(
+    fun getReviewListOfPost(
+        postId: UUID,
         page: Int,
         size: Int,
     ): GetReviewListResDto {
         val pageable = PageRequest.of(page, size)
-        val reviewPage = reviewRepository.findAll(pageable)
+        val reviewPage = reviewRepository.findAllByPostId(postId, pageable)
         return GetReviewListResDto(
             reviews =
                 reviewPage.content.map {

@@ -33,12 +33,13 @@ class ReviewController(private val reviewService: ReviewService) {
         @PathVariable reviewId: UUID,
     ): GetReviewDetailResDto = reviewService.getReviewDetail(reviewId)
 
-    @Operation(summary = "리뷰 리스트 조회 API", description = "리뷰 리스트를 조회합니다.")
-    @GetMapping("/list")
+    @Operation(summary = "특정 게시글 리뷰 리스트 조회 API", description = "리뷰 리스트를 조회합니다.")
+    @GetMapping("/list/post/{postId}")
     fun getReviewList(
+        @PathVariable postId: UUID,
         @RequestParam page: Int,
         @RequestParam size: Int,
-    ): GetReviewListResDto = reviewService.getReviewList(page, size)
+    ): GetReviewListResDto = reviewService.getReviewListOfPost(postId, page, size)
 
     @Operation(summary = "리뷰 수정 API", description = "리뷰를 수정합니다.")
     @PatchMapping
