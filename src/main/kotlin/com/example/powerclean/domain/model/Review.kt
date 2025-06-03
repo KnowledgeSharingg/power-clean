@@ -8,11 +8,12 @@ import jakarta.persistence.ForeignKey
 import jakarta.persistence.JoinColumn
 import jakarta.persistence.ManyToOne
 import jakarta.persistence.Table
+import java.util.UUID
 
 @Entity
 @Table(name = "review")
 class Review(
-    @Column(name = "content", length=1000, nullable = false)
+    @Column(name = "content", length = 1000, nullable = false)
     var content: String,
     @Column(name = "rating", nullable = false)
     var rating: Int,

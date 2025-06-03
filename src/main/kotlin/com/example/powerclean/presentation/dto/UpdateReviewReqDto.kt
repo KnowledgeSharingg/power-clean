@@ -10,7 +10,7 @@ data class UpdateReviewReqDto(
     fun toMap(): Map<String, Any> {
         return mapOf(
             "content" to content,
-            "rating" to rating
+            "rating" to rating,
         )
     }
 }

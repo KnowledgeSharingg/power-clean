@@ -1,6 +1,11 @@
 package com.example.powerclean.presentation.rest
 
-
+import com.example.powerclean.application.service.ReviewService
+import com.example.powerclean.presentation.dto.CreateReviewReqDto
+import com.example.powerclean.presentation.dto.CreateReviewResDto
+import com.example.powerclean.presentation.dto.GetReviewDetailResDto
+import com.example.powerclean.presentation.dto.GetReviewListResDto
+import com.example.powerclean.presentation.dto.UpdateReviewReqDto
 import io.swagger.v3.oas.annotations.Operation
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
@@ -11,13 +16,11 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
-
-
+import java.util.UUID
 
 @RestController
 @RequestMapping("/review")
 class ReviewController(private val reviewService: ReviewService) {
-
     @Operation(summary = "리뷰 생성 API", description = "리뷰를 생성합니다.")
     @PostMapping
     fun createReview(
@@ -42,8 +45,8 @@ class ReviewController(private val reviewService: ReviewService) {
     fun updateReview(
         @RequestBody request: UpdateReviewReqDto,
     ): String = reviewService.updateReview(request)
+
     @Operation(summary = "리뷰 삭제 API", description = "리뷰를 삭제합니다.")
-    
     @DeleteMapping("/{reviewId}")
     fun deleteReview(
         @PathVariable reviewId: UUID,
