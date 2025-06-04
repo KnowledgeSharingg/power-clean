@@ -1,12 +1,11 @@
-// app/post/[postId]/page.tsx
 import ReviewSection from "@/app/components/ReviewSection";
 import { getPostDetail } from "@/lib/api";
 
-interface PostDetailPageProps {
+export default async function PostDetailPage({
+  params,
+}: {
   params: { postId: string };
-}
-
-export default async function PostDetailPage({ params }: PostDetailPageProps) {
+}) {
   const post = await getPostDetail(params.postId);
 
   if (!post) {
@@ -52,6 +51,5 @@ export default async function PostDetailPage({ params }: PostDetailPageProps) {
         creatorAccountId={"0197353d-b73f-7847-ae1c-1f4ff1839b67"}
       />
     </div>
-    // TODO: creatorAccountId 실제 유저값 넘기도록.
   );
 }
