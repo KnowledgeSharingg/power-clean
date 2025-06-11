@@ -77,3 +77,27 @@ export async function getReviewsByPostId(
   if (!res.ok) throw new Error("리뷰 조회 실패");
   return await res.json();
 }
+
+export async function updateReview({
+  content,
+  rating,
+  reviewId,
+}: {
+  content: string;
+  rating: number;
+  reviewId: string;
+}) {
+  const res = await fetch(`${serverUrl}/review`, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ content, rating, reviewId }),
+  });
+  return res.ok;
+}
+
+export async function deleteReview(reviewId: string) {
+  const res = await fetch(`${serverUrl}/review/${reviewId}`, {
+    method: "DELETE",
+  });
+  return res.ok;
+}
