@@ -42,7 +42,7 @@ class ReviewController(private val reviewService: ReviewService) {
     ): GetReviewListResDto = reviewService.getReviewListOfPost(postId, page, size)
 
     @Operation(summary = "리뷰 수정 API", description = "리뷰를 수정합니다.")
-    @PatchMapping
+    @PatchMapping()
     fun updateReview(
         @RequestBody request: UpdateReviewReqDto,
     ): String = reviewService.updateReview(request)
