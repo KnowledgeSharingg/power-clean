@@ -5,13 +5,13 @@ services:
     ports:
       - "8081:8080"
     container_name: "power-clean-server-app"
-  # mysql:
-  #   image: "mysql:latest"
-  #   environment:
-  #     - "MYSQL_DATABASE=mydatabase"
-  #     - "MYSQL_PASSWORD=secret"
-  #     - "MYSQL_ROOT_PASSWORD=verysecret"
-  #     - "MYSQL_USER=myuser"
-  #   ports:
-  #     - "3306:3306"
-  #   container_name: "power-clean-server-mysql"
+  mysql:
+    image: "mysql:latest"
+    environment:
+      - "MYSQL_DATABASE=mydatabase"
+      - "MYSQL_PASSWORD=secret"
+      - "MYSQL_ROOT_PASSWORD=verysecret"
+      - "MYSQL_USER=myuser"
+    ports:
+      - "3306:3306"
+    container_name: "power-clean-server-mysql"
