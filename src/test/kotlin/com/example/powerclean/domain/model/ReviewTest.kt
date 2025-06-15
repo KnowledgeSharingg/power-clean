@@ -1,13 +1,12 @@
 package com.example.powerclean.domain.model
 
-import com.fasterxml.uuid.Generators
 import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.matchers.shouldBe
 import io.mockk.mockk
 
 class ReviewTest : BehaviorSpec({
     Given("a Review") {
-        val postId = Generators.timeBasedEpochGenerator().generate()
+        // val postId = Generators.timeBasedEpochGenerator().generate()
         val post = mockk<Post>()
         val review = Review("Sample Review Content", 5, post)
 
@@ -27,7 +26,7 @@ class ReviewTest : BehaviorSpec({
     }
 
     Given("a Review with a mocked Post") {
-        val postId = 12345L
+        // val postId = 12345L
         val post = mockk<Post>()
 
         When("creating a Review") {
