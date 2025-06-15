@@ -3,12 +3,13 @@ package com.example.powerclean.domain.model
 import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.matchers.shouldBe
 import io.mockk.mockk
+import java.util.UUID
 
 class ReviewTest : BehaviorSpec({
     Given("a Review") {
         // val postId = Generators.timeBasedEpochGenerator().generate()
         val post = mockk<Post>()
-        val review = Review("Sample Review Content", 5, post)
+        val review = Review("Sample Review Content", 5, UUID.randomUUID(), post)
 
         When("getting the review properties") {
             Then("the content should be correct") {
@@ -31,7 +32,7 @@ class ReviewTest : BehaviorSpec({
 
         When("creating a Review") {
             Then("the post should be set correctly") {
-                val review = Review("Sample Review Content", 5, post)
+                val review = Review("Sample Review Content", 5, UUID.randomUUID(), post)
                 review.post shouldBe post
             }
         }
