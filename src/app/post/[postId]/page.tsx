@@ -1,11 +1,11 @@
-// app/post/[postId]/page.tsx
+import ReviewSection from "@/app/components/ReviewSection";
 import { getPostDetail } from "@/lib/api";
 
-interface PostDetailPageProps {
+export default async function PostDetailPage({
+  params,
+}: {
   params: { postId: string };
-}
-
-export default async function PostDetailPage({ params }: PostDetailPageProps) {
+}) {
   const post = await getPostDetail(params.postId);
 
   if (!post) {
@@ -21,7 +21,6 @@ export default async function PostDetailPage({ params }: PostDetailPageProps) {
         작성일: {new Date(post.createdAt).toLocaleString()}
       </p>
       <p className="text-lg mb-6">{post.content}</p>
-
       <div className="border-t pt-4 mt-6">
         <h2 className="text-2xl font-semibold mb-2">📚 관련 도서 정보</h2>
         <p className="text-xl font-bold">{post.bookInfo.title}</p>
@@ -35,7 +34,6 @@ export default async function PostDetailPage({ params }: PostDetailPageProps) {
           도서 링크
         </a>
       </div>
-
       {post.bookInfo.authorInfo?.name && (
         <div className="border-t pt-4 mt-6">
           <h2 className="text-2xl font-semibold mb-2">✍️ 작가 정보</h2>
@@ -48,6 +46,10 @@ export default async function PostDetailPage({ params }: PostDetailPageProps) {
           </ul>
         </div>
       )}
+      <ReviewSection
+        postId={params.postId}
+        creatorAccountId={"0197353d-b73f-7847-ae1c-1f4ff1839b67"}
+      />
     </div>
   );
 }
