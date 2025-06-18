@@ -28,5 +28,5 @@ class ChatGptConfig {
             .openAiApi(api)
             .defaultOptions(options)
             .build()
-    }`
+    }
 }
