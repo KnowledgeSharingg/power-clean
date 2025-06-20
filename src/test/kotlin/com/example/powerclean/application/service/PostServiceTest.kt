@@ -139,12 +139,13 @@ class PostServiceTest {
         `when`(postRepository.findById(postId)).thenReturn(java.util.Optional.empty())
 
         // When
-        val exception = assertThrows(NotFoundException::class.java) {
-            postService.getPostDetail(postId)
-        }
+        val exception =
+            assertThrows(NotFoundException::class.java) {
+                postService.getPostDetail(postId)
+            }
 
         // Then
-        assertEquals("Post not found", exception.message);
+        assertEquals("Post not found", exception.message)
     }
 
     @Test
@@ -199,7 +200,7 @@ class PostServiceTest {
                 title = "Updated Title",
                 content = "Updated Content",
             )
-        val updatedPost = 
+        val updatedPost =
             Post(
                 title = requestDto.title,
                 content = requestDto.content,
@@ -237,9 +238,10 @@ class PostServiceTest {
         `when`(postRepository.findById(requestDto.id)).thenReturn(java.util.Optional.empty())
 
         // When
-        val exception = assertThrows(NotFoundException::class.java) {
-            postService.updatePost(requestDto)
-        }
+        val exception =
+            assertThrows(NotFoundException::class.java) {
+                postService.updatePost(requestDto)
+            }
 
         // Then
         assertEquals("Post not found", exception.message)
