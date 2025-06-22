@@ -5,19 +5,18 @@ import com.example.powerclean.domain.repository.PostRepository
 import com.example.powerclean.domain.repository.ReviewRepository
 import com.example.powerclean.presentation.dto.CreateReviewReqDto
 import com.example.powerclean.presentation.dto.UpdateReviewReqDto
-import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.BeforeEach
-import org.springframework.data.domain.PageImpl
-import org.springframework.data.domain.PageRequest
-import org.mockito.kotlin.mock
-import org.mockito.kotlin.verify
-import java.util.UUID
-import java.util.Optional
-import com.example.powerclean.presentation.dto.GetReviewDetailResDto
-import kotlin.test.assertEquals
+import org.junit.jupiter.api.Test
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.`when`
 import org.mockito.kotlin.any
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.verify
+import org.springframework.data.domain.PageImpl
+import org.springframework.data.domain.PageRequest
+import java.util.Optional
+import java.util.UUID
+import kotlin.test.assertEquals
 
 class ReviewServiceTest {
     private lateinit var reviewRepository: ReviewRepository
@@ -37,7 +36,7 @@ class ReviewServiceTest {
         val postId = UUID.randomUUID()
         val creatorAccountId = UUID.randomUUID()
         val request = CreateReviewReqDto("Great post!", 5, postId, creatorAccountId)
-        val post = Post("Sample Post", "Content",creatorAccountId ,10)
+        val post = Post("Sample Post", "Content", creatorAccountId, 10)
         `when`(postRepository.findById(request.postId)).thenReturn(Optional.of(post))
         val savedReview = Review(request.content, request.rating, creatorAccountId, post)
         `when`(reviewRepository.save(any())).thenReturn(savedReview)
@@ -56,7 +55,7 @@ class ReviewServiceTest {
     fun `getReviewDetail should return review details`() {
         // Given
         val creatorAccountId = UUID.randomUUID()
-        val post = Post("Sample Post", "Content",creatorAccountId ,10)
+        val post = Post("Sample Post", "Content", creatorAccountId, 10)
         val review = Review("Great post!", 5, creatorAccountId, post)
         `when`(reviewRepository.findById(review.id)).thenReturn(Optional.of(review))
 
@@ -74,7 +73,7 @@ class ReviewServiceTest {
         // Given
         val creatorAccountId = UUID.randomUUID()
         val pageable = PageRequest.of(0, 10)
-        val post = Post("Sample Post", "Content",creatorAccountId ,10)
+        val post = Post("Sample Post", "Content", creatorAccountId, 10)
         val reviews = listOf(Review("Great post!", 5, creatorAccountId, post))
         val reviewPage = PageImpl(reviews, pageable, reviews.size.toLong())
         `when`(reviewRepository.findAllByPostId(post.id, pageable)).thenReturn(reviewPage)

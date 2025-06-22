@@ -60,6 +60,7 @@ class SecurityConfig {
                 "http://127.0.0.1:3000",
                 "http://localhost:3000",
                 "https://power-clean-client.vercel.app",
+                "https://barely-settled-iguana.ngrok-free.app",
             )
         configuration.allowedMethods = listOf("GET", "POST", "PUT", "DELETE", "OPTIONS")
         configuration.allowedHeaders = listOf("Authorization", "Content-Type")
