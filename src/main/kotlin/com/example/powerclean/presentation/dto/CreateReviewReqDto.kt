@@ -5,6 +5,6 @@ import java.util.UUID
 data class CreateReviewReqDto(
     val content: String,
     val rating: Int,
-    val postId: String,
+    val postId: UUID,
     val creatorAccountId: UUID,
 )
