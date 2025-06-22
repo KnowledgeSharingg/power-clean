@@ -14,6 +14,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.`when`
+import org.mockito.kotlin.any
 import org.webjars.NotFoundException
 import java.util.UUID
 
@@ -31,7 +32,7 @@ class PostServiceTest {
 
     @Test
     fun createPost_WhenValidRequestDto_ReturnsCreatePostResDto() {
-        // Arrange
+        // Given.
         val requestDto =
             CreatePostReqDto(
                 title = "Test Title",
@@ -67,26 +68,26 @@ class PostServiceTest {
                 authorInfo = requestDto.bookInfo.authorInfo,
                 post = savedPost,
             )
-        // `when`(postRepository.save(any())).thenReturn(savedPost)
-        // `when`(bookRepository.save(any())).thenReturn(savedBook)
+        `when`(postRepository.save(any<Post>())).thenReturn(savedPost)
+        `when`(bookRepository.save(any())).thenReturn(savedBook)
 
-        // // Act
-        // val result = postService.createPost(requestDto)
+        // When
+        val result = postService.createPost(requestDto)
 
-        // // Assert
-        // assertNotNull(result.id)
-        // assertEquals(requestDto.title, result.title)
-        // assertEquals(requestDto.content, result.content)
-        // assertNotNull(result.bookInfo)
-        // assertEquals(requestDto.bookInfo.title, result.bookInfo.title)
-        // assertEquals(requestDto.bookInfo.content, result.bookInfo.content)
-        // assertEquals(requestDto.bookInfo.link, result.bookInfo.link)
-        // assertEquals(requestDto.bookInfo.authorInfo, result.bookInfo.authorInfo)
+        // Then
+        assertNotNull(result.id)
+        assertEquals(requestDto.title, result.title)
+        assertEquals(requestDto.content, result.content)
+        assertNotNull(result.bookInfo)
+        assertEquals(requestDto.bookInfo.title, result.bookInfo.title)
+        assertEquals(requestDto.bookInfo.content, result.bookInfo.content)
+        assertEquals(requestDto.bookInfo.link, result.bookInfo.link)
+        assertEquals(requestDto.bookInfo.authorInfo, result.bookInfo.authorInfo)
     }
 
     @Test
     fun getPostDetail_WhenValidPostId_ReturnsGetPostDetailResDto() {
-        // Arrange
+        // Given
         val postId = UUID.randomUUID()
         val foundPost =
             Post(
@@ -113,10 +114,10 @@ class PostServiceTest {
         foundPost.book = foundBook
         `when`(postRepository.findById(postId)).thenReturn(java.util.Optional.of(foundPost))
 
-        // Act
+        // When
         val result = postService.getPostDetail(postId)
 
-        // Assert
+        // Then
         assertEquals(foundPost.id, result.id)
         assertEquals(foundPost.title, result.title)
         assertEquals(foundPost.content, result.content)
@@ -133,19 +134,23 @@ class PostServiceTest {
 
     @Test
     fun getPostDetail_WhenInvalidPostId_ThrowsNotFoundException() {
-        // Arrange
+        // Given
         val postId = UUID.randomUUID()
         `when`(postRepository.findById(postId)).thenReturn(java.util.Optional.empty())
 
-        // Act & Assert
-        assertThrows(NotFoundException::class.java) {
-            postService.getPostDetail(postId)
-        }
+        // When
+        val exception =
+            assertThrows(NotFoundException::class.java) {
+                postService.getPostDetail(postId)
+            }
+
+        // Then
+        assertEquals("Post not found", exception.message)
     }
 
     @Test
     fun getPostList_WhenValidPageAndSize_ReturnsGetPostListResDto() {
-        // Arrange
+        // Given
         val foundPosts =
             listOf(
                 Post(
@@ -163,10 +168,10 @@ class PostServiceTest {
             )
         `when`(postRepository.findAll()).thenReturn(foundPosts)
 
-        // Act
+        // When
         val result = postService.getPostList(page = 1, size = 10)
 
-        // Assert
+        // Then
         assertEquals(foundPosts.size, result.postList.size)
         for (i in foundPosts.indices) {
             val foundPost = foundPosts[i]
@@ -188,12 +193,19 @@ class PostServiceTest {
 
     @Test
     fun updatePost_WhenValidRequestDto_ReturnsOk() {
-        // Arrange
+        // Given
         val requestDto =
             UpdatePostReqDto(
                 id = UUID.randomUUID(),
                 title = "Updated Title",
                 content = "Updated Content",
+            )
+        val updatedPost =
+            Post(
+                title = requestDto.title,
+                content = requestDto.content,
+                creatorAccountId = UUID.randomUUID(),
+                likeCount = 0,
             )
         val foundPost =
             Post(
@@ -203,12 +215,12 @@ class PostServiceTest {
                 likeCount = 0,
             )
         `when`(postRepository.findById(requestDto.id)).thenReturn(java.util.Optional.of(foundPost))
-        `when`(postRepository.save(foundPost)).thenReturn(foundPost)
+        `when`(postRepository.save(foundPost)).thenReturn(updatedPost)
 
-        // Act
+        // When
         val result = postService.updatePost(requestDto)
 
-        // Assert
+        // Then
         assertEquals("ok", result)
         assertEquals(requestDto.title, foundPost.title)
         assertEquals(requestDto.content, foundPost.content)
@@ -216,7 +228,7 @@ class PostServiceTest {
 
     @Test
     fun updatePost_WhenInvalidPostId_ThrowsNotFoundException() {
-        // Arrange
+        // Given
         val requestDto =
             UpdatePostReqDto(
                 id = UUID.randomUUID(),
@@ -225,21 +237,25 @@ class PostServiceTest {
             )
         `when`(postRepository.findById(requestDto.id)).thenReturn(java.util.Optional.empty())
 
-        // Act & Assert
-        assertThrows(NotFoundException::class.java) {
-            postService.updatePost(requestDto)
-        }
+        // When
+        val exception =
+            assertThrows(NotFoundException::class.java) {
+                postService.updatePost(requestDto)
+            }
+
+        // Then
+        assertEquals("Post not found", exception.message)
     }
 
     @Test
     fun deletePost_WhenValidPostId_ReturnsOk() {
-        // Arrange
+        // Given
         val postId = UUID.randomUUID()
 
-        // Act
+        // When
         val result = postService.deletePost(postId)
 
-        // Assert
+        // Then
         assertEquals("ok", result)
     }
 }

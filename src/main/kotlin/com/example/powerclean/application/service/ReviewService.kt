@@ -26,7 +26,7 @@ class ReviewService(
                     rating = request.rating,
                     creatorAccountId = request.creatorAccountId,
                     post =
-                        postRepository.findById(UUID.fromString(request.postId)).orElseThrow {
+                        postRepository.findById(request.postId).orElseThrow {
                             NotFoundException("Post not found")
                         },
                 ),
