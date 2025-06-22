@@ -26,8 +26,8 @@ class ReviewServiceTest {
 
     @BeforeEach
     fun setUp() {
-        reviewRepository = mock(ReviewRepository::class.java)
-        postRepository = mock(PostRepository::class.java)
+        reviewRepository = mock()
+        postRepository = mock()
         reviewService = ReviewService(reviewRepository, postRepository)
     }
 
