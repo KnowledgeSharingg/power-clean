@@ -105,9 +105,15 @@ class PostService(private val postRepository: PostRepository, private val bookRe
     }
 
     fun updatePost(requestDto: UpdatePostReqDto): String {
-        val foundPost = postRepository.findById(requestDto.id).orElse(null) ?: throw NotFoundException("Post not found")
+        val foundPost =
+            postRepository.findByIdWithBook(requestDto.id).orElse(null)
+                ?: throw NotFoundException("Post not found")
         foundPost.title = requestDto.title
         foundPost.content = requestDto.content
+        foundPost.book?.title = requestDto.bookInfo.title
+        foundPost.book?.content = requestDto.bookInfo.content
+        foundPost.book?.link = requestDto.bookInfo.link
+
         postRepository.save(foundPost)
         return "ok"
     }

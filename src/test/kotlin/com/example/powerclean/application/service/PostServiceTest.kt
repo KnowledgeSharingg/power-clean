@@ -6,6 +6,7 @@ import com.example.powerclean.domain.repository.PostRepository
 import com.example.powerclean.domain.valueobject.AuthorInfo
 import com.example.powerclean.presentation.dto.CreateBookReqDto
 import com.example.powerclean.presentation.dto.CreatePostReqDto
+import com.example.powerclean.presentation.dto.UpdateBookReqDto
 import com.example.powerclean.presentation.dto.UpdatePostReqDto
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
@@ -199,6 +200,12 @@ class PostServiceTest {
                 id = UUID.randomUUID(),
                 title = "Updated Title",
                 content = "Updated Content",
+                bookInfo =
+                    UpdateBookReqDto(
+                        "Updated Book Title",
+                        "Updated Book Content",
+                        "Updated Book Link",
+                    ),
             )
         val updatedPost =
             Post(
@@ -214,7 +221,7 @@ class PostServiceTest {
                 creatorAccountId = UUID.randomUUID(),
                 likeCount = 0,
             )
-        `when`(postRepository.findById(requestDto.id)).thenReturn(java.util.Optional.of(foundPost))
+        `when`(postRepository.findByIdWithBook(requestDto.id)).thenReturn(java.util.Optional.of(foundPost))
         `when`(postRepository.save(foundPost)).thenReturn(updatedPost)
 
         // When
@@ -234,6 +241,12 @@ class PostServiceTest {
                 id = UUID.randomUUID(),
                 title = "Updated Title",
                 content = "Updated Content",
+                bookInfo =
+                    UpdateBookReqDto(
+                        "Updated Book Title",
+                        "Updated Book Content",
+                        "Updated Book Link",
+                    ),
             )
         `when`(postRepository.findById(requestDto.id)).thenReturn(java.util.Optional.empty())
 
