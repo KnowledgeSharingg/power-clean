@@ -174,6 +174,7 @@ export default function PostDetailPage({
       {!isEditing && (
         <ReviewSection
           postId={params.postId}
+          // TODO: 로그인 기능 추가되면 값 넘기도록.
           creatorAccountId={"0197353d-b73f-7847-ae1c-1f4ff1839b67"}
         />
       )}
