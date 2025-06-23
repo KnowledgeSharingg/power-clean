@@ -62,7 +62,7 @@ class SecurityConfig {
                 "https://power-clean-client.vercel.app",
                 "https://barely-settled-iguana.ngrok-free.app",
             )
-        configuration.allowedMethods = listOf("GET", "POST", "PUT", "DELETE", "OPTIONS")
+        configuration.allowedMethods = listOf("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")
         configuration.allowedHeaders = listOf("Authorization", "Content-Type")
         configuration.allowCredentials = true
 
