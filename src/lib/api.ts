@@ -46,6 +46,36 @@ export async function getPostDetail(postId: string) {
   return await response.json();
 }
 
+export async function updatePost(data: {
+  id: string;
+  title: string;
+  content: string;
+  bookInfo: {
+    title: string;
+    content: string;
+    link: string;
+    authorInfo?: {
+      name: string;
+      dateOfBirth: string;
+      phoneNumber: string;
+      gender: string;
+      history: string;
+    };
+  };
+}) {
+  try {
+    const response = await fetch(`${serverUrl}/post`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
+    });
+    return response.ok;
+  } catch (error) {
+    console.error("게시글 수정 오류:", error);
+    return false;
+  }
+}
+
 export async function createReview(data: {
   content: string;
   rating: number;
