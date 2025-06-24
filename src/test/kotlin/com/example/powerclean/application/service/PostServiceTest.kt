@@ -248,7 +248,7 @@ class PostServiceTest {
                         "Updated Book Link",
                     ),
             )
-        `when`(postRepository.findById(requestDto.id)).thenReturn(java.util.Optional.empty())
+        `when`(postRepository.findByIdWithBook(requestDto.id)).thenReturn(java.util.Optional.empty())
 
         // When
         val exception =
