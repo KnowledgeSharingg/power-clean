@@ -16,5 +16,5 @@ data class UpdateBookReqDto(
     )
     val link: String,
     @Schema(description = "저자 정보.")
-    var authorInfo: AuthorInfo? = null,
+    val authorInfo: AuthorInfo? = null,
 )
