@@ -9,7 +9,29 @@ export default function PostDetailPage({
 }: {
   params: { postId: string };
 }) {
-  const [post, setPost] = useState<any>(null);
+  interface AuthorInfo {
+    name: string;
+    dateOfBirth: string;
+    phoneNumber: string;
+    gender: string;
+    history: string;
+  }
+
+  interface BookInfo {
+    title: string;
+    content: string;
+    link: string;
+    authorInfo?: AuthorInfo;
+  }
+
+  interface Post {
+    id: string;
+    title: string;
+    content: string;
+    bookInfo: BookInfo;
+  }
+
+  const [post, setPost] = useState<Post | null>(null);
   const [isEditing, setIsEditing] = useState(false);
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
