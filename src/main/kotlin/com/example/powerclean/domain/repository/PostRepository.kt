@@ -9,6 +9,8 @@ public interface PostRepository {
 
     fun findById(id: UUID): Optional<Post>
 
+    fun findByIdWithBook(id: UUID): Optional<Post>
+
     fun findAll(): List<Post>
 
     fun deleteById(id: UUID)
