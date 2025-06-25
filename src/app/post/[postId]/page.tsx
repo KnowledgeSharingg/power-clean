@@ -40,6 +40,7 @@ export default function PostDetailPage({
         setBookInfo(postData.bookInfo);
       } catch (error) {
         console.error(error);
+        setLoadError(true);
       }
     };
     fetchPost();
