@@ -21,10 +21,12 @@ export default function PostDetailPage({
     title: string;
     content: string;
     link: string;
+    coverImageUrl: string;
     authorInfo?: AuthorInfo;
   }
 
   interface Post {
+    createdAt: string;
     id: string;
     title: string;
     content: string;

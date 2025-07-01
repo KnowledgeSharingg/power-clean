@@ -13,6 +13,7 @@ export default function CreatePost() {
     bookInfo: {
       title: "",
       content: "",
+      coverImageUrl: "",
       link: "",
       authorInfo: {
         name: "",
@@ -34,7 +35,7 @@ export default function CreatePost() {
       // If the name corresponds to a top-level property, update it directly
       if (keys.length === 1) {
         return { ...prev, [name]: value };
-      } 
+      }
       // If the name corresponds to a second-level property (e.g., "bookInfo.title"),
       // update the nested object while preserving other properties at the same level
       else if (keys.length === 2) {

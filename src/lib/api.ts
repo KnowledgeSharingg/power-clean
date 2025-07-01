@@ -54,6 +54,7 @@ export async function updatePost(data: {
     title: string;
     content: string;
     link: string;
+    coverImageUrl: string;
     authorInfo?: {
       name: string;
       dateOfBirth: string;
