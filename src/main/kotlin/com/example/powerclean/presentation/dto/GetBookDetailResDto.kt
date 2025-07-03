@@ -8,5 +8,6 @@ data class GetBookDetailResDto(
     val title: String?,
     val content: String?,
     val link: String?,
+    val coverImageUrl: String?,
     val authorInfo: AuthorInfo?,
 )

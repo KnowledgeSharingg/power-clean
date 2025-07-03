@@ -10,6 +10,7 @@ import com.example.powerclean.presentation.dto.GetBookDetailResDto
 import com.example.powerclean.presentation.dto.GetPostDetailResDto
 import com.example.powerclean.presentation.dto.GetPostListResDto
 import com.example.powerclean.presentation.dto.UpdatePostReqDto
+import com.example.powerclean.utils.DefaultBookCoverImageUrl
 import org.springframework.stereotype.Service
 import org.webjars.NotFoundException
 import java.util.UUID
@@ -19,6 +20,7 @@ import java.util.UUID
 @Service
 class PostService(private val postRepository: PostRepository, private val bookRepository: BookRepository) {
     fun createPost(requestDto: CreatePostReqDto): CreatePostResDto {
+        println("requestDto : $requestDto")
         val savedPost =
             postRepository.save(
                 Post(
@@ -35,6 +37,7 @@ class PostService(private val postRepository: PostRepository, private val bookRe
                     title = requestDto.bookInfo.title,
                     content = requestDto.bookInfo.content,
                     link = requestDto.bookInfo.link,
+                    coverImageUrl = requestDto.bookInfo.coverImageUrl.takeIf { it.isNotBlank() } ?: DefaultBookCoverImageUrl,
                     authorInfo = requestDto.bookInfo.authorInfo,
                     post = savedPost,
                 ),
@@ -50,6 +53,7 @@ class PostService(private val postRepository: PostRepository, private val bookRe
                     title = savedBook.title,
                     content = savedBook.content,
                     link = savedBook.link,
+                    coverImageUrl = savedBook.coverImageUrl,
                     authorInfo = savedBook.authorInfo,
                 ),
         )
@@ -70,6 +74,7 @@ class PostService(private val postRepository: PostRepository, private val bookRe
                     title = foundPost.book?.title,
                     content = foundPost.book?.content,
                     link = foundPost.book?.link,
+                    coverImageUrl = foundPost.book?.coverImageUrl,
                     authorInfo = foundPost.book?.authorInfo,
                 ),
         )
@@ -97,6 +102,7 @@ class PostService(private val postRepository: PostRepository, private val bookRe
                                 title = it.book?.title,
                                 content = it.book?.content,
                                 link = it.book?.link,
+                                coverImageUrl = it.book?.coverImageUrl,
                                 authorInfo = it.book?.authorInfo,
                             ),
                     )
