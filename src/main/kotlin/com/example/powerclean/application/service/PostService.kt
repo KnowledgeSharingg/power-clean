@@ -37,7 +37,9 @@ class PostService(private val postRepository: PostRepository, private val bookRe
                     title = requestDto.bookInfo.title,
                     content = requestDto.bookInfo.content,
                     link = requestDto.bookInfo.link,
-                    coverImageUrl = requestDto.bookInfo.coverImageUrl.takeIf { it.isNotBlank() } ?: DefaultBookCoverImageUrl,
+                    coverImageUrl =
+                        requestDto.bookInfo.coverImageUrl.takeIf { it.isNotBlank() }
+                            ?: DefaultBookCoverImageUrl,
                     authorInfo = requestDto.bookInfo.authorInfo,
                     post = savedPost,
                 ),
