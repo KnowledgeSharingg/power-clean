@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import ReviewSection from "@/app/components/ReviewSection";
-import { getPostDetail, updatePost } from "@/lib/api";
+import { getPostDetail, serverUrl, updatePost } from "@/lib/api";
 import Image from "next/image";
 
 export default function PostDetailPage({
@@ -170,7 +170,7 @@ export default function PostDetailPage({
             {post.bookInfo?.coverImageUrl && (
               <div className="my-4 flex justify-center">
                 <Image
-                  src={post.bookInfo.coverImageUrl}
+                  src={`${serverUrl}${post.bookInfo.coverImageUrl}`}
                   alt={`${post.bookInfo.title} cover`}
                   width={96}
                   height={144}

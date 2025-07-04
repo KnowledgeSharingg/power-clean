@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { getPostList } from "@/lib/api";
+import { getPostList, serverUrl } from "@/lib/api";
 import Link from "next/link";
 import Image from "next/image";
 
@@ -81,19 +81,12 @@ export default function Home() {
                 <h2 className="text-xl font-semibold text-gray-900 mb-2">
                   {post.title}
                 </h2>
-                <p className="text-gray-700 mb-2 line-clamp-2">
-                  {post.content}
-                </p>
-                <p className="text-sm text-gray-500 mb-1">
-                  👍 {post.likeCount} | 🕒{" "}
-                  {new Date(post.createdAt).toLocaleString()}
-                </p>
                 {post.bookInfo?.title && (
                   <div className="mt-3 text-sm text-gray-600">
                     {post.bookInfo.coverImageUrl && (
                       <div className="w-24 h-auto relative mb-2">
                         <Image
-                          src={post.bookInfo.coverImageUrl}
+                          src={`${serverUrl}${post.bookInfo.coverImageUrl}`}
                           alt={`${post.bookInfo.title} cover`}
                           width={96}
                           height={144}
@@ -105,6 +98,13 @@ export default function Home() {
                     {post.bookInfo.content}
                   </div>
                 )}
+                <p className="text-gray-700 mb-2 line-clamp-2">
+                  {post.content}
+                </p>
+                <p className="text-sm text-gray-500 mb-1">
+                  👍 {post.likeCount} | 🕒{" "}
+                  {new Date(post.createdAt).toLocaleString()}
+                </p>
                 <Link
                   href={`/post/${post.id}`}
                   className="inline-block mt-4 text-blue-600 hover:underline text-sm"
