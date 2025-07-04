@@ -69,7 +69,7 @@ export default function CreatePost() {
     formData.append("file", file);
 
     try {
-      const res = await fetch("http://localhost:8080/upload", {
+      const res = await fetch(`${serverUrl}/upload`, {
         method: "POST",
         body: formData,
       });
