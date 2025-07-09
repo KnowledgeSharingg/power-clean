@@ -9,7 +9,7 @@ import org.springframework.web.multipart.MultipartFile
 
 @RestController("image")
 class ImageController(
-    private val ImageService: ImageService,
+    private val imageService: ImageService,
 ) {
     @Operation(
         summary = "이미지 업로드 API",
@@ -19,6 +19,6 @@ class ImageController(
     fun uploadImage(
         @RequestParam("file") file: MultipartFile,
     ): String {
-        return ImageService.uploadImage(file)
+        return imageService.uploadImage(file)
     }
 }
