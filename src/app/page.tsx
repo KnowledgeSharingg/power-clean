@@ -86,7 +86,7 @@ export default function Home() {
                     {post.bookInfo.coverImageUrl && (
                       <div className="w-24 h-auto relative mb-2">
                         <Image
-                          src={`${serverUrl}${post.bookInfo.coverImageUrl}`}
+                          src={`${post.bookInfo.coverImageUrl}`}
                           alt={`${post.bookInfo.title} cover`}
                           width={96}
                           height={144}

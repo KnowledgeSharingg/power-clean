@@ -170,7 +170,7 @@ export default function PostDetailPage({
             {post.bookInfo?.coverImageUrl && (
               <div className="my-4 flex justify-center">
                 <Image
-                  src={`${serverUrl}${post.bookInfo.coverImageUrl}`}
+                  src={`${post.bookInfo.coverImageUrl}`}
                   alt={`${post.bookInfo.title} cover`}
                   width={96}
                   height={144}

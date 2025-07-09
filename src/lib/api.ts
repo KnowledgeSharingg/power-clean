@@ -131,3 +131,23 @@ export async function deleteReview(reviewId: string) {
   });
   return res.ok;
 }
+
+export async function uploadImage(file: File) {
+  const formData = new FormData();
+  formData.append("file", file);
+
+  try {
+    const response = await fetch(`${serverUrl}/upload`, {
+      method: "POST",
+      body: formData,
+    });
+
+    if (!response.ok) throw new Error("이미지 업로드 실패");
+
+    const imageUrl = await response.text(); // 서버가 String 반환 시
+    return imageUrl;
+  } catch (error) {
+    console.error("이미지 업로드 오류:", error);
+    throw error;
+  }
+}

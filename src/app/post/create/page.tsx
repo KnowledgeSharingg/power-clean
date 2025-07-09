@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { createPost } from "@/lib/api";
+import { createPost, uploadImage } from "@/lib/api";
 import Image from "next/image";
 
 export default function CreatePost() {
@@ -65,18 +65,9 @@ export default function CreatePost() {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    const formData = new FormData();
-    formData.append("file", file);
-
     try {
-      const res = await fetch("http://localhost:8080/upload", {
-        method: "POST",
-        body: formData,
-      });
+      const imageUrl = await uploadImage(file);
 
-      if (!res.ok) throw new Error("Upload failed");
-
-      const imageUrl = await res.text(); // 서버가 String 반환 시
       setForm((prev) => ({
         ...prev,
         bookInfo: {

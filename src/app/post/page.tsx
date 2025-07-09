@@ -20,7 +20,7 @@ export default async function PostListPage() {
             {post.bookInfo?.coverImageUrl && (
               <div className="mt-3">
                 <Image
-                  src={`${serverUrl}${post.bookInfo.coverImageUrl}`}
+                  src={`${post.bookInfo.coverImageUrl}`}
                   alt={post.bookInfo.title || "Book cover"}
                   width={128} // 원하는 너비
                   height={192} // 원하는 높이
