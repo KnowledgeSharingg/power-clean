@@ -19,8 +19,10 @@ import java.util.UUID
 
 @Service
 class PostService(private val postRepository: PostRepository, private val bookRepository: BookRepository) {
+    private val logger = org.slf4j.LoggerFactory.getLogger(PostService::class.java)
+
     fun createPost(requestDto: CreatePostReqDto): CreatePostResDto {
-        println("requestDto : $requestDto")
+        logger.debug("requestDto : $requestDto")
         val savedPost =
             postRepository.save(
                 Post(

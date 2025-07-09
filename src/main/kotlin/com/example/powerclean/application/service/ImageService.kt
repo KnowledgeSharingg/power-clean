@@ -16,7 +16,7 @@ class ImageService() {
             Files.createDirectories(uploadDir)
         }
 
-        val originalFilename = file.originalFilename ?: return ""
+        val originalFilename = file.originalFilename?.let { Paths.get(it).fileName.toString() } ?: return ""
         val filePath = uploadDir.resolve(originalFilename)
         file.transferTo(filePath)
 
