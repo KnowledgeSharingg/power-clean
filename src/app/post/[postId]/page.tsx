@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import ReviewSection from "@/app/components/ReviewSection";
-import { getPostDetail, serverUrl, updatePost } from "@/lib/api";
+import { getPostDetail, updatePost } from "@/lib/api";
 import Image from "next/image";
 
 export default function PostDetailPage({
