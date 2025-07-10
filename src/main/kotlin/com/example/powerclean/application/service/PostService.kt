@@ -10,7 +10,7 @@ import com.example.powerclean.presentation.dto.GetBookDetailResDto
 import com.example.powerclean.presentation.dto.GetPostDetailResDto
 import com.example.powerclean.presentation.dto.GetPostListResDto
 import com.example.powerclean.presentation.dto.UpdatePostReqDto
-import com.example.powerclean.utils.DefaultBookCoverImageUrl
+import com.example.powerclean.utils.DEFAULT_BOOK_COVER_IMAGE_URL
 import org.springframework.stereotype.Service
 import org.webjars.NotFoundException
 import java.util.UUID
@@ -41,7 +41,7 @@ class PostService(private val postRepository: PostRepository, private val bookRe
                     link = requestDto.bookInfo.link,
                     coverImageUrl =
                         requestDto.bookInfo.coverImageUrl.takeIf { it.isNotBlank() }
-                            ?: DefaultBookCoverImageUrl,
+                            ?: DEFAULT_BOOK_COVER_IMAGE_URL,
                     authorInfo = requestDto.bookInfo.authorInfo,
                     post = savedPost,
                 ),

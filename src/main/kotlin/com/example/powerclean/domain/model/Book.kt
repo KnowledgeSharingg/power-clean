@@ -1,7 +1,7 @@
 package com.example.powerclean.domain.model
 
 import com.example.powerclean.domain.valueobject.AuthorInfo
-import com.example.powerclean.utils.DefaultBookCoverImageUrl
+import com.example.powerclean.utils.DEFAULT_BOOK_COVER_IMAGE_URL
 import jakarta.persistence.Column
 import jakarta.persistence.ConstraintMode
 import jakarta.persistence.Embedded
@@ -22,7 +22,7 @@ class Book(
     @Column(name = "link", nullable = false)
     var link: String,
     @Column(name = "cover_image_url", nullable = false)
-    var coverImageUrl: String = DefaultBookCoverImageUrl,
+    var coverImageUrl: String = DEFAULT_BOOK_COVER_IMAGE_URL,
     @Embedded
     var authorInfo: AuthorInfo,
     @OneToOne(fetch = FetchType.LAZY)

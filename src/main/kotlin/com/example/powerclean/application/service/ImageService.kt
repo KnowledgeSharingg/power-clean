@@ -7,8 +7,9 @@ import java.nio.file.Path
 import java.nio.file.Paths
 
 @Service
-class ImageService() {
-    private val uploadDir: Path = Paths.get("BookCoverImages") // 프로젝트 루트 기준
+class ImageService(
+    private val uploadDir: Path = Paths.get("BookCoverImages")
+) {
 
     fun uploadImage(file: MultipartFile): String {
         // 디렉토리가 없으면 생성

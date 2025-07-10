@@ -1,6 +1,7 @@
 package com.example.powerclean.domain.model
 
 import com.example.powerclean.domain.valueobject.AuthorInfo
+import com.example.powerclean.utils.DEFAULT_BOOK_COVER_IMAGE_URL
 import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.matchers.shouldBe
 import io.mockk.mockk
@@ -10,7 +11,7 @@ class BookTest : BehaviorSpec({
         val authorInfo =
             AuthorInfo("John Doe", "960707", "01012341234", "male", "Borned in Ulsaan.")
         val post = mockk<Post>()
-        val book = Book("Sample Book", "Sample Content", "samplelink.com", authorInfo, post)
+        val book = Book("Sample Book", "Sample Content", "samplelink.com",  DEFAULT_BOOK_COVER_IMAGE_URL, authorInfo, post)
 
         When("getting the book properties") {
             Then("the properties should match the values set during creation") {
