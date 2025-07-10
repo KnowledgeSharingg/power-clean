@@ -66,4 +66,8 @@ class ImageServiceTest {
         val expectedUrl = "http://localhost:8080/BookCoverImages/$originalFilename"
         Assertions.assertEquals(expectedUrl, imageUrl)
     }
+
+    @Test
+    fun `이미지 업로드시 이미 업로드된 이미지이면 덮어쓴다`() {
+    }
 }
