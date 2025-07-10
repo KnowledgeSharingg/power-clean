@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import ReviewSection from "@/app/components/ReviewSection";
 import { getPostDetail, updatePost } from "@/lib/api";
+import Image from "next/image";
 
 export default function PostDetailPage({
   params,
@@ -21,10 +22,12 @@ export default function PostDetailPage({
     title: string;
     content: string;
     link: string;
+    coverImageUrl: string;
     authorInfo?: AuthorInfo;
   }
 
   interface Post {
+    createdAt: string;
     id: string;
     title: string;
     content: string;
@@ -39,6 +42,7 @@ export default function PostDetailPage({
     title: string;
     content: string;
     link: string;
+    coverImageUrl: string;
     authorInfo?: {
       name: string;
       dateOfBirth: string;
@@ -50,6 +54,7 @@ export default function PostDetailPage({
     title: "",
     content: "",
     link: "",
+    coverImageUrl: "",
   });
 
   useEffect(() => {
@@ -62,7 +67,6 @@ export default function PostDetailPage({
         setBookInfo(postData.bookInfo);
       } catch (error) {
         console.error(error);
-        setLoadError(true);
       }
     };
     fetchPost();
@@ -163,6 +167,17 @@ export default function PostDetailPage({
 
           <div className="border-t pt-4 mt-6">
             <h2 className="text-2xl font-semibold">📚 관련 도서 정보</h2>
+            {post.bookInfo?.coverImageUrl && (
+              <div className="my-4 flex justify-center">
+                <Image
+                  src={`${post.bookInfo.coverImageUrl}`}
+                  alt={`${post.bookInfo.title} cover`}
+                  width={96}
+                  height={144}
+                  className="rounded shadow object-contain"
+                />
+              </div>
+            )}
             <p className="text-xl font-bold">{post.bookInfo?.title}</p>
             <p className="text-gray-700">{post.bookInfo?.content}</p>
             <a

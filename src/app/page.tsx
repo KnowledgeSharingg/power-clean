@@ -2,8 +2,9 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { getPostList } from "@/lib/api";
+import { getPostList, serverUrl } from "@/lib/api";
 import Link from "next/link";
+import Image from "next/image";
 
 interface Post {
   id: number;
@@ -12,6 +13,7 @@ interface Post {
   likeCount: number;
   createdAt: string;
   bookInfo?: {
+    coverImageUrl: string;
     title: string;
     content: string;
   };
@@ -79,6 +81,23 @@ export default function Home() {
                 <h2 className="text-xl font-semibold text-gray-900 mb-2">
                   {post.title}
                 </h2>
+                {post.bookInfo?.title && (
+                  <div className="mt-3 text-sm text-gray-600">
+                    {post.bookInfo.coverImageUrl && (
+                      <div className="w-24 h-auto relative mb-2">
+                        <Image
+                          src={`${post.bookInfo.coverImageUrl}`}
+                          alt={`${post.bookInfo.title} cover`}
+                          width={96}
+                          height={144}
+                          className="rounded-lg mb-2 shadow object-contain"
+                        />
+                      </div>
+                    )}
+                    📖 <strong>{post.bookInfo.title}</strong>:{" "}
+                    {post.bookInfo.content}
+                  </div>
+                )}
                 <p className="text-gray-700 mb-2 line-clamp-2">
                   {post.content}
                 </p>
@@ -86,12 +105,6 @@ export default function Home() {
                   👍 {post.likeCount} | 🕒{" "}
                   {new Date(post.createdAt).toLocaleString()}
                 </p>
-                {post.bookInfo?.title && (
-                  <div className="mt-3 text-sm text-gray-600">
-                    📖 <strong>{post.bookInfo.title}</strong>:{" "}
-                    {post.bookInfo.content}
-                  </div>
-                )}
                 <Link
                   href={`/post/${post.id}`}
                   className="inline-block mt-4 text-blue-600 hover:underline text-sm"

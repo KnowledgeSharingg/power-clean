@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { createPost } from "@/lib/api";
+import { createPost, uploadImage } from "@/lib/api";
+import Image from "next/image";
 
 export default function CreatePost() {
   const router = useRouter();
@@ -13,6 +14,7 @@ export default function CreatePost() {
     bookInfo: {
       title: "",
       content: "",
+      coverImageUrl: "",
       link: "",
       authorInfo: {
         name: "",
@@ -31,13 +33,9 @@ export default function CreatePost() {
     const keys = name.split(".");
 
     setForm((prev) => {
-      // If the name corresponds to a top-level property, update it directly
       if (keys.length === 1) {
         return { ...prev, [name]: value };
-      } 
-      // If the name corresponds to a second-level property (e.g., "bookInfo.title"),
-      // update the nested object while preserving other properties at the same level
-      else if (keys.length === 2) {
+      } else if (keys.length === 2) {
         return {
           ...prev,
           [keys[0]]: {
@@ -60,6 +58,27 @@ export default function CreatePost() {
 
       return prev;
     });
+  };
+
+  // 🔸 이미지 업로드 핸들러
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    try {
+      const imageUrl = await uploadImage(file);
+
+      setForm((prev) => ({
+        ...prev,
+        bookInfo: {
+          ...prev.bookInfo,
+          coverImageUrl: imageUrl,
+        },
+      }));
+    } catch (error) {
+      console.error("이미지 업로드 실패:", error);
+      alert("이미지 업로드에 실패했습니다.");
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -117,6 +136,21 @@ export default function CreatePost() {
             placeholder="Book Link"
             onChange={handleChange}
           />
+        </div>
+        {/* 🔸 이미지 업로드 필드 */}
+        <div className="form-group">
+          <input type="file" accept="image/*" onChange={handleImageUpload} />
+          {form.bookInfo.coverImageUrl && (
+            <div style={{ marginTop: "8px" }}>
+              <Image
+                src={form.bookInfo.coverImageUrl || "/default-image.png"}
+                alt="Preview"
+                width={200}
+                height={300}
+                style={{ objectFit: "contain" }}
+              />
+            </div>
+          )}
         </div>
         <button type="submit" className="btn">
           Submit

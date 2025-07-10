@@ -1,5 +1,6 @@
-import { getPostList } from "@/lib/api";
+import { getPostList, serverUrl } from "@/lib/api";
 import Link from "next/link";
+import Image from "next/image";
 
 export default async function PostListPage() {
   const data = await getPostList();
@@ -16,17 +17,30 @@ export default async function PostListPage() {
             <h2 className="text-xl font-semibold text-gray-900 mb-2">
               {post.title}
             </h2>
+            {post.bookInfo?.coverImageUrl && (
+              <div className="mt-3">
+                <Image
+                  src={`${post.bookInfo.coverImageUrl}`}
+                  alt={post.bookInfo.title || "Book cover"}
+                  width={128} // 원하는 너비
+                  height={192} // 원하는 높이
+                  className="rounded-md"
+                />
+              </div>
+            )}
             <p className="text-gray-700 mb-2 line-clamp-2">{post.content}</p>
             <p className="text-sm text-gray-500 mb-1">
               👍 {post.likeCount} | 🕒{" "}
               {new Date(post.createdAt).toLocaleString()}
             </p>
+
             {post.bookInfo?.title && (
               <div className="mt-3 text-sm text-gray-600">
                 📖 <strong>{post.bookInfo.title}</strong>:{" "}
                 {post.bookInfo.content}
               </div>
             )}
+
             <Link
               href={`/post/${post.id}`}
               className="inline-block mt-4 text-blue-600 hover:underline text-sm"

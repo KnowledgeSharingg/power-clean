@@ -1,5 +1,4 @@
-// const serverUrl = "http://18.205.151.65:8081";
-const serverUrl = process.env.SERVER_URL || "http://localhost:8080";
+export const serverUrl = process.env.SERVER_URL || "http://localhost:8080";
 
 export async function createPost(data: {
   title: string;
@@ -54,6 +53,7 @@ export async function updatePost(data: {
     title: string;
     content: string;
     link: string;
+    coverImageUrl: string;
     authorInfo?: {
       name: string;
       dateOfBirth: string;
@@ -130,4 +130,24 @@ export async function deleteReview(reviewId: string) {
     method: "DELETE",
   });
   return res.ok;
+}
+
+export async function uploadImage(file: File) {
+  const formData = new FormData();
+  formData.append("file", file);
+
+  try {
+    const response = await fetch(`${serverUrl}/upload`, {
+      method: "POST",
+      body: formData,
+    });
+
+    if (!response.ok) throw new Error("이미지 업로드 실패");
+
+    const imageUrl = await response.text(); // 서버가 String 반환 시
+    return imageUrl;
+  } catch (error) {
+    console.error("이미지 업로드 오류:", error);
+    throw error;
+  }
 }
