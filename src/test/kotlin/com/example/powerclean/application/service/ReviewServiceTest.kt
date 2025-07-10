@@ -31,7 +31,7 @@ class ReviewServiceTest {
     }
 
     @Test
-    fun `createReview should save and return created review`() {
+    fun `리뷰를 생성할 수 있다`() {
         // Given
         val postId = UUID.randomUUID()
         val creatorAccountId = UUID.randomUUID()
@@ -52,7 +52,7 @@ class ReviewServiceTest {
     }
 
     @Test
-    fun `getReviewDetail should return review details`() {
+    fun `리뷰 상세조회를 할 수 있다`() {
         // Given
         val creatorAccountId = UUID.randomUUID()
         val post = Post("Sample Post", "Content", creatorAccountId, 10)
@@ -69,7 +69,7 @@ class ReviewServiceTest {
     }
 
     @Test
-    fun `getReviewListOfPost should return paginated reviews`() {
+    fun `특정 포스트의 리뷰 리스트를 조회할 수 있으며 페이징이 가능하다`() {
         // Given
         val creatorAccountId = UUID.randomUUID()
         val pageable = PageRequest.of(0, 10)
@@ -88,7 +88,7 @@ class ReviewServiceTest {
     }
 
     @Test
-    fun `updateReview should update and return ok`() {
+    fun `리뷰를 내용을 업데이트할 수 있다`() {
         // Given
         val creatorAccountId = UUID.randomUUID()
         val review = Review("Old content", 3, creatorAccountId, mock(Post::class.java))
@@ -105,7 +105,7 @@ class ReviewServiceTest {
     }
 
     @Test
-    fun `deleteReview should delete review and return ok`() {
+    fun `리뷰를 삭제할 수 있다`() {
         // Given
         val creatorAccountId = UUID.randomUUID()
         val review = Review("Content", 5, creatorAccountId, mock(Post::class.java))

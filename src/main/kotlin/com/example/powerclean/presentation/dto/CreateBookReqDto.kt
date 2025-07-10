@@ -1,6 +1,7 @@
 package com.example.powerclean.presentation.dto
 
 import com.example.powerclean.domain.valueobject.AuthorInfo
+import com.example.powerclean.utils.DEFAULT_BOOK_COVER_IMAGE_URL
 import io.swagger.v3.oas.annotations.media.Schema
 
 data class CreateBookReqDto(
@@ -8,6 +9,11 @@ data class CreateBookReqDto(
     val title: String,
     @Schema(description = "책 내용.", example = "이방인의 삶.")
     val content: String,
+    @Schema(
+        description = "책 커버 이미지",
+        example = "https://github.com/user-attachments/assets/a4143315-2f76-44a2-8f0d-517414e95906",
+    )
+    val coverImageUrl: String = DEFAULT_BOOK_COVER_IMAGE_URL,
     @Schema(
         description = "책 정보 링크.",
         example =
