@@ -32,7 +32,7 @@ class PostServiceTest {
     }
 
     @Test
-    fun createPost_WhenValidRequestDto_ReturnsCreatePostResDto() {
+    fun `포스트_생성_시_포스트_정보와_책_정보_저자_정보가_모두_저장되어_반환된다`() {
         // Given.
         val requestDto =
             CreatePostReqDto(
@@ -87,7 +87,7 @@ class PostServiceTest {
     }
 
     @Test
-    fun getPostDetail_WhenValidPostId_ReturnsGetPostDetailResDto() {
+    fun `포스트_상세_조회_시_책정보와_저자정보도_함께 조회된다`() {
         // Given
         val postId = UUID.randomUUID()
         val foundPost =
@@ -134,7 +134,7 @@ class PostServiceTest {
     }
 
     @Test
-    fun getPostDetail_WhenInvalidPostId_ThrowsNotFoundException() {
+    fun `포스트_상세_조회시_조회된_포스트가_없는경우_NotFoundException을_발생시킨다`() {
         // Given
         val postId = UUID.randomUUID()
         `when`(postRepository.findById(postId)).thenReturn(java.util.Optional.empty())
@@ -150,7 +150,7 @@ class PostServiceTest {
     }
 
     @Test
-    fun getPostList_WhenValidPageAndSize_ReturnsGetPostListResDto() {
+    fun `포스트_리스트_조회시_각_포스트의_책정보_저자정보도_반환된다`() {
         // Given
         val foundPosts =
             listOf(
@@ -193,7 +193,7 @@ class PostServiceTest {
     }
 
     @Test
-    fun updatePost_WhenValidRequestDto_ReturnsOk() {
+    fun `포스트업데이트시_책정보와_저자정보도_한번에_업데이트가능하다`() {
         // Given
         val requestDto =
             UpdatePostReqDto(
@@ -234,7 +234,7 @@ class PostServiceTest {
     }
 
     @Test
-    fun updatePost_WhenInvalidPostId_ThrowsNotFoundException() {
+    fun `업데이트하고자하는 포스트가 조회되지 않는 경우 NotfoundException을 발생시킨다`() {
         // Given
         val requestDto =
             UpdatePostReqDto(
@@ -261,7 +261,7 @@ class PostServiceTest {
     }
 
     @Test
-    fun deletePost_WhenValidPostId_ReturnsOk() {
+    fun `포스트 삭제가 가능하다`() {
         // Given
         val postId = UUID.randomUUID()
 
