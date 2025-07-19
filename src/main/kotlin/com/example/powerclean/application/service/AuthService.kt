@@ -26,6 +26,8 @@ class AuthService(
                 accountRepository.save(
                     Account(
                         nickname = "nickname",
+                        email = "email",
+                        password = "password",
                         personalInfo =
                             PersonalInfo(
                                 name =
