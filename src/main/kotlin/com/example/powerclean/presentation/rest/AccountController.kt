@@ -4,6 +4,8 @@ import com.example.powerclean.application.service.AccountService
 import com.example.powerclean.presentation.dto.RegisterAccountReqDto
 import com.example.powerclean.presentation.dto.RegisterAccountResDto
 import io.swagger.v3.oas.annotations.Operation
+import org.springframework.web.bind.annotation.PatchMapping
+import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
@@ -32,4 +34,13 @@ class AccountController(private val accountService: AccountService) {
     // fun getUserInfo(): GetUserInfoResDto {
     //     return this.accountService.getUserInfo()
     // }
+
+    @Operation(summary = "닉네임 수정 API", description = "사용자의 닉네임을 수정합니다.")
+    @PatchMapping("/nickname/{nickname}")
+    fun updateNickname(
+        @PathVariable nickname: String,
+    ): String {
+        // TODO: accountId는 jwt에서 획득하기.
+        return this.accountService.updateNickname(nickname, "accountId")
+    }
 }

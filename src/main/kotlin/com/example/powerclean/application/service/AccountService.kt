@@ -4,6 +4,7 @@ import com.example.powerclean.domain.repository.AccountRepository
 import com.example.powerclean.presentation.dto.RegisterAccountReqDto
 import com.example.powerclean.presentation.dto.RegisterAccountResDto
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 
 @Service
 class AccountService(
@@ -27,5 +28,14 @@ class AccountService(
             "",
             "",
         )
+    }
+
+    @Transactional()
+    fun updateNickname(
+        nickname: String,
+        accountId: String,
+    ): String {
+        this.accountRepository.updateNicknameById(accountId, nickname)
+        return "닉네임이 수정되었습니다."
     }
 }
