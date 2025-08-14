@@ -1,16 +1,16 @@
 package com.example.powerclean.application.service
 
-import com.example.powerclean.application.inbound.AccountRegisterPort
-import com.example.powerclean.domain.repository.AccountRepository
+import com.example.powerclean.application.inbound.AccountRegisterUseCase
 import com.example.powerclean.presentation.dto.RegisterAccountReqDto
 import com.example.powerclean.presentation.dto.RegisterAccountResDto
+import com.example.powerclean.presentation.outbound.persistence.port.AccountRepository
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
 @Service
 class AccountService(
     private val accountRepository: AccountRepository,
-) : AccountRegisterPort {
+) : AccountRegisterUseCase {
     override fun registerAccount(requestDto: RegisterAccountReqDto): RegisterAccountResDto {
         // val savedAccount = accountRepository.save(
         //     Account(

@@ -1,4 +1,4 @@
-package com.example.powerclean.presentation.rest
+package com.example.powerclean.presentation.inbound.rest
 
 import com.example.powerclean.application.service.ImageService
 import io.swagger.v3.oas.annotations.Operation

@@ -1,4 +1,4 @@
-package com.example.powerclean.presentation.rest
+package com.example.powerclean.presentation.inbound.rest
 
 import com.example.powerclean.application.service.AuthService
 import org.springframework.security.core.annotation.AuthenticationPrincipal

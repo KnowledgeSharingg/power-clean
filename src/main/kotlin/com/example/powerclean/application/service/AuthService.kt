@@ -2,9 +2,9 @@ package com.example.powerclean.application.service
 
 import com.example.powerclean.domain.model.Account
 import com.example.powerclean.domain.model.OauthProfile
-import com.example.powerclean.domain.repository.AccountRepository
 import com.example.powerclean.domain.repository.OauthProfileRepository
 import com.example.powerclean.domain.valueobject.PersonalInfo
+import com.example.powerclean.presentation.outbound.persistence.port.AccountRepository
 import org.springframework.security.oauth2.core.user.OAuth2User
 import org.springframework.stereotype.Service
 
