@@ -1,8 +1,8 @@
 package com.example.powerclean.application.service
 
 import com.example.powerclean.application.inbound.AccountRegisterUseCase
+import com.example.powerclean.domain.model.Account
 import com.example.powerclean.presentation.dto.RegisterAccountReqDto
-import com.example.powerclean.presentation.dto.RegisterAccountResDto
 import com.example.powerclean.presentation.outbound.persistence.port.AccountRepository
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -11,23 +11,13 @@ import org.springframework.transaction.annotation.Transactional
 class AccountService(
     private val accountRepository: AccountRepository,
 ) : AccountRegisterUseCase {
-    override fun registerAccount(requestDto: RegisterAccountReqDto): RegisterAccountResDto {
-        // val savedAccount = accountRepository.save(
-        //     Account(
-        //         email = requestDto.email,
-        //         password = requestDto.password,
-        //         nickname = requestDto.nickname ?: requestDto.email,
-        //     )
-        // )
-
-        // return RegisterAccountResDto.of(
-        //     createAccessToken(savedAccount.id),
-        //     createRefreshToken(savedAccount.id)
-        // )
-
-        return RegisterAccountResDto.of(
-            "",
-            "",
+    override fun registerAccount(requestDto: RegisterAccountReqDto): Account {
+        return accountRepository.save(
+            Account(
+                email = requestDto.email,
+                password = requestDto.password,
+                nickname = requestDto.email,
+            ),
         )
     }
 

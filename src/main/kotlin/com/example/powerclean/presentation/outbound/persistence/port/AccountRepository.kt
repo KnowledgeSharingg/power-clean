@@ -8,6 +8,10 @@ import org.springframework.data.repository.query.Param
 public interface AccountRepository {
     fun save(account: Account): Account
 
+    fun findByNickname(nickname: String): Account?
+
+    fun findByEmail(email: String): Account?
+
     @Modifying
     @Query("UPDATE Account a SET a.nickname = :nickname WHERE a.id = :accountId")
     fun updateNicknameById(

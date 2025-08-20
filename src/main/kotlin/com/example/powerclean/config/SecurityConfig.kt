@@ -1,12 +1,24 @@
 package com.example.powerclean.config
 
+import com.example.powerclean.application.service.JwtUserDetailsService
+import com.example.powerclean.presentation.inbound.filter.JwtAuthorizationFilter
+import com.example.powerclean.presentation.outbound.persistence.port.AccountRepository
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.http.HttpStatus
+import org.springframework.security.authentication.AuthenticationManager
+import org.springframework.security.authentication.AuthenticationProvider
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
+import org.springframework.security.config.http.SessionCreationPolicy
+import org.springframework.security.core.userdetails.UserDetailsService
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
+import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.web.SecurityFilterChain
 import org.springframework.security.web.authentication.HttpStatusEntryPoint
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
 import org.springframework.web.cors.CorsConfiguration
 import org.springframework.web.cors.CorsConfigurationSource
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource
@@ -15,7 +27,26 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource
 @EnableWebSecurity
 class SecurityConfig {
     @Bean
-    fun securityFilterChain(http: HttpSecurity): SecurityFilterChain {
+    fun userDetailsService(accountRepository: AccountRepository): UserDetailsService =
+        JwtUserDetailsService(accountRepository)
+
+    @Bean
+    fun authenticationManager(config: AuthenticationConfiguration): AuthenticationManager = config.authenticationManager
+
+    @Bean
+    fun authenticationProvider(accountRepository: AccountRepository): AuthenticationProvider =
+        DaoAuthenticationProvider()
+            .also {
+                it.setUserDetailsService(userDetailsService(accountRepository))
+                it.setPasswordEncoder(encoder())
+            }
+
+    @Bean
+    fun securityFilterChain(
+        http: HttpSecurity,
+        jwtAuthenticationFilter: JwtAuthorizationFilter,
+        authenticationProvider: AuthenticationProvider,
+    ): SecurityFilterChain {
         http
             .cors { it.configurationSource(corsConfigurationSource()) }
             .csrf { it.disable() } // CSRF 보호 비활성화
@@ -23,19 +54,18 @@ class SecurityConfig {
                 headers.frameOptions { it.disable() } // H2 콘솔 프레임 허용
             }
             .authorizeHttpRequests {
-                // it.requestMatchers(
-                //     "/",
-                //     "/error",
-                //     "/webjars/**",
-                //     "/h2-console/**",
-                //     "/health-check",
-                //     "/swagger-ui.html",
-                //     "/swagger-ui/**",
-                //     "/v3/api-docs/**",
-                // ).permitAll()
-                // it.anyRequest().authenticated()
-                it.anyRequest().permitAll()
+//                it.requestMatchers("/auth", "/auth/refresh", "/error")
+                it
+                    .anyRequest()
+                    .permitAll()
+                    .anyRequest()
+                    .fullyAuthenticated()
             }
+            .sessionManagement {
+                it.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+            }
+            .authenticationProvider(authenticationProvider)
+            .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter::class.java)
             .exceptionHandling { exception ->
                 exception.authenticationEntryPoint(HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED))
             }
@@ -52,6 +82,9 @@ class SecurityConfig {
 
         return http.build()
     }
+
+    @Bean
+    fun encoder(): PasswordEncoder = BCryptPasswordEncoder()
 
     fun corsConfigurationSource(): CorsConfigurationSource {
         val configuration = CorsConfiguration()

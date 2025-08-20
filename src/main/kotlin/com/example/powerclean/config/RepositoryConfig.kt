@@ -16,27 +16,18 @@ import org.springframework.context.annotation.Configuration
 @Configuration
 class RepositoryConfig {
     @Bean
-    fun accountRepository(jpaAccountRepository: JpaAccountRepository): AccountRepository {
-        return jpaAccountRepository
-    }
+    fun accountRepository(jpaAccountRepository: JpaAccountRepository): AccountRepository = jpaAccountRepository
 
     @Bean
-    fun bookRepository(jpaBookRepository: JpaBookRepository): BookRepository {
-        return jpaBookRepository
-    }
+    fun bookRepository(jpaBookRepository: JpaBookRepository): BookRepository = jpaBookRepository
 
     @Bean
-    fun oauthProfileRepository(jpaOauthProfileRepository: JpaOauthProfileRepository): OauthProfileRepository {
-        return jpaOauthProfileRepository
-    }
+    fun oauthProfileRepository(jpaOauthProfileRepository: JpaOauthProfileRepository): OauthProfileRepository =
+        jpaOauthProfileRepository
 
     @Bean
-    fun postRepository(jpaPostRepository: JpaPostRepository): PostRepository {
-        return jpaPostRepository
-    }
+    fun postRepository(jpaPostRepository: JpaPostRepository): PostRepository = jpaPostRepository
 
     @Bean
-    fun reviewRepository(jpaReviewRepository: JpaReviewRepository): ReviewRepository {
-        return jpaReviewRepository
-    }
+    fun reviewRepository(jpaReviewRepository: JpaReviewRepository): ReviewRepository = jpaReviewRepository
 }
