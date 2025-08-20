@@ -4,7 +4,6 @@ import com.example.powerclean.application.inbound.AccountAuthenticateUseCase
 import com.example.powerclean.presentation.dto.AuthenticationReqDto
 import com.example.powerclean.presentation.dto.AuthenticationResDto
 import com.example.powerclean.presentation.outbound.persistence.port.AccountRepository
-import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.AuthenticationServiceException
@@ -19,9 +18,9 @@ class AuthenticationService(
     private val authManager: AuthenticationManager,
     private val userDetailsService: UserDetailsService,
     private val tokenService: TokenService,
-    @Value("\${jwt.accessTokenExpiration}") private val accessTokenExpiration: Long = 0,
-    @Value("\${jwt.refreshTokenExpiration}") private val refreshTokenExpiration: Long = 0,
-    @Qualifier("accountRepository") private val accountRepository: AccountRepository,
+    @Value("\${jwt.access-token-expiration-time}") private val accessTokenExpiration: Long = 0,
+    @Value("\${jwt.refresh-token-expiration-time}") private val refreshTokenExpiration: Long = 0,
+    private val accountRepository: AccountRepository,
 ) : AccountAuthenticateUseCase {
     override fun authentication(authenticationRequest: AuthenticationReqDto): AuthenticationResDto {
         authManager.authenticate(
