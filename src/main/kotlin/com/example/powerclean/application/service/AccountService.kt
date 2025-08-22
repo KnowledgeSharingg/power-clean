@@ -4,18 +4,20 @@ import com.example.powerclean.application.inbound.AccountRegisterUseCase
 import com.example.powerclean.application.outbound.AccountRepository
 import com.example.powerclean.domain.model.Account
 import com.example.powerclean.presentation.dto.RegisterAccountReqDto
+import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
 @Service
 class AccountService(
     private val accountRepository: AccountRepository,
+    private val passwordEncoder: PasswordEncoder,
 ) : AccountRegisterUseCase {
     override fun registerAccount(requestDto: RegisterAccountReqDto): Account {
         return accountRepository.save(
             Account(
                 email = requestDto.email,
-                password = requestDto.password,
+                password = passwordEncoder.encode(requestDto.password),
                 nickname = requestDto.email,
             ),
         )

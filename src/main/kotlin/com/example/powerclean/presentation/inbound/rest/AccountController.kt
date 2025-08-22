@@ -26,6 +26,7 @@ class AccountController(
     fun registerAccount(
         @RequestBody requestDto: RegisterAccountReqDto,
     ): RegisterAccountResDto {
+        // TODO: 이메일 인증 로직 추가.
         val registeredAccount = this.accountService.registerAccount(requestDto)
         val authenticationResponse: AuthenticationResDto =
             authenticationService.authentication(
