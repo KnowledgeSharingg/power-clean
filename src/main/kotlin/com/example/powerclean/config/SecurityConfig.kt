@@ -27,7 +27,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource
 @EnableWebSecurity
 class SecurityConfig {
     @Bean
-    fun userDetailsService(accountRepository: AccountRepository): UserDetailsService =
+    fun userDetailsService(accountRepository: AccountRepository): JwtUserDetailsService =
         JwtUserDetailsService(accountRepository)
 
     @Bean
@@ -68,6 +68,7 @@ class SecurityConfig {
                     .permitAll()
                     .anyRequest()
                     .fullyAuthenticated()
+//                it.anyRequest().permitAll()
             }
             .sessionManagement {
                 it.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
