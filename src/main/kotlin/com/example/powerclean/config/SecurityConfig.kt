@@ -54,7 +54,17 @@ class SecurityConfig {
                 headers.frameOptions { it.disable() } // H2 콘솔 프레임 허용
             }
             .authorizeHttpRequests {
-                it.requestMatchers("/auth", "/auth/refresh", "/account/register", "/error")
+                it.requestMatchers(
+                    "/auth",
+                    "/auth/refresh",
+                    "/account/register",
+                    "/error",
+                    "/h2-console/**",
+                    "/oauth2/**",
+                    "/login",
+                    "/swagger-ui/**",
+                    "/v3/api-docs/**",
+                )
                     .permitAll()
                     .anyRequest()
                     .fullyAuthenticated()
