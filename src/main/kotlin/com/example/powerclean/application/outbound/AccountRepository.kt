@@ -1,4 +1,4 @@
-package com.example.powerclean.presentation.outbound.persistence.port
+package com.example.powerclean.application.outbound
 
 import com.example.powerclean.domain.model.Account
 import org.springframework.data.jpa.repository.Modifying
@@ -11,6 +11,8 @@ public interface AccountRepository {
     fun findByNickname(nickname: String): Account?
 
     fun findByEmail(email: String): Account?
+
+    fun findByName(name: String): Account?
 
     @Modifying
     @Query("UPDATE Account a SET a.nickname = :nickname WHERE a.id = :accountId")

@@ -1,8 +1,8 @@
 package com.example.powerclean.config
 
+import com.example.powerclean.application.outbound.AccountRepository
 import com.example.powerclean.application.service.JwtUserDetailsService
 import com.example.powerclean.presentation.inbound.filter.JwtAuthorizationFilter
-import com.example.powerclean.presentation.outbound.persistence.port.AccountRepository
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.http.HttpStatus

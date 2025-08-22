@@ -1,9 +1,9 @@
 package com.example.powerclean.application.service
 
 import com.example.powerclean.application.inbound.AccountRegisterUseCase
+import com.example.powerclean.application.outbound.AccountRepository
 import com.example.powerclean.domain.model.Account
 import com.example.powerclean.presentation.dto.RegisterAccountReqDto
-import com.example.powerclean.presentation.outbound.persistence.port.AccountRepository
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 

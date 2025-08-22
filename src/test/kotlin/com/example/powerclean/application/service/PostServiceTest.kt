@@ -1,8 +1,8 @@
+import com.example.powerclean.application.outbound.BookRepository
+import com.example.powerclean.application.outbound.PostRepository
 import com.example.powerclean.application.service.PostService
 import com.example.powerclean.domain.model.Book
 import com.example.powerclean.domain.model.Post
-import com.example.powerclean.domain.repository.BookRepository
-import com.example.powerclean.domain.repository.PostRepository
 import com.example.powerclean.domain.valueobject.AuthorInfo
 import com.example.powerclean.presentation.dto.CreateBookReqDto
 import com.example.powerclean.presentation.dto.CreatePostReqDto

@@ -1,10 +1,10 @@
 package com.example.powerclean.application.service
 
+import com.example.powerclean.application.outbound.AccountRepository
+import com.example.powerclean.application.outbound.OauthProfileRepository
 import com.example.powerclean.domain.model.Account
 import com.example.powerclean.domain.model.OauthProfile
-import com.example.powerclean.domain.repository.OauthProfileRepository
 import com.example.powerclean.domain.valueobject.PersonalInfo
-import com.example.powerclean.presentation.outbound.persistence.port.AccountRepository
 import org.springframework.security.oauth2.core.user.OAuth2User
 import org.springframework.stereotype.Service
 
@@ -17,10 +17,10 @@ class AuthService(
         // TODO: jwt 토큰 발급.
         // TODO: 랜덤 닉네임 할당해주기.
 
-        val foundAccount = null
-        // accountRepository.findByName(
-        //     principal.getAttribute<String>("name") ?: throw IllegalArgumentException("name"),
-        // )
+        val foundAccount =
+            accountRepository.findByName(
+                principal.getAttribute<String>("name") ?: throw IllegalArgumentException("name"),
+            )
         if (foundAccount == null) {
             val savedAccount: Account =
                 accountRepository.save(

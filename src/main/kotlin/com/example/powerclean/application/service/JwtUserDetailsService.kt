@@ -1,6 +1,6 @@
 package com.example.powerclean.application.service
 
-import com.example.powerclean.presentation.outbound.persistence.port.AccountRepository
+import com.example.powerclean.application.outbound.AccountRepository
 import org.springframework.security.core.userdetails.User
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.core.userdetails.UserDetailsService

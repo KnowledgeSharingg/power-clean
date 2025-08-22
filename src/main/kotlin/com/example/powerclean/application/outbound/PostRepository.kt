@@ -1,4 +1,4 @@
-package com.example.powerclean.domain.repository
+package com.example.powerclean.application.outbound
 
 import com.example.powerclean.domain.model.Post
 import java.util.Optional
