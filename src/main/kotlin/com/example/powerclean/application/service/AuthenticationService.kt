@@ -23,6 +23,8 @@ class AuthenticationService(
     private val accountRepository: AccountRepository,
 ) : AccountAuthenticateUseCase {
     override fun authentication(authenticationRequest: AuthenticationReqDto): AuthenticationResDto {
+        // TODO: 내부 동작 플로우 파악하기.
+        // 이메일, 패스워드 일치 등 계정 정보에 대해 request값과 DB값 비교 검증.
         authManager.authenticate(
             UsernamePasswordAuthenticationToken(
                 authenticationRequest.email,
@@ -30,8 +32,10 @@ class AuthenticationService(
             ),
         )
 
+        // 계정 정보 조회.
         val user = userDetailsService.loadUserByUsername(authenticationRequest.email)
 
+        // jwt 생성.
         val accessToken = _createAccessToken(user)
         val refreshToken = _createRefreshToken(user)
 

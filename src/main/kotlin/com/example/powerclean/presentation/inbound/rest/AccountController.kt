@@ -2,10 +2,7 @@ package com.example.powerclean.presentation.inbound.rest
 
 import com.example.powerclean.application.inbound.AccountAuthenticateUseCase
 import com.example.powerclean.application.service.AccountService
-import com.example.powerclean.presentation.dto.AuthenticationReqDto
-import com.example.powerclean.presentation.dto.AuthenticationResDto
-import com.example.powerclean.presentation.dto.RegisterAccountReqDto
-import com.example.powerclean.presentation.dto.RegisterAccountResDto
+import com.example.powerclean.presentation.dto.*
 import io.swagger.v3.oas.annotations.Operation
 import org.springframework.web.bind.annotation.PatchMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -25,21 +22,19 @@ class AccountController(
     @PostMapping("/register")
     fun registerAccount(
         @RequestBody requestDto: RegisterAccountReqDto,
-    ): RegisterAccountResDto {
+    ): String {
         // TODO: 이메일 인증 로직 추가.
-        val registeredAccount = this.accountService.registerAccount(requestDto)
-        val authenticationResponse: AuthenticationResDto =
-            authenticationService.authentication(
-                AuthenticationReqDto(registeredAccount.email, requestDto.password),
-            )
-        return RegisterAccountResDto.of(authenticationResponse.accessToken, authenticationResponse.refreshToken)
+        this.accountService.registerAccount(requestDto)
+        return "ok"
     }
 
-    // @Operation(summary = "로그인 API", description = "사용자 인증을 수행합니다.")
-    // @PostMapping("/login")
-    // fun login(@RequestBody requestDto: LoginReqDto): LoginResDto {
-    //     return this.accountService.login(requestDto)
-    // }
+    @Operation(summary = "로그인 API", description = "사용자 인증을 수행합니다.")
+    @PostMapping("/login")
+    fun login(
+        @RequestBody requestDto: LoginReqDto,
+    ): LoginResDto {
+        return this.accountService.login(requestDto)
+    }
 
     // @Operation(summary = "사용자 정보 조회 API", description = "사용자의 정보를 조회합니다.")
     // @GetMapping("/info")
