@@ -18,7 +18,7 @@ class AuthService(
         // TODO: 랜덤 닉네임 할당해주기.
 
         val foundAccount =
-            accountRepository.findByName(
+            accountRepository.findByPersonalInfo_Name(
                 principal.getAttribute<String>("name") ?: throw IllegalArgumentException("name"),
             )
         if (foundAccount == null) {

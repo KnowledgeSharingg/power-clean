@@ -25,12 +25,12 @@ class AuthenticationService(
     override fun authentication(authenticationRequest: AuthenticationReqDto): AuthenticationResDto {
         authManager.authenticate(
             UsernamePasswordAuthenticationToken(
-                authenticationRequest.username,
+                authenticationRequest.email,
                 authenticationRequest.password,
             ),
         )
 
-        val user = userDetailsService.loadUserByUsername(authenticationRequest.username)
+        val user = userDetailsService.loadUserByUsername(authenticationRequest.email)
 
         val accessToken = _createAccessToken(user)
         val refreshToken = _createRefreshToken(user)
@@ -46,7 +46,7 @@ class AuthenticationService(
 
         return username.let { user ->
             val currentUserDetails = userDetailsService.loadUserByUsername(user)
-            val foundAccount = accountRepository.findByEmail(username)
+            val foundAccount = accountRepository.findByPersonalInfo_Name(username)
 
             if (currentUserDetails.username == foundAccount?.email) {
                 _createAccessToken(currentUserDetails)

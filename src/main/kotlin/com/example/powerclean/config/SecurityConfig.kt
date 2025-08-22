@@ -54,9 +54,7 @@ class SecurityConfig {
                 headers.frameOptions { it.disable() } // H2 콘솔 프레임 허용
             }
             .authorizeHttpRequests {
-//                it.requestMatchers("/auth", "/auth/refresh", "/error")
-                it
-                    .anyRequest()
+                it.requestMatchers("/auth", "/auth/refresh", "/account/register", "/error")
                     .permitAll()
                     .anyRequest()
                     .fullyAuthenticated()

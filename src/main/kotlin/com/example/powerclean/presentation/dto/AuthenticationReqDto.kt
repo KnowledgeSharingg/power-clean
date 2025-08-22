@@ -1,6 +1,6 @@
 package com.example.powerclean.presentation.dto
 
 data class AuthenticationReqDto(
-    val username: String,
+    val email: String,
     val password: String,
 )

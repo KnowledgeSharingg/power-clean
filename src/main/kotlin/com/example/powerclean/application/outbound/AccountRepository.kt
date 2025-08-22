@@ -12,7 +12,7 @@ public interface AccountRepository {
 
     fun findByEmail(email: String): Account?
 
-    fun findByName(name: String): Account?
+    fun findByPersonalInfo_Name(name: String): Account?
 
     @Modifying
     @Query("UPDATE Account a SET a.nickname = :nickname WHERE a.id = :accountId")
@@ -20,7 +20,4 @@ public interface AccountRepository {
         @Param("accountId") accountId: String,
         @Param("nickname") nickname: String,
     ): String
-
-    // TODO: personalInfo value object 안의 name을 매핑해야한다.
-    // fun findByName(name: String): Account?
 }
