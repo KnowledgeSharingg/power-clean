@@ -30,7 +30,7 @@ class AccountController(
         val registeredAccount = this.accountService.registerAccount(requestDto)
         val authenticationResponse: AuthenticationResDto =
             authenticationService.authentication(
-                AuthenticationReqDto(registeredAccount.email, registeredAccount.password),
+                AuthenticationReqDto(registeredAccount.email, requestDto.password),
             )
         return RegisterAccountResDto.of(authenticationResponse.accessToken, authenticationResponse.refreshToken)
     }
