@@ -8,6 +8,8 @@ import com.example.powerclean.presentation.dto.*
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import java.util.*
+import javax.security.auth.login.AccountNotFoundException
 
 @Service
 @Transactional
@@ -41,5 +43,17 @@ class AccountService(
     ): String {
         this.accountRepository.updateNicknameById(accountId, nickname)
         return "닉네임이 수정되었습니다."
+    }
+
+    fun getAccountInfo(accountId: UUID): GetAccountInfoResDto {
+        val foundAccount: Account =
+            this.accountRepository.findById(accountId).orElse(null)
+                ?: throw AccountNotFoundException()
+        return GetAccountInfoResDto(
+            foundAccount.email,
+            foundAccount.nickname,
+            foundAccount.createdAt,
+            foundAccount.updatedAt,
+        )
     }
 }
