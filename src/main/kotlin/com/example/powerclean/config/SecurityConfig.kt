@@ -57,6 +57,7 @@ class SecurityConfig {
                     "/auth",
                     "/auth/refresh",
                     "/account/register",
+                    "/account/login",
                     "/error",
                     "/h2-console/**",
                     "/oauth2/**",
