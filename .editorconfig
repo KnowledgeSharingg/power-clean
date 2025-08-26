@@ -8,3 +8,8 @@ indent_size = 4
 insert_final_newline = true
 max_line_length = 120
 tab_width = 4
+# 와일드카드 import 허용
+ktlint_standard_no-wildcard-imports = disabled
+
+# 함수명 규칙(소문자 시작) 비활성화
+ktlint_standard_function-naming = disabled

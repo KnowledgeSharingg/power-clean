@@ -12,6 +12,11 @@ on:
     pull_request:
 
 jobs:
+    build:
+        env:
+            JWT_SECRET_KEY: ${{ secrets.JWT_SECRET_KEY }}
+            ACCESS_TOKEN_EXPIRATION_TIME: ${{ secrets.ACCESS_TOKEN_EXPIRATION_TIME }}
+            REFRESH_TOKEN_EXPIRATION_TIME: ${{secrets.REFRESH_TOKEN_EXPIRATION_TIME}}
     test:
         runs-on: ubuntu-latest
 

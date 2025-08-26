@@ -9,7 +9,7 @@ import io.mockk.mockk
 class AccountTest : BehaviorSpec({
     Given("Account") {
         val mockedPersonalInfo = mockk<PersonalInfo>()
-        val account = Account("nickname", mockedPersonalInfo)
+        val account = Account("nickname", "email", "password", mockedPersonalInfo)
 
         When("getting the personal info") {
             every { mockedPersonalInfo.name } returns "Mocked Name"
