@@ -44,10 +44,9 @@ class JwtAuthorizationFilter(
                     }
                 }
             } catch (ex: Exception) {
+                response.contentType = "application/json"
                 response.writer.write(
-                    """{"error": "Filter Authorization error: 
-                    |${ex.message ?: "unknown error"}"}
-                    """.trimMargin(),
+                    "{\"error\": \"Filter Authorization error: ${ex.message?.replace("\"", "\\\"") ?: "unknown error"}\"}"
                 )
             }
         }
