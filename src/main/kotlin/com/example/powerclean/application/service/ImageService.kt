@@ -18,7 +18,7 @@ class ImageService(
 
         val originalFilename = file.originalFilename?.let { Paths.get(it).fileName.toString() } ?: return ""
         val filePath = uploadDir.resolve(originalFilename)
-        file.transferTo(filePath)
+        file.apply { transferTo(filePath) }
 
         return "http://localhost:8080/BookCoverImages/$originalFilename"
     }

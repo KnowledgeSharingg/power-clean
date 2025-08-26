@@ -1,6 +1,7 @@
 package com.example.powerclean.domain.model
 
 import com.example.powerclean.domain.valueobject.PersonalInfo
+import com.example.powerclean.presentation.dto.RegisterAccountReqDto
 import jakarta.persistence.Column
 import jakarta.persistence.Embedded
 import jakarta.persistence.Entity
@@ -24,4 +25,9 @@ class Account(
     //     optional = true,
     // )
     // var oauthProfile: OauthProfile? = null,
-) : BaseEntity()
+) : BaseEntity() {
+    companion object {
+        fun from(requestDto: RegisterAccountReqDto): Account =
+            Account(email = requestDto.email, nickname = requestDto.email, password = requestDto.password)
+    }
+}

@@ -5,7 +5,6 @@ import com.example.powerclean.application.inbound.AccountRegisterUseCase
 import com.example.powerclean.application.outbound.AccountRepository
 import com.example.powerclean.domain.model.Account
 import com.example.powerclean.presentation.dto.*
-import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.util.*
@@ -16,16 +15,10 @@ import javax.security.auth.login.AccountNotFoundException
 class AccountService(
     private val accountRepository: AccountRepository,
     private val authenticationService: AccountAuthenticateUseCase,
-    private val passwordEncoder: PasswordEncoder,
 ) : AccountRegisterUseCase {
     override fun registerAccount(requestDto: RegisterAccountReqDto): Account {
         return accountRepository.save(
-            // TODO: 도메인 메소드 만들기.
-            Account(
-                email = requestDto.email,
-                password = passwordEncoder.encode(requestDto.password),
-                nickname = requestDto.email,
-            ),
+            Account.from(requestDto),
         )
     }
 
