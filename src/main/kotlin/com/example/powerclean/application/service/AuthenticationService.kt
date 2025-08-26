@@ -63,13 +63,13 @@ class AuthenticationService(
     private fun _createAccessToken(user: UserDetails): String {
         return tokenService.generateToken(
             subject = user.username,
-            expiration = Date(System.currentTimeMillis() + accessTokenExpiration),
+            expiration = Date(System.currentTimeMillis() + accessTokenExpiration * 60 * 60 * 1000),
         )
     }
 
     private fun _createRefreshToken(user: UserDetails) =
         tokenService.generateToken(
             subject = user.username,
-            expiration = Date(System.currentTimeMillis() + refreshTokenExpiration),
+            expiration = Date(System.currentTimeMillis() + refreshTokenExpiration * 60 * 60 * 1000),
         )
 }
