@@ -7,6 +7,7 @@ import com.example.powerclean.presentation.dto.GetPostDetailResDto
 import com.example.powerclean.presentation.dto.GetPostListResDto
 import com.example.powerclean.presentation.dto.UpdatePostReqDto
 import io.swagger.v3.oas.annotations.Operation
+import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PatchMapping
@@ -24,8 +25,9 @@ class PostController(private val postService: PostService) {
     @Operation(summary = "Post 생성 API.", description = "포스트 생성")
     @PostMapping()
     fun createPost(
+        @AuthenticationPrincipal(expression = "id") accountId: UUID,
         @RequestBody request: CreatePostReqDto,
-    ): CreatePostResDto = postService.createPost(request)
+    ): CreatePostResDto = postService.createPost(request.apply { creatorAccountId = accountId })
 
     @Operation(summary = "Post 상세 조회 API.", description = "포스트 상세 조회.")
     @GetMapping("/{postId}")
