@@ -16,11 +16,11 @@ import javax.security.auth.login.AccountNotFoundException
 class AccountService(
     private val accountRepository: AccountRepository,
     private val authenticationService: AccountAuthenticateUseCase,
-    private val passwordEncoder: PasswordEncoder
+    private val passwordEncoder: PasswordEncoder,
 ) : AccountRegisterUseCase {
     override fun registerAccount(requestDto: RegisterAccountReqDto): Account {
         return accountRepository.save(
-            Account.from(requestDto.apply {this.password = passwordEncoder.encode(this.password)}),
+            Account.from(requestDto.apply { this.password = passwordEncoder.encode(this.password) }),
         )
     }
 
