@@ -9,6 +9,7 @@ data class CustomUser(
     private val email: String,
     private val password: String,
     private val username: String,
+    private val authorities: Collection<GrantedAuthority> = emptyList(),
 ) : UserDetails {
     override fun getAuthorities(): Collection<GrantedAuthority> = this.authorities
 
