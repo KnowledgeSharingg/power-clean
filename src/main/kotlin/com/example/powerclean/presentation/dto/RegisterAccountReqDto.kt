@@ -2,7 +2,7 @@ package com.example.powerclean.presentation.dto
 
 data class RegisterAccountReqDto(
     val email: String,
-    val password: String,
+    var password: String,
 ) {
     companion object {
         fun of(
