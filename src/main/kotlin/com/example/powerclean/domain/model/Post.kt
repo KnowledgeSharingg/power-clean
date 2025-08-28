@@ -28,7 +28,9 @@ class Post(
             Post(
                 title = requestDto.title,
                 content = requestDto.content,
-                creatorAccountId = requestDto.creatorAccountId,
+                creatorAccountId =
+                    requestDto.creatorAccountId
+                        ?: throw IllegalStateException("creatorAccountId must not be null"),
                 likeCount = 0,
             )
     }

@@ -6,5 +6,5 @@ data class CreateReviewReqDto(
     val content: String,
     val rating: Int,
     val postId: UUID,
-    var creatorAccountId: UUID,
+    var creatorAccountId: UUID?,
 )

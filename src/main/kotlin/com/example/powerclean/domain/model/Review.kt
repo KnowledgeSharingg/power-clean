@@ -34,7 +34,9 @@ class Review(
             Review(
                 content = requestDto.content,
                 rating = requestDto.rating,
-                creatorAccountId = requestDto.creatorAccountId,
+                creatorAccountId =
+                    requestDto.creatorAccountId
+                        ?: throw IllegalStateException("creatorAccountId must not be null"),
                 post = post,
             )
     }
