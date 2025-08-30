@@ -27,7 +27,7 @@ class PostController(private val postService: PostService) {
     fun createPost(
         @AuthenticationPrincipal(expression = "id") accountId: UUID,
         @RequestBody request: CreatePostReqDto,
-    ): CreatePostResDto = postService.createPost(request.apply { creatorAccountId = accountId })
+    ): CreatePostResDto = postService.createPost(request.copy(creatorAccountId = accountId))
 
     @Operation(summary = "Post 상세 조회 API.", description = "포스트 상세 조회.")
     @GetMapping("/{postId}")
