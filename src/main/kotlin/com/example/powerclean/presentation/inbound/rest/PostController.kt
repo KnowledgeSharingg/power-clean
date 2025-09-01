@@ -7,6 +7,7 @@ import com.example.powerclean.presentation.dto.GetPostDetailResDto
 import com.example.powerclean.presentation.dto.GetPostListResDto
 import com.example.powerclean.presentation.dto.UpdatePostReqDto
 import io.swagger.v3.oas.annotations.Operation
+import jakarta.validation.constraints.NotBlank
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
@@ -32,7 +33,7 @@ class PostController(private val postService: PostService) {
     @Operation(summary = "Post 상세 조회 API.", description = "포스트 상세 조회.")
     @GetMapping("/{postId}")
     fun getPostDetail(
-        @PathVariable postId: UUID,
+        @PathVariable @NotBlank postId: UUID,
     ): GetPostDetailResDto = postService.getPostDetail(postId)
 
     @Operation(summary = "Post 리스트 조회 API.", description = "포스트 리스트 조회.")
@@ -51,6 +52,6 @@ class PostController(private val postService: PostService) {
     @Operation(summary = "Post 삭제 API.", description = "포스트 삭제.")
     @DeleteMapping("/{postId}")
     fun deletePost(
-        @PathVariable postId: UUID,
+        @PathVariable @NotBlank postId: UUID,
     ): String = postService.deletePost(postId)
 }
