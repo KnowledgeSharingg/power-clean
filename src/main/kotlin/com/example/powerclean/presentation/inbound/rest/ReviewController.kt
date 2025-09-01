@@ -7,6 +7,7 @@ import com.example.powerclean.presentation.dto.GetReviewDetailResDto
 import com.example.powerclean.presentation.dto.GetReviewListResDto
 import com.example.powerclean.presentation.dto.UpdateReviewReqDto
 import io.swagger.v3.oas.annotations.Operation
+import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PatchMapping
@@ -24,8 +25,9 @@ class ReviewController(private val reviewService: ReviewService) {
     @Operation(summary = "리뷰 생성 API", description = "리뷰를 생성합니다.")
     @PostMapping
     fun createReview(
+        @AuthenticationPrincipal(expression = "id") accountId: UUID,
         @RequestBody request: CreateReviewReqDto,
-    ): CreateReviewResDto = reviewService.createReview(request)
+    ): CreateReviewResDto = reviewService.createReview(request.apply { creatorAccountId = accountId })
 
     @Operation(summary = "리뷰 상세 조회 API", description = "리뷰의 상세 정보를 조회합니다.")
     @GetMapping("/{reviewId}")

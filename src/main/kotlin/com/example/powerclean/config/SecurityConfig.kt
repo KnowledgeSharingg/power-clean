@@ -5,6 +5,7 @@ import com.example.powerclean.application.service.JwtUserDetailsService
 import com.example.powerclean.presentation.inbound.filter.JwtAuthorizationFilter
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.http.HttpMethod
 import org.springframework.http.HttpStatus
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.AuthenticationProvider
@@ -66,6 +67,11 @@ class SecurityConfig {
                     "/v3/api-docs/**",
                 )
                     .permitAll()
+                    .requestMatchers(HttpMethod.GET, "/**").permitAll()
+                    .requestMatchers(HttpMethod.POST, "/**").authenticated()
+                    .requestMatchers(HttpMethod.PUT, "/**").authenticated()
+                    .requestMatchers(HttpMethod.DELETE, "/**").authenticated()
+                    .requestMatchers(HttpMethod.PATCH, "/**").authenticated()
                     .anyRequest()
                     .fullyAuthenticated()
 //                it.anyRequest().permitAll()

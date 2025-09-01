@@ -9,14 +9,13 @@ import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.AuthenticationServiceException
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.userdetails.UserDetails
-import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.stereotype.Service
 import java.util.*
 
 @Service
 class AuthenticationService(
     private val authManager: AuthenticationManager,
-    private val userDetailsService: UserDetailsService,
+    private val userDetailsService: JwtUserDetailsService,
     private val tokenService: TokenService,
     @Value("\${jwt.access-token-expiration-time}") private val accessTokenExpiration: Long = 0,
     @Value("\${jwt.refresh-token-expiration-time}") private val refreshTokenExpiration: Long = 0,
@@ -52,7 +51,7 @@ class AuthenticationService(
             val currentUserDetails = userDetailsService.loadUserByUsername(user)
             val foundAccount = accountRepository.findByPersonalInfo_Name(username)
 
-            if (currentUserDetails.username == foundAccount?.email) {
+            if (currentUserDetails.getEmail() == foundAccount?.email) {
                 _createAccessToken(currentUserDetails)
             } else {
                 throw AuthenticationServiceException("Invalid refresh token")

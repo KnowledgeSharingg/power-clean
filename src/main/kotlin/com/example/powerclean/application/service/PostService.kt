@@ -10,7 +10,7 @@ import com.example.powerclean.presentation.dto.GetBookDetailResDto
 import com.example.powerclean.presentation.dto.GetPostDetailResDto
 import com.example.powerclean.presentation.dto.GetPostListResDto
 import com.example.powerclean.presentation.dto.UpdatePostReqDto
-import com.example.powerclean.utils.DEFAULT_BOOK_COVER_IMAGE_URL
+import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import org.webjars.NotFoundException
 import java.util.UUID
@@ -19,32 +19,17 @@ import java.util.UUID
 
 @Service
 class PostService(private val postRepository: PostRepository, private val bookRepository: BookRepository) {
-    private val logger = org.slf4j.LoggerFactory.getLogger(PostService::class.java)
+    private val logger = LoggerFactory.getLogger(PostService::class.java)
 
     fun createPost(requestDto: CreatePostReqDto): CreatePostResDto {
-        logger.debug("requestDto : $requestDto")
         val savedPost =
             postRepository.save(
-                Post(
-                    title = requestDto.title,
-                    content = requestDto.content,
-                    creatorAccountId = requestDto.creatorAccountId,
-                    likeCount = 0,
-                ),
+                Post.from(requestDto),
             )
 
         val savedBook =
             bookRepository.save(
-                Book(
-                    title = requestDto.bookInfo.title,
-                    content = requestDto.bookInfo.content,
-                    link = requestDto.bookInfo.link,
-                    coverImageUrl =
-                        requestDto.bookInfo.coverImageUrl.takeIf { it.isNotBlank() }
-                            ?: DEFAULT_BOOK_COVER_IMAGE_URL,
-                    authorInfo = requestDto.bookInfo.authorInfo,
-                    post = savedPost,
-                ),
+                Book.from(requestDto.bookInfo, savedPost),
             )
 
         return CreatePostResDto(
@@ -115,16 +100,22 @@ class PostService(private val postRepository: PostRepository, private val bookRe
     }
 
     fun updatePost(requestDto: UpdatePostReqDto): String {
-        val foundPost =
+        (
             postRepository.findByIdWithBook(requestDto.id).orElse(null)
                 ?: throw NotFoundException("Post not found")
-        foundPost.title = requestDto.title
-        foundPost.content = requestDto.content
-        foundPost.book?.title = requestDto.bookInfo.title
-        foundPost.book?.content = requestDto.bookInfo.content
-        foundPost.book?.link = requestDto.bookInfo.link
+        )
+            .apply {
+                updateInfo(requestDto.title, requestDto.content)
+                this.book?.updateInfo(
+                    requestDto.bookInfo.title,
+                    requestDto.bookInfo.content,
+                    requestDto.bookInfo.link,
+                )
+            }
+            .also {
+                postRepository.save(it)
+            }
 
-        postRepository.save(foundPost)
         return "ok"
     }
 

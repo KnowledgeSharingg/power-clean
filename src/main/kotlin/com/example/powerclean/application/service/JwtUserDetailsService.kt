@@ -1,23 +1,24 @@
 package com.example.powerclean.application.service
 
 import com.example.powerclean.application.outbound.AccountRepository
-import org.springframework.security.core.userdetails.User
-import org.springframework.security.core.userdetails.UserDetails
+import com.example.powerclean.config.CustomUser
 import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.core.userdetails.UsernameNotFoundException
 
 class JwtUserDetailsService(
     private val accountRepository: AccountRepository,
 ) : UserDetailsService {
-    override fun loadUserByUsername(email: String): UserDetails {
+    override fun loadUserByUsername(email: String): CustomUser {
         val user =
             accountRepository.findByEmail(email)
                 ?: throw UsernameNotFoundException("User $email not found!")
 
-        return User.builder()
-            .username(user.email)
-            .password(user.password)
-//            .roles(user.role.name)
-            .build()
+        return CustomUser(
+            // TODO: personalInfo.name not-null로 변경 ?
+            username = user.personalInfo?.name ?: user.email,
+            email = user.email,
+            password = user.password,
+            id = user.id,
+        )
     }
 }

@@ -20,12 +20,7 @@ class AccountService(
 ) : AccountRegisterUseCase {
     override fun registerAccount(requestDto: RegisterAccountReqDto): Account {
         return accountRepository.save(
-            // TODO: 도메인 메소드 만들기.
-            Account(
-                email = requestDto.email,
-                password = passwordEncoder.encode(requestDto.password),
-                nickname = requestDto.email,
-            ),
+            Account.from(requestDto.apply { this.password = passwordEncoder.encode(this.password) }),
         )
     }
 
