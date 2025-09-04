@@ -18,6 +18,5 @@ data class UpdatePostReqDto(
     @get:NotBlank()
     @get:Size(min = 1, max = 1000)
     val content: String,
-    @get:NotNull()
     val bookInfo: UpdateBookReqDto,
 )

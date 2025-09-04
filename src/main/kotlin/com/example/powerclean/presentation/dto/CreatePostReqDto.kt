@@ -20,6 +20,5 @@ data class CreatePostReqDto(
     @get:Nullable()
     var creatorAccountId: UUID?,
     @Schema(description = "포스트에 등록될 책 정보.")
-    @get:NotNull()
     val bookInfo: CreateBookReqDto,
 )
