@@ -1,3 +1,8 @@
 package com.example.powerclean.presentation.dto
 
-data class RefreshAccessTokenReqDto(val refreshToken: String)
+import jakarta.validation.constraints.NotBlank
+
+data class RefreshAccessTokenReqDto(
+    @get:NotBlank
+    val refreshToken: String,
+)
