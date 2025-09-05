@@ -33,7 +33,7 @@ class PostController(private val postService: PostService) {
     @Operation(summary = "Post 상세 조회 API.", description = "포스트 상세 조회.")
     @GetMapping("/{postId}")
     fun getPostDetail(
-        @PathVariable @NotBlank postId: UUID,
+        @PathVariable postId: UUID,
     ): GetPostDetailResDto = postService.getPostDetail(postId)
 
     @Operation(summary = "Post 리스트 조회 API.", description = "포스트 리스트 조회.")

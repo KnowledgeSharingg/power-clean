@@ -13,7 +13,6 @@ data class UpdateReviewReqDto(
     @get:Min(1)
     @get:Max(5)
     val rating: Int,
-    @get:NotBlank
     val reviewId: UUID,
 ) {
     fun toMap(): Map<String, Any> {
