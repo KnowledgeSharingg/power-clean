@@ -52,6 +52,6 @@ class PostController(private val postService: PostService) {
     @Operation(summary = "Post 삭제 API.", description = "포스트 삭제.")
     @DeleteMapping("/{postId}")
     fun deletePost(
-        @PathVariable @NotBlank postId: UUID,
+        @PathVariable postId: UUID,
     ): String = postService.deletePost(postId)
 }
