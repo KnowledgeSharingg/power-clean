@@ -2,7 +2,6 @@ package com.example.powerclean.presentation.dto
 
 import com.example.powerclean.domain.valueobject.AuthorInfo
 import io.swagger.v3.oas.annotations.media.Schema
-import jakarta.annotation.Nullable
 import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.Size
 import org.hibernate.validator.constraints.URL
