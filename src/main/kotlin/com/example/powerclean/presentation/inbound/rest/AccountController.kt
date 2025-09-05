@@ -3,6 +3,7 @@ package com.example.powerclean.presentation.inbound.rest
 import com.example.powerclean.application.service.AccountService
 import com.example.powerclean.presentation.dto.*
 import io.swagger.v3.oas.annotations.Operation
+import jakarta.validation.constraints.NotBlank
 import org.springframework.web.bind.annotation.*
 import java.util.UUID
 
@@ -40,7 +41,7 @@ class AccountController(
     @Operation(summary = "닉네임 수정 API", description = "사용자의 닉네임을 수정합니다.")
     @PatchMapping("/nickname/{nickname}")
     fun updateNickname(
-        @PathVariable nickname: String,
+        @PathVariable @NotBlank nickname: String,
     ): String {
         // TODO: accountId는 jwt에서 획득하기.
         return this.accountService.updateNickname(nickname, "accountId")
