@@ -33,6 +33,5 @@ data class CreateBookReqDto(
     @get:URL()
     val link: String,
     @Schema(description = "저자 정보.")
-    @get:Nullable()
     var authorInfo: AuthorInfo,
 )
