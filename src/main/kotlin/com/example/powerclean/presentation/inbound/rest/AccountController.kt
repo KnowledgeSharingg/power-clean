@@ -1,5 +1,6 @@
 package com.example.powerclean.presentation.inbound.rest
 
+import com.example.powerclean.application.inbound.AccountRegisterUseCase
 import com.example.powerclean.application.service.AccountService
 import com.example.powerclean.presentation.dto.*
 import io.swagger.v3.oas.annotations.Operation
@@ -10,6 +11,7 @@ import java.util.UUID
 @RestController
 @RequestMapping("/account")
 class AccountController(
+    private val accountRegisterService: AccountRegisterUseCase,
     private val accountService: AccountService,
 ) {
     @Operation(summary = "회원 가입 API", description = "새로운 계정을 등록합니다.")
@@ -18,7 +20,7 @@ class AccountController(
         @RequestBody requestDto: RegisterAccountReqDto,
     ): String {
         // TODO: 이메일 인증 로직 추가.
-        this.accountService.registerAccount(requestDto)
+        this.accountRegisterService.registerAccount(requestDto)
         return "ok"
     }
 
