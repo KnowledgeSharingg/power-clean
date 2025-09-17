@@ -1,8 +1,8 @@
 package com.example.powerclean.application.service
 
-import com.example.powerclean.application.inbound.AccountAuthenticateUseCase
-import com.example.powerclean.application.inbound.AccountRegisterUseCase
-import com.example.powerclean.application.outbound.AccountRepository
+import com.example.powerclean.application.port.inbound.AccountAuthenticateUseCase
+import com.example.powerclean.application.port.inbound.AccountRegisterUseCase
+import com.example.powerclean.application.port.outbound.persistence.AccountRepository
 import com.example.powerclean.domain.model.Account
 import com.example.powerclean.presentation.dto.*
 import org.springframework.security.crypto.password.PasswordEncoder

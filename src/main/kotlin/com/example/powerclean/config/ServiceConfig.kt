@@ -1,7 +1,7 @@
 package com.example.powerclean.config
 
-import com.example.powerclean.application.inbound.AccountAuthenticateUseCase
-import com.example.powerclean.application.inbound.AccountRegisterUseCase
+import com.example.powerclean.application.port.inbound.AccountAuthenticateUseCase
+import com.example.powerclean.application.port.inbound.AccountRegisterUseCase
 import com.example.powerclean.application.service.AccountService
 import com.example.powerclean.application.service.AuthenticationService
 import org.springframework.context.annotation.Bean
@@ -13,7 +13,10 @@ class ServiceConfig {
     @Bean("AccountRegisterUseCase")
     fun accountService(accountService: AccountService): AccountRegisterUseCase = accountService
 
-    @Bean("accountAuthenticationUseCase")
+    @Bean("AccountAuthenticationUseCase")
     fun authenticationService(authenticationService: AuthenticationService): AccountAuthenticateUseCase =
         authenticationService
+
+//    @Bean("TokenProvider")
+//    fun tokenProvider(tokenProvider: JwtTokenProvider): TokenProvider = tokenProvider
 }

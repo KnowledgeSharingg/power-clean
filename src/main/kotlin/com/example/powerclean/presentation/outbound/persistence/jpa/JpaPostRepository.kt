@@ -1,6 +1,6 @@
 package com.example.powerclean.presentation.outbound.persistence.jpa
 
-import com.example.powerclean.application.outbound.PostRepository
+import com.example.powerclean.application.port.outbound.persistence.PostRepository
 import com.example.powerclean.domain.model.Post
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query

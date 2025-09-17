@@ -1,8 +1,8 @@
 package com.example.powerclean.presentation.inbound.filter
 
-import com.example.powerclean.application.service.JwtUserDetailsService
-import com.example.powerclean.application.service.TokenService
-import com.example.powerclean.config.CustomUser
+import com.example.powerclean.application.port.outbound.TokenProvider
+import com.example.powerclean.config.security.CustomUser
+import com.example.powerclean.config.security.JwtUserDetailsService
 import jakarta.servlet.FilterChain
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
@@ -16,7 +16,7 @@ import org.springframework.web.filter.OncePerRequestFilter
 class JwtAuthorizationFilter(
     // TODO: JwtUserDetailService의 커스텀한 CustomerUser를 반환하기위해 UserDetailsService를 의존하던것을 구현체 의존하도록 변경했다. UserDetailsService를 의존하는게 좋을 것 같다.
     private val userDetailsService: JwtUserDetailsService,
-    private val tokenService: TokenService,
+    private val tokenService: TokenProvider,
 ) : OncePerRequestFilter() {
     override fun doFilterInternal(
         request: HttpServletRequest,

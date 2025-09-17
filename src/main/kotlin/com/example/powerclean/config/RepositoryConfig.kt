@@ -1,10 +1,10 @@
 package com.example.powerclean.config
 
-import com.example.powerclean.application.outbound.AccountRepository
-import com.example.powerclean.application.outbound.BookRepository
-import com.example.powerclean.application.outbound.OauthProfileRepository
-import com.example.powerclean.application.outbound.PostRepository
-import com.example.powerclean.application.outbound.ReviewRepository
+import com.example.powerclean.application.port.outbound.persistence.AccountRepository
+import com.example.powerclean.application.port.outbound.persistence.BookRepository
+import com.example.powerclean.application.port.outbound.persistence.OauthProfileRepository
+import com.example.powerclean.application.port.outbound.persistence.PostRepository
+import com.example.powerclean.application.port.outbound.persistence.ReviewRepository
 import com.example.powerclean.presentation.outbound.persistence.jpa.JpaAccountRepository
 import com.example.powerclean.presentation.outbound.persistence.jpa.JpaBookRepository
 import com.example.powerclean.presentation.outbound.persistence.jpa.JpaOauthProfileRepository

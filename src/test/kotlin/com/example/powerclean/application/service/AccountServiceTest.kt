@@ -1,5 +1,5 @@
-import com.example.powerclean.application.inbound.AccountAuthenticateUseCase
-import com.example.powerclean.application.outbound.AccountRepository
+import com.example.powerclean.application.port.inbound.AccountAuthenticateUseCase
+import com.example.powerclean.application.port.outbound.persistence.AccountRepository
 import com.example.powerclean.application.service.AccountService
 import com.example.powerclean.domain.model.Account
 import com.example.powerclean.presentation.dto.AuthenticationResDto
@@ -10,7 +10,6 @@ import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.mockito.ArgumentMatchers
 import org.mockito.Mockito
 import org.mockito.Mockito.`when`
 import org.mockito.kotlin.any

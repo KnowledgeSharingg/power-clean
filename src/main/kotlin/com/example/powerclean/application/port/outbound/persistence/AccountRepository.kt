@@ -1,4 +1,4 @@
-package com.example.powerclean.application.outbound
+package com.example.powerclean.application.port.outbound.persistence
 
 import com.example.powerclean.domain.model.Account
 import org.springframework.data.jpa.repository.Modifying

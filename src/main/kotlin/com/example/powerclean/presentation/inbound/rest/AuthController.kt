@@ -1,6 +1,6 @@
 package com.example.powerclean.presentation.inbound.rest
 
-import com.example.powerclean.application.inbound.AccountAuthenticateUseCase
+import com.example.powerclean.application.port.inbound.AccountAuthenticateUseCase
 import com.example.powerclean.application.service.AuthService
 import com.example.powerclean.presentation.dto.RefreshAccessTokenReqDto
 import com.example.powerclean.presentation.dto.RefreshAccessTokenResDto

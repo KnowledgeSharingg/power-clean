@@ -1,7 +1,9 @@
 package com.example.powerclean.application.service
 
-import com.example.powerclean.application.inbound.AccountAuthenticateUseCase
-import com.example.powerclean.application.outbound.AccountRepository
+import com.example.powerclean.application.port.inbound.AccountAuthenticateUseCase
+import com.example.powerclean.application.port.outbound.TokenProvider
+import com.example.powerclean.application.port.outbound.persistence.AccountRepository
+import com.example.powerclean.config.security.JwtUserDetailsService
 import com.example.powerclean.presentation.dto.AuthenticationReqDto
 import com.example.powerclean.presentation.dto.AuthenticationResDto
 import org.springframework.beans.factory.annotation.Value
@@ -10,13 +12,13 @@ import org.springframework.security.authentication.AuthenticationServiceExceptio
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.stereotype.Service
-import java.util.*
+import java.util.Date
 
 @Service
 class AuthenticationService(
     private val authManager: AuthenticationManager,
     private val userDetailsService: JwtUserDetailsService,
-    private val tokenService: TokenService,
+    private val tokenService: TokenProvider,
     @Value("\${jwt.access-token-expiration-time}") private val accessTokenExpiration: Long = 0,
     @Value("\${jwt.refresh-token-expiration-time}") private val refreshTokenExpiration: Long = 0,
     private val accountRepository: AccountRepository,

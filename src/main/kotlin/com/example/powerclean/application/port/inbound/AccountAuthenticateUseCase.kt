@@ -1,4 +1,4 @@
-package com.example.powerclean.application.inbound
+package com.example.powerclean.application.port.inbound
 
 import com.example.powerclean.presentation.dto.AuthenticationReqDto
 import com.example.powerclean.presentation.dto.AuthenticationResDto
