@@ -1,5 +1,7 @@
 package com.example.powerclean
 
+import com.example.powerclean.common.exception.CommonException
+import com.example.powerclean.common.exception.ExceptionCode
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RestController
 
@@ -8,5 +10,10 @@ class PowerCleanController {
     @GetMapping("/health-check")
     fun healthCheck(): String {
         return "I'm healthy!"
+    }
+
+    @GetMapping("/exception-test")
+    fun exceptionTest(): String {
+        throw CommonException("This is an exception!", ExceptionCode.INTERNAL_ERROR)
     }
 }

@@ -1,7 +1,6 @@
-package com.example.powerclean.application.service
+package com.example.powerclean.config.security
 
-import com.example.powerclean.application.outbound.AccountRepository
-import com.example.powerclean.config.CustomUser
+import com.example.powerclean.application.port.outbound.persistence.AccountRepository
 import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.core.userdetails.UsernameNotFoundException
 

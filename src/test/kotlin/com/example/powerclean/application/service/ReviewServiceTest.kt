@@ -1,5 +1,5 @@
-import com.example.powerclean.application.outbound.PostRepository
-import com.example.powerclean.application.outbound.ReviewRepository
+import com.example.powerclean.application.port.outbound.persistence.PostRepository
+import com.example.powerclean.application.port.outbound.persistence.ReviewRepository
 import com.example.powerclean.application.service.ReviewService
 import com.example.powerclean.domain.model.Post
 import com.example.powerclean.domain.model.Review

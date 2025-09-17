@@ -1,5 +1,5 @@
-import com.example.powerclean.application.outbound.BookRepository
-import com.example.powerclean.application.outbound.PostRepository
+import com.example.powerclean.application.port.outbound.persistence.BookRepository
+import com.example.powerclean.application.port.outbound.persistence.PostRepository
 import com.example.powerclean.application.service.PostService
 import com.example.powerclean.domain.model.Book
 import com.example.powerclean.domain.model.Post
