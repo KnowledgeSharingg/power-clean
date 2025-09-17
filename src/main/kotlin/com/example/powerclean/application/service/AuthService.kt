@@ -2,6 +2,7 @@ package com.example.powerclean.application.service
 
 import com.example.powerclean.application.port.outbound.persistence.AccountRepository
 import com.example.powerclean.application.port.outbound.persistence.OauthProfileRepository
+import com.example.powerclean.common.exception.CustomIllegalArgumentException
 import com.example.powerclean.domain.model.Account
 import com.example.powerclean.domain.model.OauthProfile
 import com.example.powerclean.domain.valueobject.PersonalInfo
@@ -32,7 +33,7 @@ class AuthService(
                             PersonalInfo(
                                 name =
                                     principal.getAttribute<String>("name")
-                                        ?: throw IllegalArgumentException(
+                                        ?: throw CustomIllegalArgumentException(
                                             "name",
                                         ),
                             ),
@@ -51,7 +52,7 @@ class AuthService(
                         ),
                     profileImageUrl =
                         principal.getAttribute<String>("avatar_url")
-                            ?: throw IllegalArgumentException(
+                            ?: throw CustomIllegalArgumentException(
                                 "profileImageUrl",
                             ),
                     type = "github",

@@ -2,6 +2,7 @@ package com.example.powerclean.application.service
 
 import com.example.powerclean.application.port.outbound.persistence.PostRepository
 import com.example.powerclean.application.port.outbound.persistence.ReviewRepository
+import com.example.powerclean.common.exception.CustomNotFoundException
 import com.example.powerclean.domain.model.Review
 import com.example.powerclean.presentation.dto.CreateReviewReqDto
 import com.example.powerclean.presentation.dto.CreateReviewResDto
@@ -11,7 +12,6 @@ import com.example.powerclean.presentation.dto.UpdateReviewReqDto
 import jakarta.transaction.Transactional
 import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Service
-import org.webjars.NotFoundException
 import java.util.UUID
 
 @Service
@@ -25,7 +25,7 @@ class ReviewService(
             Review.from(
                 requestDto,
                 postRepository.findById(requestDto.postId).orElse(null)
-                    ?: throw NotFoundException("Post not found"),
+                    ?: throw CustomNotFoundException("Post not found"),
             ),
         ).let {
             CreateReviewResDto(
@@ -40,7 +40,7 @@ class ReviewService(
     fun getReviewDetail(reviewId: UUID): GetReviewDetailResDto {
         return (
             reviewRepository.findById(reviewId).orElse(null)
-                ?: throw NotFoundException("Review not found")
+                ?: throw CustomNotFoundException("Review not found")
         ).let {
             GetReviewDetailResDto(
                 id = it.id,
@@ -82,7 +82,7 @@ class ReviewService(
     fun updateReview(requestDto: UpdateReviewReqDto): String {
         (
             reviewRepository.findById(requestDto.reviewId).orElse(null)
-                ?: throw NotFoundException("Review not found")
+                ?: throw CustomNotFoundException("Review not found")
         )
             .apply {
                 this.updateInfo(requestDto.content, requestDto.rating)
@@ -95,7 +95,7 @@ class ReviewService(
     fun deleteReview(reviewId: UUID): String {
         (
             reviewRepository.findById(reviewId).orElse(null)
-                ?: throw NotFoundException("Review not found")
+                ?: throw CustomNotFoundException("Review not found")
         ).let {
             // TODO : soft deleete로 변경.
             reviewRepository.deleteById(it.id)
