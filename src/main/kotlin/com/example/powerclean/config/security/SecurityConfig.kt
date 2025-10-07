@@ -53,28 +53,28 @@ class SecurityConfig {
                 headers.frameOptions { it.disable() } // H2 콘솔 프레임 허용
             }
             .authorizeHttpRequests {
-//                it.requestMatchers(
-//                    "/auth",
-//                    "/auth/refresh",
-//                    "/account/register",
-//                    "/account/login",
-//                    "/error",
-//                    "/h2-console/**",
-//                    "/oauth2/**",
-//                    "/login",
-//                    "/swagger-ui/**",
-//                    "/v3/api-docs/**",
-//                    "/exception-test/**",
-//                )
-//                    .permitAll()
-//                    .requestMatchers(HttpMethod.GET, "/**").permitAll()
-//                    .requestMatchers(HttpMethod.POST, "/**").authenticated()
-//                    .requestMatchers(HttpMethod.PUT, "/**").authenticated()
-//                    .requestMatchers(HttpMethod.DELETE, "/**").authenticated()
-//                    .requestMatchers(HttpMethod.PATCH, "/**").authenticated()
-//                    .anyRequest()
-//                    .fullyAuthenticated()
-                it.anyRequest().permitAll()
+                it.requestMatchers(
+                    "/auth",
+                    "/auth/refresh",
+                    "/account/register",
+                    "/account/login",
+                    "/error",
+                    "/h2-console/**",
+                    "/oauth2/**",
+                    "/login",
+                    "/swagger-ui/**",
+                    "/v3/api-docs/**",
+                    "/exception-test/**",
+                )
+                    .permitAll()
+                    .requestMatchers(HttpMethod.GET, "/**").permitAll()
+                    .requestMatchers(HttpMethod.POST, "/**").authenticated()
+                    .requestMatchers(HttpMethod.PUT, "/**").authenticated()
+                    .requestMatchers(HttpMethod.DELETE, "/**").authenticated()
+                    .requestMatchers(HttpMethod.PATCH, "/**").authenticated()
+                    .anyRequest()
+                    .fullyAuthenticated()
+//                it.anyRequest().permitAll()
             }
             .sessionManagement {
                 it.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
