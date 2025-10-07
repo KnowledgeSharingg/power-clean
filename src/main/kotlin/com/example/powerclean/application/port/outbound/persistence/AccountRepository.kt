@@ -20,7 +20,7 @@ public interface AccountRepository {
     @Modifying
     @Query("UPDATE Account a SET a.nickname = :nickname WHERE a.id = :accountId")
     fun updateNicknameById(
-        @Param("accountId") accountId: String,
+        @Param("accountId") accountId: UUID,
         @Param("nickname") nickname: String,
     ): String
 }

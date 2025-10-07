@@ -35,7 +35,7 @@ class AccountService(
 
     fun updateNickname(
         nickname: String,
-        accountId: String,
+        accountId: UUID,
     ): String {
         this.accountRepository.updateNicknameById(accountId, nickname)
         return "닉네임이 수정되었습니다."

@@ -5,6 +5,7 @@ import com.example.powerclean.application.service.AccountService
 import com.example.powerclean.presentation.dto.*
 import io.swagger.v3.oas.annotations.Operation
 import jakarta.validation.constraints.NotBlank
+import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.*
 import java.util.UUID
 
@@ -33,9 +34,9 @@ class AccountController(
     }
 
     @Operation(summary = "사용자 정보 조회 API", description = "사용자의 정보를 조회합니다.")
-    @GetMapping("/{accountId}/info")
+    @GetMapping("/info")
     fun getAccountInfo(
-        @PathVariable("accountId") accountId: UUID,
+        @AuthenticationPrincipal(expression = "id") accountId: UUID,
     ): GetAccountInfoResDto {
         return this.accountService.getAccountInfo(accountId)
     }
@@ -44,8 +45,8 @@ class AccountController(
     @PatchMapping("/nickname/{nickname}")
     fun updateNickname(
         @PathVariable @NotBlank nickname: String,
-    ): String {
-        // TODO: accountId는 jwt에서 획득하기.
-        return this.accountService.updateNickname(nickname, "accountId")
+        @AuthenticationPrincipal(expression = "id") accountId: UUID,
+        ): String {
+        return this.accountService.updateNickname(nickname, accountId)
     }
 }
