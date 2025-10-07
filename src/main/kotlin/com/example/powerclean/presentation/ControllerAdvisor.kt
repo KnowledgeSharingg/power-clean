@@ -9,7 +9,7 @@ import java.time.LocalDateTime
 @RestControllerAdvice
 class ControllerAdvisor {
     @ExceptionHandler(CommonException::class)
-    fun handleException(e: CommonException): ResponseEntity<CommonExceptionResponse> {
+    fun handleCommonException(e: CommonException): ResponseEntity<CommonExceptionResponse> {
         val body =
             CommonExceptionResponse(
                 e.code.status,
@@ -20,6 +20,22 @@ class ControllerAdvisor {
             )
 
         return ResponseEntity.status(e.code.status).body(body)
+    }
+
+    @ExceptionHandler(Exception::class)
+    fun handleException(e: Exception): ResponseEntity<CommonExceptionResponse> {
+        if (e is CommonException) return handleCommonException(e)
+        val body =
+            CommonExceptionResponse(
+                500,
+                e.message ?: "Internal Server Error",
+                "E500",
+                LocalDateTime.now().toString(),
+                "",
+            )
+
+        println("ControllerAdvisor:handleException: e.message - ${e.message}")
+        return ResponseEntity.status(500).body(body)
     }
 }
 
