@@ -1,6 +1,6 @@
 package com.example.powerclean.presentation.inbound.rest
 
-import com.example.powerclean.application.inbound.AccountRegisterUseCase
+import com.example.powerclean.application.port.inbound.AccountRegisterUseCase
 import com.example.powerclean.application.service.AccountService
 import com.example.powerclean.presentation.dto.*
 import io.swagger.v3.oas.annotations.Operation
