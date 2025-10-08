@@ -23,7 +23,7 @@ export async function createPost(data: {
       headers: authHeaders(),
       body: JSON.stringify(data),
     });
-
+    await handleResponse(response);
     return response.ok;
   } catch (error) {
     console.error("게시글 생성 오류:", error);
@@ -69,6 +69,7 @@ export async function updatePost(data: {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data),
     });
+    await handleResponse(response);
     return response.ok;
   } catch (error) {
     console.error("게시글 수정 오류:", error);
@@ -88,6 +89,7 @@ export async function createReview(data: {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data),
     });
+    await handleResponse(response);
     return response.ok;
   } catch (error) {
     console.error("리뷰 생성 오류:", error);
@@ -122,6 +124,7 @@ export async function updateReview({
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ content, rating, reviewId }),
   });
+  await handleResponse(res);
   return res.ok;
 }
 
@@ -129,6 +132,7 @@ export async function deleteReview(reviewId: string) {
   const res = await fetch(`${serverUrl}/review/${reviewId}`, {
     method: "DELETE",
   });
+  await handleResponse(res);
   return res.ok;
 }
 
@@ -143,6 +147,7 @@ export async function uploadImage(file: File) {
       body: formData,
     });
 
+    await handleResponse(response);
     if (!response.ok) throw new Error("이미지 업로드 실패");
 
     const imageUrl = await response.text(); // 서버가 String 반환 시
@@ -173,6 +178,22 @@ function authHeaders(): HeadersInit {
   const token = getToken();
   if (token) headers.set("Authorization", `Bearer ${token}`);
   return headers;
+}
+
+// 중앙 응답 처리기: 401이면 로그인 페이지로 이동
+async function handleResponse(res: Response) {
+  if (res.status === 401) {
+    try {
+      setToken(null);
+    } catch {}
+    if (typeof window !== "undefined") {
+      const current = window.location.pathname + window.location.search + window.location.hash;
+      const redirect = encodeURIComponent(current);
+      window.location.href = `/auth?redirect=${redirect}`;
+    }
+    throw new Error("Unauthorized");
+  }
+  return res;
 }
 
 export async function signUp(data: {
@@ -229,6 +250,7 @@ export async function getMyInfo() {
       headers: authHeaders(),
       cache: "no-store",
     });
+    await handleResponse(res);
     if (!res.ok) return null;
     return await res.json();
   } catch (e) {
@@ -243,6 +265,7 @@ export async function updateNickname(nickname: string) {
       method: "PATCH",
       headers: authHeaders(),
     });
+    await handleResponse(res);
     return res.ok;
   } catch (e) {
     console.error("닉네임 수정 실패:", e);

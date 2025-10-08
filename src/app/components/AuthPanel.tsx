@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import {
   getMyInfo,
   login,
@@ -17,6 +18,10 @@ interface MeResponse {
 }
 
 export default function AuthPanel() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const redirectParam = searchParams?.get("redirect") || null;
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [nickname, setNickname] = useState("");
@@ -35,6 +40,26 @@ export default function AuthPanel() {
     fetchMe();
   }, []);
 
+  // 로그인 혹은 이미 로그인된 상태에서 redirect 쿼리가 있으면 원래 페이지로 이동
+  useEffect(() => {
+    if (me && redirectParam) {
+      const target = safeDecode(redirectParam) || "/";
+      // replace로 히스토리를 깔끔하게 유지
+      router.replace(target);
+    }
+  }, [me, redirectParam, router]);
+
+  const safeDecode = (value: string) => {
+    try {
+      const decoded = decodeURIComponent(value);
+      // 보안상 내부 경로만 허용
+      if (decoded.startsWith("/")) return decoded;
+      return "/";
+    } catch {
+      return "/";
+    }
+  };
+
   const handleSignUp = async () => {
     setError(null);
     setLoading(true);
@@ -49,8 +74,14 @@ export default function AuthPanel() {
     setLoading(true);
     const token = await login({ email, password });
     setLoading(false);
-    if (!token) setError("로그인에 실패했습니다.");
+    if (!token) {
+      setError("로그인에 실패했습니다.");
+      return;
+    }
     await fetchMe();
+    // 로그인 성공 시 redirect 처리
+    const target = redirectParam ? safeDecode(redirectParam) : "/";
+    router.replace(target);
   };
 
   const handleUpdateNickname = async () => {
