@@ -46,7 +46,7 @@ class AccountController(
     fun updateNickname(
         @PathVariable @NotBlank nickname: String,
         @AuthenticationPrincipal(expression = "id") accountId: UUID,
-        ): String {
+    ): String {
         return this.accountService.updateNickname(nickname, accountId)
     }
 }

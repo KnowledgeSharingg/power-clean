@@ -5,6 +5,7 @@ import com.example.powerclean.domain.model.Account
 import com.example.powerclean.presentation.dto.AuthenticationResDto
 import com.example.powerclean.presentation.dto.LoginReqDto
 import com.example.powerclean.presentation.dto.RegisterAccountReqDto
+import com.fasterxml.uuid.Generators
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Assertions.assertThrows
@@ -84,7 +85,7 @@ class AccountServiceTest {
     fun `닉네임_수정시_리포지토리를_호출하고_성공메시지를_반환한다`() {
         // Given
         val nickname = "new-nickname"
-        val accountId = "account-id-123"
+        val accountId = Generators.timeBasedEpochGenerator().generate()
         `when`(accountRepository.updateNicknameById(accountId, nickname)).thenReturn("ok")
 
         // When
