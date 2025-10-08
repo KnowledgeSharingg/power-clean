@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
 import ReviewSection from "@/app/components/ReviewSection";
 import { getPostDetail, updatePost } from "@/lib/api";
 import Image from "next/image";
@@ -8,7 +8,7 @@ import Image from "next/image";
 export default function PostDetailPage({
   params,
 }: {
-  params: { postId: string };
+  params: Promise<{ postId: string }>;
 }) {
   interface AuthorInfo {
     name: string;
@@ -57,10 +57,12 @@ export default function PostDetailPage({
     coverImageUrl: "",
   });
 
+  const { postId } = use(params);
+
   useEffect(() => {
     const fetchPost = async () => {
       try {
-        const postData = await getPostDetail(params.postId);
+        const postData = await getPostDetail(postId);
         setPost(postData);
         setTitle(postData.title);
         setContent(postData.content);
@@ -70,7 +72,7 @@ export default function PostDetailPage({
       }
     };
     fetchPost();
-  }, [params.postId]);
+  }, [postId]);
 
   const handleUpdate = async () => {
     if (!post) return;
@@ -211,7 +213,7 @@ export default function PostDetailPage({
       )}
       {!isEditing && (
         <ReviewSection
-          postId={params.postId}
+          postId={postId}
           // TODO: 로그인 기능 추가되면 값 넘기도록.
           creatorAccountId={"0197353d-b73f-7847-ae1c-1f4ff1839b67"}
         />

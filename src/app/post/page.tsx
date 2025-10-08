@@ -1,4 +1,4 @@
-import { getPostList, serverUrl } from "@/lib/api";
+import { getPostList } from "@/lib/api";
 import Link from "next/link";
 import Image from "next/image";
 

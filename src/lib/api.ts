@@ -20,7 +20,7 @@ export async function createPost(data: {
   try {
     const response = await fetch(`${serverUrl}/post`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: authHeaders(),
       body: JSON.stringify(data),
     });
 
@@ -139,6 +139,7 @@ export async function uploadImage(file: File) {
   try {
     const response = await fetch(`${serverUrl}/upload`, {
       method: "POST",
+        headers: authHeaders(),
       body: formData,
     });
 
@@ -149,5 +150,102 @@ export async function uploadImage(file: File) {
   } catch (error) {
     console.error("이미지 업로드 오류:", error);
     throw error;
+  }
+}
+
+// =========================
+// Auth helpers & APIs
+// =========================
+export function getToken() {
+  if (typeof window === "undefined") return null;
+  return localStorage.getItem("accessToken");
+}
+
+export function setToken(token: string | null) {
+  if (typeof window === "undefined") return;
+  if (token) localStorage.setItem("accessToken", token);
+  else localStorage.removeItem("accessToken");
+}
+
+function authHeaders(): HeadersInit {
+  const headers = new Headers();
+  headers.set("Content-Type", "application/json");
+  const token = getToken();
+  if (token) headers.set("Authorization", `Bearer ${token}`);
+  return headers;
+}
+
+export async function signUp(data: {
+  email: string;
+  password: string;
+  nickname: string;
+}) {
+  try {
+    const res = await fetch(`${serverUrl}/account/register`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
+    });
+    return res.ok;
+  } catch (e) {
+    console.error("회원가입 실패:", e);
+    return false;
+  }
+}
+
+export async function login(data: { email: string; password: string }) {
+  try {
+    const res = await fetch(`${serverUrl}/account/login`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
+    });
+    if (!res.ok) return null;
+    // 서버가 토큰을 문자열 혹은 {accessToken: string} 로 응답한다고 가정
+    const contentType = res.headers.get("content-type") || "";
+    let token: string | null = null;
+    if (contentType.includes("application/json")) {
+      const json = await res.json();
+      token = json.accessToken || json.token || null;
+    } else {
+      token = await res.text();
+    }
+    if (token) setToken(token);
+    return token;
+  } catch (e) {
+    console.error("로그인 실패:", e);
+    return null;
+  }
+}
+
+export function logout() {
+  setToken(null);
+}
+
+export async function getMyInfo() {
+  try {
+    const res = await fetch(`${serverUrl}/account/info`, {
+      method: "GET",
+      headers: authHeaders(),
+      cache: "no-store",
+    });
+    if (!res.ok) return null;
+    return await res.json();
+  } catch (e) {
+    console.error("내 정보 조회 실패:", e);
+    return null;
+  }
+}
+
+export async function updateNickname(nickname: string) {
+  try {
+    const res = await fetch(`${serverUrl}/account/nickname/${nickname}`, {
+      method: "PATCH",
+      headers: authHeaders(),
+    });
+    return res.ok;
+  } catch (e) {
+    console.error("닉네임 수정 실패:", e);
+    return false;
   }
 }

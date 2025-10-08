@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { getPostList, serverUrl } from "@/lib/api";
+import { getPostList } from "@/lib/api";
 import Link from "next/link";
 import Image from "next/image";
 
@@ -45,6 +45,15 @@ export default function Home() {
       <p className="text-lg mb-8 text-[#5c4033] text-center">
         Share book information and engage in discussions!
       </p>
+
+      <div className="mb-6">
+        <Link
+          href="/auth"
+          className="inline-block bg-[#6a563f] text-white px-4 py-2 rounded-xl shadow hover:bg-[#4b3b2a] transition duration-200"
+        >
+          내 계정 관리 (로그인/회원가입)
+        </Link>
+      </div>
 
       <div
         className={`transition-all duration-500 ${showList ? "mb-2" : "mb-10"}`}
