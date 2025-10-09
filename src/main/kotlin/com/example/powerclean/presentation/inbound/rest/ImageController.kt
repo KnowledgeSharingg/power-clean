@@ -11,6 +11,7 @@ import org.springframework.web.multipart.MultipartFile
 class ImageController(
     private val imageService: ImageService,
 ) {
+    private val logger = org.slf4j.LoggerFactory.getLogger(ImageController::class.java)
     @Operation(
         summary = "이미지 업로드 API",
         description = "이미지를 업로드하고 URL을 반환합니다.",

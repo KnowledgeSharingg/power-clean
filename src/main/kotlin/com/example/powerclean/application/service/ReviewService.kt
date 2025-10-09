@@ -20,6 +20,7 @@ class ReviewService(
     private val reviewRepository: ReviewRepository,
     private val postRepository: PostRepository,
 ) {
+    private val logger = org.slf4j.LoggerFactory.getLogger(ReviewService::class.java)
     fun createReview(requestDto: CreateReviewReqDto): CreateReviewResDto {
         return reviewRepository.save(
             Review.from(

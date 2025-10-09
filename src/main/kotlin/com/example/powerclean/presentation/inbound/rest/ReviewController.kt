@@ -22,6 +22,7 @@ import java.util.UUID
 @RestController
 @RequestMapping("/review")
 class ReviewController(private val reviewService: ReviewService) {
+    private val logger = org.slf4j.LoggerFactory.getLogger(ReviewController::class.java)
     @Operation(summary = "리뷰 생성 API", description = "리뷰를 생성합니다.")
     @PostMapping
     fun createReview(

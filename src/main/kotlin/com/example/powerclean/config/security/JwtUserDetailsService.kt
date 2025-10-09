@@ -7,6 +7,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException
 class JwtUserDetailsService(
     private val accountRepository: AccountRepository,
 ) : UserDetailsService {
+    private val logger = org.slf4j.LoggerFactory.getLogger(JwtUserDetailsService::class.java)
     override fun loadUserByUsername(email: String): CustomUser {
         val user =
             accountRepository.findByEmail(email)
