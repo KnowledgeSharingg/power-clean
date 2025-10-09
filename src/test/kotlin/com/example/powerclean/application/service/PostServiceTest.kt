@@ -1,6 +1,7 @@
 import com.example.powerclean.application.port.outbound.persistence.BookRepository
 import com.example.powerclean.application.port.outbound.persistence.PostRepository
 import com.example.powerclean.application.service.PostService
+import com.example.powerclean.common.exception.CustomNotFoundException
 import com.example.powerclean.domain.model.Book
 import com.example.powerclean.domain.model.Post
 import com.example.powerclean.domain.valueobject.AuthorInfo
@@ -143,7 +144,7 @@ class PostServiceTest {
 
         // When
         val exception =
-            assertThrows(NotFoundException::class.java) {
+            assertThrows(CustomNotFoundException::class.java) {
                 postService.getPostDetail(postId)
             }
 

@@ -9,3 +9,8 @@ class CustomIllegalArgumentException(
     override val message: String,
     val code: ExceptionCode = ExceptionCode.ILLEGAL_ARGUMENT,
 ) : Exception()
+
+class CustomConflictException(
+    override val message: String,
+    val code: ExceptionCode = ExceptionCode.CONFLICT,
+) : Exception()
