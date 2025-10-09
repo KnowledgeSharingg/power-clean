@@ -2,6 +2,8 @@ package com.example.powerclean.application.service
 
 import com.example.powerclean.application.port.outbound.persistence.BookRepository
 import com.example.powerclean.application.port.outbound.persistence.PostRepository
+import com.example.powerclean.common.exception.CustomConflictException
+import com.example.powerclean.common.exception.CustomNotFoundException
 import com.example.powerclean.domain.model.Book
 import com.example.powerclean.domain.model.Post
 import com.example.powerclean.presentation.dto.CreatePostReqDto
@@ -22,6 +24,10 @@ class PostService(private val postRepository: PostRepository, private val bookRe
     private val logger = LoggerFactory.getLogger(PostService::class.java)
 
     fun createPost(requestDto: CreatePostReqDto): CreatePostResDto {
+        bookRepository.findByTitle(
+            requestDto.bookInfo.title,
+        )?.let { throw CustomConflictException("Book already exists.") }
+
         val savedPost =
             postRepository.save(
                 Post.from(requestDto),
@@ -49,7 +55,7 @@ class PostService(private val postRepository: PostRepository, private val bookRe
     }
 
     fun getPostDetail(postId: UUID): GetPostDetailResDto {
-        val foundPost = postRepository.findById(postId).orElse(null) ?: throw NotFoundException("Post not found")
+        val foundPost = postRepository.findById(postId).orElse(null) ?: throw CustomNotFoundException("Post not found")
         return GetPostDetailResDto(
             id = foundPost.id,
             title = foundPost.title,

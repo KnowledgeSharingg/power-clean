@@ -11,6 +11,7 @@ enum class ExceptionCode(
     NOT_FOUND(404, "E004", "리소스를 찾을 수 없습니다."),
     INTERNAL_ERROR(500, "E999", "서버 내부 오류가 발생했습니다."),
     ILLEGAL_ARGUMENT(400, "E005", "유효하지 않은 인자가 전달되었습니다."),
+    CONFLICT(409, "E006", "이미 존제하는 데이터입니다."),
     ;
 
     fun toErrorResponse(): Map<String, Any> {
