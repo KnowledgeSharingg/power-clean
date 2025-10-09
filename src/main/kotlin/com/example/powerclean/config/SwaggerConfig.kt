@@ -10,6 +10,8 @@ import org.springframework.context.annotation.Configuration
 
 @Configuration
 class SwaggerConfig {
+    private val logger = org.slf4j.LoggerFactory.getLogger(SwaggerConfig::class.java)
+
     @Bean
     fun openAPI(): OpenAPI {
         val jwtSchemeName = "bearerAuth"

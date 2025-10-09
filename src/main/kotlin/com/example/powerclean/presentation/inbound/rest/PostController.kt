@@ -22,6 +22,8 @@ import java.util.UUID
 @RestController
 @RequestMapping("/post")
 class PostController(private val postService: PostService) {
+    private val logger = org.slf4j.LoggerFactory.getLogger(PostController::class.java)
+
     @Operation(summary = "Post 생성 API.", description = "포스트 생성")
     @PostMapping()
     fun createPost(

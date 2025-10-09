@@ -15,6 +15,8 @@ import org.springframework.context.annotation.Configuration
 
 @Configuration
 class RepositoryConfig {
+    private val logger = org.slf4j.LoggerFactory.getLogger(RepositoryConfig::class.java)
+
     /*
         @Bean을 메소드에 붙일 경우.
         해당 메소드의 리턴값이 타입, 메소드 명이 이름인 빈을 등록해준다.

@@ -10,6 +10,8 @@ import java.nio.file.Paths
 class ImageService(
     private val uploadDir: Path = Paths.get("BookCoverImages"),
 ) {
+    private val logger = org.slf4j.LoggerFactory.getLogger(ImageService::class.java)
+
     fun uploadImage(file: MultipartFile): String {
         // 디렉토리가 없으면 생성
         if (!Files.exists(uploadDir)) {

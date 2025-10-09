@@ -15,6 +15,8 @@ class AccountController(
     private val accountRegisterService: AccountRegisterUseCase,
     private val accountService: AccountService,
 ) {
+    private val logger = org.slf4j.LoggerFactory.getLogger(AccountController::class.java)
+
     @Operation(summary = "회원 가입 API", description = "새로운 계정을 등록합니다.")
     @PostMapping("/register")
     fun registerAccount(

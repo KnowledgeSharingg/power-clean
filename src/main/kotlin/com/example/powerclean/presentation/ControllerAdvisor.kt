@@ -8,6 +8,8 @@ import java.time.LocalDateTime
 
 @RestControllerAdvice
 class ControllerAdvisor {
+    private val logger = org.slf4j.LoggerFactory.getLogger(ControllerAdvisor::class.java)
+
     @ExceptionHandler(CommonException::class)
     fun handleCommonException(e: CommonException): ResponseEntity<CommonExceptionResponse> {
         val body =
@@ -18,6 +20,8 @@ class ControllerAdvisor {
                 LocalDateTime.now().toString(),
                 "",
             )
+
+        logger.error("ControllerAdvisor:handleCommonException: e.message - ${e.message}", e)
 
         return ResponseEntity.status(e.code.status).body(body)
     }
@@ -34,7 +38,7 @@ class ControllerAdvisor {
                 "",
             )
 
-        println("ControllerAdvisor:handleException: e.message - ${e.message}")
+        logger.error("ControllerAdvisor:handleException: e.message - ${e.message}", e)
         return ResponseEntity.status(500).body(body)
     }
 }
