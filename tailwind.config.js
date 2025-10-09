@@ -1,12 +1,52 @@
 // tailwind.config.js
 /* eslint-disable @typescript-eslint/no-require-imports */
-const plugin = require("@tailwindcss/line-clamp");
+const lineClamp = require("@tailwindcss/line-clamp");
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: ["./src/**/*.{js,ts,jsx,tsx}", "./app/**/*.{js,ts,jsx,tsx}"],
+  content: [
+    "./src/**/*.{js,ts,jsx,tsx}",
+    "./src/app/**/*.{js,ts,jsx,tsx}",
+    "./src/components/**/*.{js,ts,jsx,tsx}",
+  ],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        black: "#000000",
+        white: "#ffffff",
+        link: "#0a62ff",
+      },
+      fontFamily: {
+        // System UI stack for a clean, readable look
+        sans: [
+          "ui-sans-serif",
+          "system-ui",
+          "-apple-system",
+          "Segoe UI",
+          "Roboto",
+          "Noto Sans",
+          "Ubuntu",
+          "Cantarell",
+          "Helvetica Neue",
+          "Arial",
+          "\"Apple Color Emoji\"",
+          "\"Segoe UI Emoji\"",
+        ],
+        mono: [
+          "ui-monospace",
+          "SFMono-Regular",
+          "Menlo",
+          "Monaco",
+          "Consolas",
+          "Liberation Mono",
+          "Courier New",
+          "monospace",
+        ],
+      },
+      maxWidth: {
+        prose: "72ch", // comfortable reading width
+      },
+    },
   },
-  plugins: [plugin],
+  plugins: [lineClamp],
 };

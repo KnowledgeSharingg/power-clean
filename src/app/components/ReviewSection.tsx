@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {
   createReview,
   deleteReview,
@@ -60,18 +60,18 @@ export default function ReviewSection({
     }
   };
 
-  const fetchReviews = async () => {
+  const fetchReviews = useCallback(async () => {
     try {
       const data = await getReviewsByPostId(postId, 0, 10);
       setReviews(data.reviews || []);
     } catch (error) {
       console.error(error);
     }
-  };
+  }, [postId]);
 
   useEffect(() => {
     fetchReviews();
-  }, []);
+  }, [fetchReviews]);
 
   const handleSubmit = async () => {
     if (!content) return;

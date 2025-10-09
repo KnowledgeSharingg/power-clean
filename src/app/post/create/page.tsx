@@ -93,69 +93,72 @@ export default function CreatePost() {
   };
 
   return (
-    <div className="container">
-      <h2>Create a New Post</h2>
-      <form onSubmit={handleSubmit} className="form">
-        <div className="form-group">
-          <input
-            type="text"
-            name="title"
-            placeholder="Post Title"
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <div className="form-group">
-          <textarea
-            name="content"
-            placeholder="Post Content"
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <div className="form-group">
-          <input
-            type="text"
-            name="bookInfo.title"
-            placeholder="Book Title"
-            onChange={handleChange}
-          />
-        </div>
-        <div className="form-group">
-          <input
-            type="text"
-            name="bookInfo.content"
-            placeholder="Book Summary"
-            onChange={handleChange}
-          />
-        </div>
-        <div className="form-group">
-          <input
-            type="text"
-            name="bookInfo.link"
-            placeholder="Book Link"
-            onChange={handleChange}
-          />
-        </div>
-        {/* 🔸 이미지 업로드 필드 */}
-        <div className="form-group">
-          <input type="file" accept="image/*" onChange={handleImageUpload} />
-          {form.bookInfo.coverImageUrl && (
-            <div style={{ marginTop: "8px" }}>
-              <Image
-                src={form.bookInfo.coverImageUrl || "/default-image.png"}
-                alt="Preview"
-                width={200}
-                height={300}
-                style={{ objectFit: "contain" }}
-              />
-            </div>
-          )}
-        </div>
-        <button type="submit" className="btn">
-          Submit
-        </button>
-      </form>
+    <div className="site-container">
+      <div className="max-w-3xl mx-auto card-padded">
+        <h2 className="text-2xl font-bold mb-4">Create a New Post</h2>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <input
+              type="text"
+              name="title"
+              placeholder="Post Title"
+              onChange={handleChange}
+              required
+            />
+          </div>
+          <div>
+            <textarea
+              name="content"
+              placeholder="Post Content"
+              onChange={handleChange}
+              required
+              rows={6}
+            />
+          </div>
+          <div>
+            <input
+              type="text"
+              name="bookInfo.title"
+              placeholder="Book Title"
+              onChange={handleChange}
+            />
+          </div>
+          <div>
+            <input
+              type="text"
+              name="bookInfo.content"
+              placeholder="Book Summary"
+              onChange={handleChange}
+            />
+          </div>
+          <div>
+            <input
+              type="text"
+              name="bookInfo.link"
+              placeholder="Book Link"
+              onChange={handleChange}
+            />
+          </div>
+          {/* 🔸 이미지 업로드 필드 */}
+          <div>
+            <input type="file" accept="image/*" onChange={handleImageUpload} />
+            {form.bookInfo.coverImageUrl && (
+              <div className="mt-2">
+                <Image
+                  src={form.bookInfo.coverImageUrl || "/default-image.png"}
+                  alt="Preview"
+                  width={200}
+                  height={300}
+                  className="rounded-md border border-black/10 object-contain"
+                />
+              </div>
+            )}
+          </div>
+          <button type="submit" className="btn">
+            Submit
+          </button>
+        </form>
+      </div>
     </div>
   );
 }

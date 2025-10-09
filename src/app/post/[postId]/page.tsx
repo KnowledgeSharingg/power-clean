@@ -105,118 +105,114 @@ export default function PostDetailPage({
   }
 
   return (
-    <div className="max-w-3xl mx-auto p-6">
-      {isEditing ? (
-        <>
-          <input
-            className="border p-2 w-full text-3xl font-bold"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            placeholder="새 제목"
-          />
-          <textarea
-            className="border p-2 w-full mt-2"
-            value={content}
-            onChange={(e) => setContent(e.target.value)}
-            placeholder="새 내용"
-          />
-
-          <div className="mt-4">
-            <h2 className="text-2xl font-semibold">📚 도서 정보 수정</h2>
+    <div className="site-container">
+      <div className="card-padded">
+        {isEditing ? (
+          <>
             <input
-              className="border p-2 w-full mt-2"
-              value={bookInfo?.title}
-              onChange={(e) =>
-                setBookInfo({ ...bookInfo, title: e.target.value })
-              }
-              placeholder="도서 제목"
+              className="w-full text-3xl font-bold"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              placeholder="새 제목"
             />
             <textarea
-              className="border p-2 w-full mt-2"
-              value={bookInfo?.content}
-              onChange={(e) =>
-                setBookInfo({ ...bookInfo, content: e.target.value })
-              }
-              placeholder="도서 내용"
+              className="w-full mt-2"
+              value={content}
+              onChange={(e) => setContent(e.target.value)}
+              placeholder="새 내용"
             />
-            <input
-              className="border p-2 w-full mt-2"
-              value={bookInfo?.link}
-              onChange={(e) =>
-                setBookInfo({ ...bookInfo, link: e.target.value })
-              }
-              placeholder="도서 링크"
-            />
-            {/* 필요하면 authorInfo도 같은 방식으로 확장 가능 */}
-          </div>
 
-          <div className="flex space-x-2 mt-4">
-            <button
-              className="bg-green-600 text-white p-2 rounded"
-              onClick={handleUpdate}
-            >
-              저장
-            </button>
-            <button
-              className="bg-gray-400 text-white p-2 rounded"
-              onClick={() => setIsEditing(false)}
-            >
-              취소
-            </button>
-          </div>
-        </>
-      ) : (
-        <>
-          <h1 className="text-3xl font-bold mb-4">{post.title}</h1>
-          <p className="text-gray-600">
-            작성일: {new Date(post.createdAt).toLocaleString()}
-          </p>
-          <p className="text-lg mt-4">{post.content}</p>
+            <div className="mt-4">
+              <h2 className="text-2xl font-semibold">📚 도서 정보 수정</h2>
+              <input
+                className="w-full mt-2"
+                value={bookInfo?.title}
+                onChange={(e) =>
+                  setBookInfo({ ...bookInfo, title: e.target.value })
+                }
+                placeholder="도서 제목"
+              />
+              <textarea
+                className="w-full mt-2"
+                value={bookInfo?.content}
+                onChange={(e) =>
+                  setBookInfo({ ...bookInfo, content: e.target.value })
+                }
+                placeholder="도서 내용"
+              />
+              <input
+                className="w-full mt-2"
+                value={bookInfo?.link}
+                onChange={(e) =>
+                  setBookInfo({ ...bookInfo, link: e.target.value })
+                }
+                placeholder="도서 링크"
+              />
+              {/* 필요하면 authorInfo도 같은 방식으로 확장 가능 */}
+            </div>
 
-          <div className="border-t pt-4 mt-6">
-            <h2 className="text-2xl font-semibold">📚 관련 도서 정보</h2>
-            {post.bookInfo?.coverImageUrl && (
-              <div className="my-4 flex justify-center">
-                <Image
-                  src={toAbsoluteUrl(post.bookInfo.coverImageUrl)}
-                  alt={`${post.bookInfo.title} cover`}
-                  width={96}
-                  height={144}
-                  className="rounded shadow object-contain"
-                />
-              </div>
-            )}
-            <p className="text-xl font-bold">{post.bookInfo?.title}</p>
-            <p className="text-gray-700">{post.bookInfo?.content}</p>
-            <a
-              href={post.bookInfo?.link}
-              className="text-blue-600 underline"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              도서 링크
-            </a>
-            {post.bookInfo?.authorInfo?.name && (
-              <div className="border-t pt-4 mt-6">
-                <h2 className="text-2xl font-semibold">✍️ 작가 정보</h2>
-                <ul className="list-disc list-inside text-gray-700">
-                  <li>이름: {post.bookInfo.authorInfo.name}</li>
-                  <li>생년월일: {post.bookInfo.authorInfo.dateOfBirth}</li>
-                  <li>연락처: {post.bookInfo.authorInfo.phoneNumber}</li>
-                  <li>성별: {post.bookInfo.authorInfo.gender}</li>
-                  <li>약력: {post.bookInfo.authorInfo.history}</li>
-                </ul>
-              </div>
-            )}
-            <button
+            <div className="flex gap-2 mt-4">
+              <button className="btn" onClick={handleUpdate}>
+                저장
+              </button>
+              <button className="btn-outline" onClick={() => setIsEditing(false)}>
+                취소
+              </button>
+            </div>
+          </>
+        ) : (
+          <>
+            <h1 className="text-3xl font-bold mb-4">{post.title}</h1>
+            <p className="text-black/60">
+              작성일: {new Date(post.createdAt).toLocaleString()}
+            </p>
+            <p className="text-lg mt-4">{post.content}</p>
+
+            <div className="border-t border-black/10 pt-4 mt-6">
+              <h2 className="text-2xl font-semibold">📚 관련 도서 정보</h2>
+              {post.bookInfo?.coverImageUrl && (
+                <div className="my-4 flex justify-center">
+                  <Image
+                    src={toAbsoluteUrl(post.bookInfo.coverImageUrl)}
+                    alt={`${post.bookInfo.title} cover`}
+                    width={96}
+                    height={144}
+                    className="rounded shadow-sm object-contain"
+                  />
+                </div>
+              )}
+              <p className="text-xl font-bold">{post.bookInfo?.title}</p>
+              <p className="text-black/80">{post.bookInfo?.content}</p>
+              <a
+                href={post.bookInfo?.link}
+                className="btn-link"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                도서 링크
+              </a>
+              {post.bookInfo?.authorInfo?.name && (
+                <div className="border-t border-black/10 pt-4 mt-6">
+                  <h2 className="text-2xl font-semibold">✍️ 작가 정보</h2>
+                  <ul className="list-disc list-inside text-black/80">
+                    <li>이름: {post.bookInfo.authorInfo.name}</li>
+                    <li>생년월일: {post.bookInfo.authorInfo.dateOfBirth}</li>
+                    <li>연락처: {post.bookInfo.authorInfo.phoneNumber}</li>
+                    <li>성별: {post.bookInfo.authorInfo.gender}</li>
+                    <li>약력: {post.bookInfo.authorInfo.history}</li>
+                  </ul>
+                </div>
+              )}
+              <button
               className="bg-blue-600 text-white p-2 rounded mt-4"
               onClick={() => setIsEditing(true)}
             >
               수정하기
             </button>
-          </div>
-        </>
-      )}
+            </div>
+          </>
+        )}
+      </div>
       {!isEditing && (
         <ReviewSection
           postId={postId}

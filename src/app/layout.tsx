@@ -1,4 +1,6 @@
 import "../styles/globals.css";
+import Header from "./components/Header";
+import Footer from "./components/Footer";
 
 export default function RootLayout({
   children,
@@ -15,8 +17,14 @@ export default function RootLayout({
         />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </head>
-      <body>
-        {children} {/* ✅ Ensures no extra wrapping divs */}
+      <body className="min-h-screen bg-white text-black">
+        <div className="flex min-h-screen flex-col">
+          <Header />
+          <main className="site-container flex-1 w-full py-8 sm:py-10 lg:py-12">
+            {children}
+          </main>
+          <Footer />
+        </div>
       </body>
     </html>
   );

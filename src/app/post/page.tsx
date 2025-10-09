@@ -14,17 +14,12 @@ export default async function PostListPage() {
   const data = await getPostList();
 
   return (
-    <div className="max-w-4xl mx-auto p-6">
+    <div className="site-container">
       <h1 className="text-3xl font-bold mb-6 text-center">📚 Post List</h1>
-      <ul className="space-y-6">
+      <ul className="space-y-7">
         {data.postList.map((post: any) => (
-          <li
-            key={post.id}
-            className="p-6 bg-white rounded-2xl shadow-md hover:shadow-lg transition duration-300"
-          >
-            <h2 className="text-xl font-semibold text-gray-900 mb-2">
-              {post.title}
-            </h2>
+          <li key={post.id} className="card-padded">
+            <h2 className="text-xl font-semibold mb-2">{post.title}</h2>
             {post.bookInfo?.coverImageUrl && (
               <div className="mt-3">
                 <Image
@@ -32,26 +27,22 @@ export default async function PostListPage() {
                   alt={post.bookInfo.title || "Book cover"}
                   width={128}
                   height={192}
-                  className="rounded-md"
+                  className="rounded-md shadow-sm"
                 />
               </div>
             )}
-            <p className="text-gray-700 mb-2 line-clamp-2">{post.content}</p>
-            <p className="text-sm text-gray-500 mb-1">
-              👍 {post.likeCount} | 🕒{" "}
-              {new Date(post.createdAt).toLocaleString()}
+            <p className="text-black/80 mb-2 line-clamp-2">{post.content}</p>
+            <p className="text-sm text-black/60 mb-1">
+              👍 {post.likeCount} | 🕒 {new Date(post.createdAt).toLocaleString()}
             </p>
 
             {post.bookInfo?.title && (
-              <div className="mt-3 text-sm text-gray-600">
+              <div className="mt-3 text-sm text-black/70">
                 📖 <strong>{post.bookInfo.title}</strong>: {post.bookInfo.content}
               </div>
             )}
 
-            <Link
-              href={`/post/${post.id}`}
-              className="inline-block mt-4 text-blue-600 hover:underline text-sm"
-            >
+            <Link href={`/post/${post.id}`} className="btn-link text-sm mt-4 inline-block">
               Read more →
             </Link>
           </li>
