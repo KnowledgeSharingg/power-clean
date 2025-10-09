@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { getPostList } from "@/lib/api";
+import { getPostList, serverUrl } from "@/lib/api";
 import Link from "next/link";
 import Image from "next/image";
 
@@ -38,6 +38,12 @@ export default function Home() {
       }
     }
     setShowList((prev) => !prev); // 리스트 보여짐 상태 토글
+  };
+
+  const toAbsoluteUrl = (url: string): string => {
+    if (!url) return "";
+    if (/^https?:\/\//i.test(url)) return url;
+    return `${serverUrl}${url.startsWith("/") ? url : "/" + url}`;
   };
 
   return (
@@ -95,7 +101,7 @@ export default function Home() {
                     {post.bookInfo.coverImageUrl && (
                       <div className="w-24 h-auto relative mb-2">
                         <Image
-                          src={`${post.bookInfo.coverImageUrl}`}
+                          src={toAbsoluteUrl(post.bookInfo.coverImageUrl)}
                           alt={`${post.bookInfo.title} cover`}
                           width={96}
                           height={144}

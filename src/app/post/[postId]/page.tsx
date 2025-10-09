@@ -2,8 +2,14 @@
 
 import { use, useEffect, useState } from "react";
 import ReviewSection from "@/app/components/ReviewSection";
-import { getPostDetail, updatePost } from "@/lib/api";
+import { getPostDetail, updatePost, serverUrl } from "@/lib/api";
 import Image from "next/image";
+
+function toAbsoluteUrl(url: string): string {
+  if (!url) return "";
+  if (/^https?:\/\//i.test(url)) return url;
+  return `${serverUrl}${url.startsWith("/") ? url : "/" + url}`;
+}
 
 export default function PostDetailPage({
   params,
@@ -172,7 +178,7 @@ export default function PostDetailPage({
             {post.bookInfo?.coverImageUrl && (
               <div className="my-4 flex justify-center">
                 <Image
-                  src={`${post.bookInfo.coverImageUrl}`}
+                  src={toAbsoluteUrl(post.bookInfo.coverImageUrl)}
                   alt={`${post.bookInfo.title} cover`}
                   width={96}
                   height={144}

@@ -143,7 +143,8 @@ export async function uploadImage(file: File) {
   try {
     const response = await fetch(`${serverUrl}/upload`, {
       method: "POST",
-        headers: authHeaders(),
+      // Important: do NOT set Content-Type for FormData; browser will set the correct boundary.
+      headers: authHeadersNoContentType(),
       body: formData,
     });
 
@@ -175,6 +176,14 @@ export function setToken(token: string | null) {
 function authHeaders(): HeadersInit {
   const headers = new Headers();
   headers.set("Content-Type", "application/json");
+  const token = getToken();
+  if (token) headers.set("Authorization", `Bearer ${token}`);
+  return headers;
+}
+
+// Use this when sending FormData to avoid overriding Content-Type with JSON.
+function authHeadersNoContentType(): HeadersInit {
+  const headers = new Headers();
   const token = getToken();
   if (token) headers.set("Authorization", `Bearer ${token}`);
   return headers;

@@ -1,6 +1,14 @@
-import { getPostList } from "@/lib/api";
+import { getPostList, serverUrl } from "@/lib/api";
 import Link from "next/link";
 import Image from "next/image";
+
+function toAbsoluteUrl(url: string): string {
+  if (!url) return "";
+  // 이미 절대 URL이면 그대로 반환
+  if (/^https?:\/\//i.test(url)) return url;
+  // 상대경로면 서버 주소를 붙여서 반환
+  return `${serverUrl}${url.startsWith("/") ? url : "/" + url}`;
+}
 
 export default async function PostListPage() {
   const data = await getPostList();
@@ -20,10 +28,10 @@ export default async function PostListPage() {
             {post.bookInfo?.coverImageUrl && (
               <div className="mt-3">
                 <Image
-                  src={`${post.bookInfo.coverImageUrl}`}
+                  src={toAbsoluteUrl(post.bookInfo.coverImageUrl)}
                   alt={post.bookInfo.title || "Book cover"}
-                  width={128} // 원하는 너비
-                  height={192} // 원하는 높이
+                  width={128}
+                  height={192}
                   className="rounded-md"
                 />
               </div>
@@ -36,8 +44,7 @@ export default async function PostListPage() {
 
             {post.bookInfo?.title && (
               <div className="mt-3 text-sm text-gray-600">
-                📖 <strong>{post.bookInfo.title}</strong>:{" "}
-                {post.bookInfo.content}
+                📖 <strong>{post.bookInfo.title}</strong>: {post.bookInfo.content}
               </div>
             )}
 
