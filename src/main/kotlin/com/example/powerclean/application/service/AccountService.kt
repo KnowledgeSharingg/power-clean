@@ -19,6 +19,7 @@ class AccountService(
     private val passwordEncoder: PasswordEncoder,
 ) : AccountRegisterUseCase {
     private val logger = org.slf4j.LoggerFactory.getLogger(AccountService::class.java)
+
     override fun registerAccount(requestDto: RegisterAccountReqDto): Account {
         return accountRepository.save(
             Account.from(requestDto.apply { this.password = passwordEncoder.encode(this.password) }),

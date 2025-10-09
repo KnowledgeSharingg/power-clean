@@ -17,6 +17,7 @@ class AuthController(
     private val authenticationService: AccountAuthenticateUseCase,
 ) {
     private val logger = org.slf4j.LoggerFactory.getLogger(AuthController::class.java)
+
     @PostMapping("/refresh")
     fun refreshAccessToken(
         @RequestBody request: RefreshAccessTokenReqDto,

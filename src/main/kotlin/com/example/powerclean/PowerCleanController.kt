@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 class PowerCleanController {
     private val logger = org.slf4j.LoggerFactory.getLogger(PowerCleanController::class.java)
+
     @GetMapping("/health-check")
     fun healthCheck(): String {
         return "I'm healthy!"

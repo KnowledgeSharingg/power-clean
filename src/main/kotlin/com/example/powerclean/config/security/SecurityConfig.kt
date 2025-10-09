@@ -26,6 +26,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource
 @EnableWebSecurity
 class SecurityConfig {
     private val logger = org.slf4j.LoggerFactory.getLogger(SecurityConfig::class.java)
+
     @Bean
     fun userDetailsService(accountRepository: AccountRepository): JwtUserDetailsService =
         JwtUserDetailsService(accountRepository)

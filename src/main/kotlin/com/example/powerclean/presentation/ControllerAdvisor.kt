@@ -9,6 +9,7 @@ import java.time.LocalDateTime
 @RestControllerAdvice
 class ControllerAdvisor {
     private val logger = org.slf4j.LoggerFactory.getLogger(ControllerAdvisor::class.java)
+
     @ExceptionHandler(CommonException::class)
     fun handleCommonException(e: CommonException): ResponseEntity<CommonExceptionResponse> {
         val body =

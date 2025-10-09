@@ -24,6 +24,7 @@ class AuthenticationService(
     private val accountRepository: AccountRepository,
 ) : AccountAuthenticateUseCase {
     private val logger = org.slf4j.LoggerFactory.getLogger(AuthenticationService::class.java)
+
     override fun authentication(authenticationRequest: AuthenticationReqDto): AuthenticationResDto {
         // TODO: 내부 동작 플로우 파악하기.
         // 이메일, 패스워드 일치 등 계정 정보에 대해 request값과 DB값 비교 검증.

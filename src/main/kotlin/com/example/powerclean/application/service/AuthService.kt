@@ -15,6 +15,7 @@ class AuthService(
     private val oauthProfileRepository: OauthProfileRepository,
 ) {
     private val logger = org.slf4j.LoggerFactory.getLogger(AuthService::class.java)
+
     fun oauth2Login(principal: OAuth2User): String {
         // TODO: jwt 토큰 발급.
         // TODO: 랜덤 닉네임 할당해주기.
