@@ -1,3 +1,4 @@
+import com.example.powerclean.application.port.outbound.ai.AiProvider
 import com.example.powerclean.application.port.outbound.persistence.BookRepository
 import com.example.powerclean.application.port.outbound.persistence.PostRepository
 import com.example.powerclean.application.service.PostService
@@ -23,13 +24,15 @@ import java.util.UUID
 class PostServiceTest {
     private lateinit var postRepository: PostRepository
     private lateinit var bookRepository: BookRepository
+    private lateinit var aiProvider: AiProvider
     private lateinit var postService: PostService
 
     @BeforeEach
     fun setUp() {
         postRepository = mock(PostRepository::class.java)
         bookRepository = mock(BookRepository::class.java)
-        postService = PostService(postRepository, bookRepository)
+        aiProvider = mock(AiProvider::class.java)
+        postService = PostService(postRepository, bookRepository, aiProvider)
     }
 
     @Test

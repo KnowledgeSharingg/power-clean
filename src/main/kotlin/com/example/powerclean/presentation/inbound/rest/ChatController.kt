@@ -1,5 +1,4 @@
-
-package com.example.powerclean.presentation.rest
+package com.example.powerclean.presentation.inbound.rest
 
 import org.springframework.ai.chat.messages.UserMessage
 import org.springframework.ai.chat.model.ChatResponse

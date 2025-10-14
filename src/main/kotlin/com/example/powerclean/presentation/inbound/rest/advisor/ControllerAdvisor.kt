@@ -1,6 +1,7 @@
-package com.example.powerclean.presentation
+package com.example.powerclean.presentation.inbound.rest.advisor
 
 import com.example.powerclean.common.exception.CommonException
+import org.slf4j.LoggerFactory
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.RestControllerAdvice
@@ -8,7 +9,7 @@ import java.time.LocalDateTime
 
 @RestControllerAdvice
 class ControllerAdvisor {
-    private val logger = org.slf4j.LoggerFactory.getLogger(ControllerAdvisor::class.java)
+    private val logger = LoggerFactory.getLogger(ControllerAdvisor::class.java)
 
     @ExceptionHandler(CommonException::class)
     fun handleCommonException(e: CommonException): ResponseEntity<CommonExceptionResponse> {

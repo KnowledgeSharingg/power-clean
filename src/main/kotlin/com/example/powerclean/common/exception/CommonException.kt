@@ -14,3 +14,8 @@ class CustomConflictException(
     override val message: String,
     val code: ExceptionCode = ExceptionCode.CONFLICT,
 ) : Exception()
+
+class CustomInternalServerErrorException(
+    override val message: String,
+    val code: ExceptionCode = ExceptionCode.INTERNAL_ERROR,
+) : Exception()

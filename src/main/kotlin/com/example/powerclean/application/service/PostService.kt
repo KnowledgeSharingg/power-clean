@@ -1,5 +1,6 @@
 package com.example.powerclean.application.service
 
+import com.example.powerclean.application.port.outbound.ai.AiProvider
 import com.example.powerclean.application.port.outbound.persistence.BookRepository
 import com.example.powerclean.application.port.outbound.persistence.PostRepository
 import com.example.powerclean.common.exception.CustomConflictException
@@ -9,6 +10,7 @@ import com.example.powerclean.domain.model.Post
 import com.example.powerclean.presentation.dto.CreatePostReqDto
 import com.example.powerclean.presentation.dto.CreatePostResDto
 import com.example.powerclean.presentation.dto.GetBookDetailResDto
+import com.example.powerclean.presentation.dto.GetCreatedPostByAIResDto
 import com.example.powerclean.presentation.dto.GetPostDetailResDto
 import com.example.powerclean.presentation.dto.GetPostListResDto
 import com.example.powerclean.presentation.dto.UpdatePostReqDto
@@ -20,7 +22,11 @@ import java.util.UUID
 // TODO: mapper class.
 
 @Service
-class PostService(private val postRepository: PostRepository, private val bookRepository: BookRepository) {
+class PostService(
+    private val postRepository: PostRepository,
+    private val bookRepository: BookRepository,
+    private val aiProvider: AiProvider,
+) {
     private val logger = LoggerFactory.getLogger(PostService::class.java)
 
     fun createPost(requestDto: CreatePostReqDto): CreatePostResDto {
@@ -128,5 +134,22 @@ class PostService(private val postRepository: PostRepository, private val bookRe
     fun deletePost(postId: UUID): String {
         postRepository.deleteById(postId)
         return "ok"
+    }
+
+    fun getCreatedPostContentByAI(script: String): GetCreatedPostByAIResDto {
+        val result = aiProvider.getBookInfo(script)
+        return GetCreatedPostByAIResDto(
+            title = result.postTitle,
+            content = result.postContent,
+            bookInfo =
+                GetBookDetailResDto(
+                    id = null,
+                    title = result.bookTitle,
+                    content = result.bookContent,
+                    link = result.bookLink,
+                    coverImageUrl = result.coverImageUrl,
+                    authorInfo = result.authorInfo,
+                ),
+        )
     }
 }

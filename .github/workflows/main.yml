@@ -17,6 +17,8 @@ jobs:
             JWT_SECRET_KEY: ${{ secrets.JWT_SECRET_KEY }}
             ACCESS_TOKEN_EXPIRATION_TIME: ${{ secrets.ACCESS_TOKEN_EXPIRATION_TIME }}
             REFRESH_TOKEN_EXPIRATION_TIME: ${{secrets.REFRESH_TOKEN_EXPIRATION_TIME}}
+            SPRING_AI_OPENAI_API_KEY: ${{ secrets.SPRING_AI_OPENAI_API_KEY }}
+            GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
     test:
         runs-on: ubuntu-latest
 
