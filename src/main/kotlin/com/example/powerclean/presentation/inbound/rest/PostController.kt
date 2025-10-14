@@ -3,6 +3,7 @@ package com.example.powerclean.presentation.inbound.rest
 import com.example.powerclean.application.service.PostService
 import com.example.powerclean.presentation.dto.CreatePostReqDto
 import com.example.powerclean.presentation.dto.CreatePostResDto
+import com.example.powerclean.presentation.dto.GetCreatedPostByAIResDto
 import com.example.powerclean.presentation.dto.GetPostDetailResDto
 import com.example.powerclean.presentation.dto.GetPostListResDto
 import com.example.powerclean.presentation.dto.UpdatePostReqDto
@@ -30,6 +31,12 @@ class PostController(private val postService: PostService) {
         @AuthenticationPrincipal(expression = "id") accountId: UUID,
         @RequestBody request: CreatePostReqDto,
     ): CreatePostResDto = postService.createPost(request.copy(creatorAccountId = accountId))
+
+    @Operation(summary = "Post 생성 데이터 조회 by AI API", description = "스크립트를 받아 AI를 활용해 포스트 생성 내용 자동으로 채워 데이터 내려주는 API.")
+    @GetMapping("/ai")
+    fun getCreatedPostContentByAI(
+        @RequestParam script: String,
+    ): GetCreatedPostByAIResDto = postService.getCreatedPostContentByAI(script)
 
     @Operation(summary = "Post 상세 조회 API.", description = "포스트 상세 조회.")
     @GetMapping("/{postId}")
