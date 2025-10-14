@@ -34,10 +34,13 @@ dependencies {
 	implementation 'com.fasterxml.uuid:java-uuid-generator:5.1.0'
 	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.0'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation "io.jsonwebtoken:jjwt-api:0.12.6"
+    runtimeOnly "io.jsonwebtoken:jjwt-impl:0.12.6"
+    runtimeOnly "io.jsonwebtoken:jjwt-jackson:0.12.6"
     implementation platform("org.springframework.ai:spring-ai-bom:1.0.0")
     // Replace the following with the starter dependencies of specific modules you wish to use
     implementation 'org.springframework.ai:spring-ai-openai'
-    
+
 
 
 
@@ -46,6 +49,7 @@ dependencies {
     implementation("org.webjars:bootstrap:4.3.1")
     implementation("org.webjars:webjars-locator-core")
 
+
 	// developmentOnly 'org.springframework.boot:spring-boot-docker-compose'
 	implementation("com.h2database:h2")
 	runtimeOnly 'com.mysql:mysql-connector-j'
@@ -53,7 +57,7 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.jetbrains.kotlin:kotlin-test-junit5'
 	testImplementation 'org.springframework.security:spring-security-test'
-    testImplementation 'io.kotest:kotest-runner-junit5:5.8.1'	
+    testImplementation 'io.kotest:kotest-runner-junit5:5.8.1'
     testImplementation "io.mockk:mockk:1.13.13"
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 	testImplementation("org.mockito.kotlin:mockito-kotlin:5.4.0")
@@ -89,4 +93,12 @@ jacocoTestReport {
         xml.required.set(true) // codecov depends on xml format report
         html.required.set(true)
     }
+}
+
+ktlint {
+    reporters {
+        reporter "plain"
+        reporter "checkstyle"
+    }
+    // 규칙 on/off는 .editorconfig에서!
 }

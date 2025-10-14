@@ -1,5 +1,6 @@
 package com.example.powerclean.domain.model
 
+import com.example.powerclean.presentation.dto.CreatePostReqDto
 import jakarta.persistence.CascadeType
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
@@ -21,4 +22,25 @@ class Post(
     var likeCount: Int,
     @OneToOne(mappedBy = "post", cascade = [CascadeType.ALL], fetch = FetchType.LAZY, optional = true)
     var book: Book? = null,
-) : BaseEntity()
+) : BaseEntity() {
+    companion object {
+        fun from(requestDto: CreatePostReqDto): Post =
+            Post(
+                title = requestDto.title,
+                content = requestDto.content,
+                creatorAccountId =
+                    requestDto.creatorAccountId
+                        ?: throw IllegalStateException("creatorAccountId must not be null"),
+                likeCount = 0,
+            )
+    }
+
+    fun updateInfo(
+        title: String,
+        content: String,
+    ): Post =
+        this.apply {
+            this.title = title
+            this.content = content
+        }
+}

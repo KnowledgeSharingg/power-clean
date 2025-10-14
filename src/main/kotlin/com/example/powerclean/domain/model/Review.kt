@@ -1,5 +1,6 @@
 package com.example.powerclean.domain.model
 
+import com.example.powerclean.presentation.dto.CreateReviewReqDto
 import jakarta.persistence.Column
 import jakarta.persistence.ConstraintMode
 import jakarta.persistence.Entity
@@ -24,4 +25,28 @@ class Review(
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id", foreignKey = ForeignKey(ConstraintMode.NO_CONSTRAINT))
     var post: Post,
-) : BaseEntity()
+) : BaseEntity() {
+    companion object {
+        fun from(
+            requestDto: CreateReviewReqDto,
+            post: Post,
+        ): Review =
+            Review(
+                content = requestDto.content,
+                rating = requestDto.rating,
+                creatorAccountId =
+                    requestDto.creatorAccountId
+                        ?: throw IllegalStateException("creatorAccountId must not be null"),
+                post = post,
+            )
+    }
+
+    fun updateInfo(
+        content: String,
+        rating: Int,
+    ): Review =
+        this.apply {
+            this.content = content
+            this.rating = rating
+        }
+}

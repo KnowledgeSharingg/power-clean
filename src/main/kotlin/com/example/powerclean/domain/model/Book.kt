@@ -1,6 +1,8 @@
 package com.example.powerclean.domain.model
 
 import com.example.powerclean.domain.valueobject.AuthorInfo
+import com.example.powerclean.presentation.dto.CreateBookReqDto
+import com.example.powerclean.utils.DEFAULT_BOOK_COVER_IMAGE_URL
 import jakarta.persistence.Column
 import jakarta.persistence.ConstraintMode
 import jakarta.persistence.Embedded
@@ -20,9 +22,39 @@ class Book(
     var content: String,
     @Column(name = "link", nullable = false)
     var link: String,
+    @Column(name = "cover_image_url", nullable = false)
+    var coverImageUrl: String = DEFAULT_BOOK_COVER_IMAGE_URL,
     @Embedded
     var authorInfo: AuthorInfo,
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id", foreignKey = ForeignKey(ConstraintMode.NO_CONSTRAINT))
     var post: Post,
-) : BaseEntity()
+) : BaseEntity() {
+    companion object {
+        fun from(
+            requestDto: CreateBookReqDto,
+            post: Post,
+        ): Book =
+            Book(
+                title = requestDto.title,
+                content = requestDto.content,
+                link = requestDto.link,
+                coverImageUrl =
+                    requestDto.coverImageUrl.takeIf { it.isNotBlank() }
+                        ?: DEFAULT_BOOK_COVER_IMAGE_URL,
+                authorInfo = requestDto.authorInfo,
+                post = post,
+            )
+    }
+
+    fun updateInfo(
+        title: String,
+        content: String,
+        link: String,
+    ): Book =
+        this.apply {
+            this.title = title
+            this.content = content
+            this.link = link
+        }
+}

@@ -1,15 +1,18 @@
 package com.example.powerclean.application.service
 
+import com.example.powerclean.application.port.outbound.persistence.BookRepository
+import com.example.powerclean.application.port.outbound.persistence.PostRepository
+import com.example.powerclean.common.exception.CustomConflictException
+import com.example.powerclean.common.exception.CustomNotFoundException
 import com.example.powerclean.domain.model.Book
 import com.example.powerclean.domain.model.Post
-import com.example.powerclean.domain.repository.BookRepository
-import com.example.powerclean.domain.repository.PostRepository
 import com.example.powerclean.presentation.dto.CreatePostReqDto
 import com.example.powerclean.presentation.dto.CreatePostResDto
 import com.example.powerclean.presentation.dto.GetBookDetailResDto
 import com.example.powerclean.presentation.dto.GetPostDetailResDto
 import com.example.powerclean.presentation.dto.GetPostListResDto
 import com.example.powerclean.presentation.dto.UpdatePostReqDto
+import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import org.webjars.NotFoundException
 import java.util.UUID
@@ -18,26 +21,21 @@ import java.util.UUID
 
 @Service
 class PostService(private val postRepository: PostRepository, private val bookRepository: BookRepository) {
+    private val logger = LoggerFactory.getLogger(PostService::class.java)
+
     fun createPost(requestDto: CreatePostReqDto): CreatePostResDto {
+        bookRepository.findByTitle(
+            requestDto.bookInfo.title,
+        )?.let { throw CustomConflictException("Book already exists.") }
+
         val savedPost =
             postRepository.save(
-                Post(
-                    title = requestDto.title,
-                    content = requestDto.content,
-                    creatorAccountId = requestDto.creatorAccountId,
-                    likeCount = 0,
-                ),
+                Post.from(requestDto),
             )
 
         val savedBook =
             bookRepository.save(
-                Book(
-                    title = requestDto.bookInfo.title,
-                    content = requestDto.bookInfo.content,
-                    link = requestDto.bookInfo.link,
-                    authorInfo = requestDto.bookInfo.authorInfo,
-                    post = savedPost,
-                ),
+                Book.from(requestDto.bookInfo, savedPost),
             )
 
         return CreatePostResDto(
@@ -50,13 +48,14 @@ class PostService(private val postRepository: PostRepository, private val bookRe
                     title = savedBook.title,
                     content = savedBook.content,
                     link = savedBook.link,
+                    coverImageUrl = savedBook.coverImageUrl,
                     authorInfo = savedBook.authorInfo,
                 ),
         )
     }
 
     fun getPostDetail(postId: UUID): GetPostDetailResDto {
-        val foundPost = postRepository.findById(postId).orElse(null) ?: throw NotFoundException("Post not found")
+        val foundPost = postRepository.findById(postId).orElse(null) ?: throw CustomNotFoundException("Post not found")
         return GetPostDetailResDto(
             id = foundPost.id,
             title = foundPost.title,
@@ -70,6 +69,7 @@ class PostService(private val postRepository: PostRepository, private val bookRe
                     title = foundPost.book?.title,
                     content = foundPost.book?.content,
                     link = foundPost.book?.link,
+                    coverImageUrl = foundPost.book?.coverImageUrl,
                     authorInfo = foundPost.book?.authorInfo,
                 ),
         )
@@ -97,6 +97,7 @@ class PostService(private val postRepository: PostRepository, private val bookRe
                                 title = it.book?.title,
                                 content = it.book?.content,
                                 link = it.book?.link,
+                                coverImageUrl = it.book?.coverImageUrl,
                                 authorInfo = it.book?.authorInfo,
                             ),
                     )
@@ -105,10 +106,22 @@ class PostService(private val postRepository: PostRepository, private val bookRe
     }
 
     fun updatePost(requestDto: UpdatePostReqDto): String {
-        val foundPost = postRepository.findById(requestDto.id).orElse(null) ?: throw NotFoundException("Post not found")
-        foundPost.title = requestDto.title
-        foundPost.content = requestDto.content
-        postRepository.save(foundPost)
+        (
+            postRepository.findByIdWithBook(requestDto.id).orElse(null)
+                ?: throw NotFoundException("Post not found")
+        )
+            .apply {
+                updateInfo(requestDto.title, requestDto.content)
+                this.book?.updateInfo(
+                    requestDto.bookInfo.title,
+                    requestDto.bookInfo.content,
+                    requestDto.bookInfo.link,
+                )
+            }
+            .also {
+                postRepository.save(it)
+            }
+
         return "ok"
     }
 

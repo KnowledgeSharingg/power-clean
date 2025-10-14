@@ -1,58 +1,59 @@
 package com.example.powerclean.application.service
 
+import com.example.powerclean.application.port.outbound.persistence.PostRepository
+import com.example.powerclean.application.port.outbound.persistence.ReviewRepository
+import com.example.powerclean.common.exception.CustomNotFoundException
 import com.example.powerclean.domain.model.Review
-import com.example.powerclean.domain.repository.PostRepository
-import com.example.powerclean.domain.repository.ReviewRepository
 import com.example.powerclean.presentation.dto.CreateReviewReqDto
 import com.example.powerclean.presentation.dto.CreateReviewResDto
 import com.example.powerclean.presentation.dto.GetReviewDetailResDto
 import com.example.powerclean.presentation.dto.GetReviewListResDto
 import com.example.powerclean.presentation.dto.UpdateReviewReqDto
+import jakarta.transaction.Transactional
 import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Service
-import org.webjars.NotFoundException
 import java.util.UUID
 
 @Service
+@Transactional
 class ReviewService(
     private val reviewRepository: ReviewRepository,
     private val postRepository: PostRepository,
 ) {
-    fun createReview(request: CreateReviewReqDto): CreateReviewResDto {
-        val savedReview =
-            reviewRepository.save(
-                Review(
-                    content = request.content,
-                    rating = request.rating,
-                    creatorAccountId = request.creatorAccountId,
-                    post =
-                        postRepository.findById(UUID.fromString(request.postId)).orElseThrow {
-                            NotFoundException("Post not found")
-                        },
-                ),
-            )
+    private val logger = org.slf4j.LoggerFactory.getLogger(ReviewService::class.java)
 
-        return CreateReviewResDto(
-            id = savedReview.id,
-            content = savedReview.content,
-            rating = savedReview.rating,
-            postId = savedReview.post.id,
-        )
+    fun createReview(requestDto: CreateReviewReqDto): CreateReviewResDto {
+        return reviewRepository.save(
+            Review.from(
+                requestDto,
+                postRepository.findById(requestDto.postId).orElse(null)
+                    ?: throw CustomNotFoundException("Post not found"),
+            ),
+        ).let {
+            CreateReviewResDto(
+                id = it.id,
+                content = it.content,
+                rating = it.rating,
+                postId = it.post.id,
+            )
+        }
     }
 
     fun getReviewDetail(reviewId: UUID): GetReviewDetailResDto {
-        val foundReview =
+        return (
             reviewRepository.findById(reviewId).orElse(null)
-                ?: throw NotFoundException("Review not found")
-        return GetReviewDetailResDto(
-            id = foundReview.id,
-            content = foundReview.content,
-            rating = foundReview.rating,
-            createdAt = foundReview.createdAt.toString(),
-            updatedAt = foundReview.updatedAt.toString(),
-            postId = foundReview.post.id,
-            creatorAccountId = foundReview.creatorAccountId,
-        )
+                ?: throw CustomNotFoundException("Review not found")
+        ).let {
+            GetReviewDetailResDto(
+                id = it.id,
+                content = it.content,
+                rating = it.rating,
+                createdAt = it.createdAt.toString(),
+                updatedAt = it.updatedAt.toString(),
+                postId = it.post.id,
+                creatorAccountId = it.creatorAccountId,
+            )
+        }
     }
 
     fun getReviewListOfPost(
@@ -80,23 +81,28 @@ class ReviewService(
         )
     }
 
-    fun updateReview(request: UpdateReviewReqDto): String {
-        val review =
-            reviewRepository.findById(request.reviewId).orElse(null)
-                ?: throw NotFoundException("Review not found")
-        review.content = request.content
-        review.rating = request.rating
-        reviewRepository.save(review)
+    fun updateReview(requestDto: UpdateReviewReqDto): String {
+        (
+            reviewRepository.findById(requestDto.reviewId).orElse(null)
+                ?: throw CustomNotFoundException("Review not found")
+        )
+            .apply {
+                this.updateInfo(requestDto.content, requestDto.rating)
+            }.also {
+                reviewRepository.save(it)
+            }
         return "ok"
     }
 
     fun deleteReview(reviewId: UUID): String {
-        val review =
+        (
             reviewRepository.findById(reviewId).orElse(null)
-                ?: throw NotFoundException("Review not found")
+                ?: throw CustomNotFoundException("Review not found")
+        ).let {
+            // TODO : soft deleete로 변경.
+            reviewRepository.deleteById(it.id)
+        }
 
-        // TODO : soft deleete로 변경.
-        reviewRepository.deleteById(review.id)
         return "ok"
     }
 }

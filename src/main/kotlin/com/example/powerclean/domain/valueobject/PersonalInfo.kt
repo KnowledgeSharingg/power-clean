@@ -5,8 +5,8 @@ import jakarta.persistence.Embeddable
 
 @Embeddable
 class PersonalInfo(
-    @Column(name = "name", nullable = false)
-    var name: String,
+    @Column(name = "name", nullable = true)
+    var name: String? = null,
     @Column(name = "date_of_birth", nullable = true)
     var dateOfBirth: String? = null,
     @Column(name = "phone_number", nullable = true)

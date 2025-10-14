@@ -1,11 +1,13 @@
+import com.example.powerclean.application.port.outbound.persistence.BookRepository
+import com.example.powerclean.application.port.outbound.persistence.PostRepository
 import com.example.powerclean.application.service.PostService
+import com.example.powerclean.common.exception.CustomNotFoundException
 import com.example.powerclean.domain.model.Book
 import com.example.powerclean.domain.model.Post
-import com.example.powerclean.domain.repository.BookRepository
-import com.example.powerclean.domain.repository.PostRepository
 import com.example.powerclean.domain.valueobject.AuthorInfo
 import com.example.powerclean.presentation.dto.CreateBookReqDto
 import com.example.powerclean.presentation.dto.CreatePostReqDto
+import com.example.powerclean.presentation.dto.UpdateBookReqDto
 import com.example.powerclean.presentation.dto.UpdatePostReqDto
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
@@ -31,7 +33,7 @@ class PostServiceTest {
     }
 
     @Test
-    fun createPost_WhenValidRequestDto_ReturnsCreatePostResDto() {
+    fun `포스트_생성_시_포스트_정보와_책_정보_저자_정보가_모두_저장되어_반환된다`() {
         // Given.
         val requestDto =
             CreatePostReqDto(
@@ -57,7 +59,9 @@ class PostServiceTest {
             Post(
                 title = requestDto.title,
                 content = requestDto.content,
-                creatorAccountId = requestDto.creatorAccountId,
+                creatorAccountId =
+                    requestDto.creatorAccountId
+                        ?: throw IllegalStateException("creatorAccountId must not be null."),
                 likeCount = 0,
             )
         val savedBook =
@@ -86,7 +90,7 @@ class PostServiceTest {
     }
 
     @Test
-    fun getPostDetail_WhenValidPostId_ReturnsGetPostDetailResDto() {
+    fun `포스트_상세_조회_시_책정보와_저자정보도_함께 조회된다`() {
         // Given
         val postId = UUID.randomUUID()
         val foundPost =
@@ -133,14 +137,14 @@ class PostServiceTest {
     }
 
     @Test
-    fun getPostDetail_WhenInvalidPostId_ThrowsNotFoundException() {
+    fun `포스트_상세_조회시_조회된_포스트가_없는경우_NotFoundException을_발생시킨다`() {
         // Given
         val postId = UUID.randomUUID()
         `when`(postRepository.findById(postId)).thenReturn(java.util.Optional.empty())
 
         // When
         val exception =
-            assertThrows(NotFoundException::class.java) {
+            assertThrows(CustomNotFoundException::class.java) {
                 postService.getPostDetail(postId)
             }
 
@@ -149,7 +153,7 @@ class PostServiceTest {
     }
 
     @Test
-    fun getPostList_WhenValidPageAndSize_ReturnsGetPostListResDto() {
+    fun `포스트_리스트_조회시_각_포스트의_책정보_저자정보도_반환된다`() {
         // Given
         val foundPosts =
             listOf(
@@ -192,13 +196,19 @@ class PostServiceTest {
     }
 
     @Test
-    fun updatePost_WhenValidRequestDto_ReturnsOk() {
+    fun `포스트업데이트시_책정보와_저자정보도_한번에_업데이트가능하다`() {
         // Given
         val requestDto =
             UpdatePostReqDto(
                 id = UUID.randomUUID(),
                 title = "Updated Title",
                 content = "Updated Content",
+                bookInfo =
+                    UpdateBookReqDto(
+                        "Updated Book Title",
+                        "Updated Book Content",
+                        "Updated Book Link",
+                    ),
             )
         val updatedPost =
             Post(
@@ -214,7 +224,7 @@ class PostServiceTest {
                 creatorAccountId = UUID.randomUUID(),
                 likeCount = 0,
             )
-        `when`(postRepository.findById(requestDto.id)).thenReturn(java.util.Optional.of(foundPost))
+        `when`(postRepository.findByIdWithBook(requestDto.id)).thenReturn(java.util.Optional.of(foundPost))
         `when`(postRepository.save(foundPost)).thenReturn(updatedPost)
 
         // When
@@ -227,15 +237,21 @@ class PostServiceTest {
     }
 
     @Test
-    fun updatePost_WhenInvalidPostId_ThrowsNotFoundException() {
+    fun `업데이트하고자하는 포스트가 조회되지 않는 경우 NotfoundException을 발생시킨다`() {
         // Given
         val requestDto =
             UpdatePostReqDto(
                 id = UUID.randomUUID(),
                 title = "Updated Title",
                 content = "Updated Content",
+                bookInfo =
+                    UpdateBookReqDto(
+                        "Updated Book Title",
+                        "Updated Book Content",
+                        "Updated Book Link",
+                    ),
             )
-        `when`(postRepository.findById(requestDto.id)).thenReturn(java.util.Optional.empty())
+        `when`(postRepository.findByIdWithBook(requestDto.id)).thenReturn(java.util.Optional.empty())
 
         // When
         val exception =
@@ -248,7 +264,7 @@ class PostServiceTest {
     }
 
     @Test
-    fun deletePost_WhenValidPostId_ReturnsOk() {
+    fun `포스트 삭제가 가능하다`() {
         // Given
         val postId = UUID.randomUUID()
 
