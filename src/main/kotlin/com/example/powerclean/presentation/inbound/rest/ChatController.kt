@@ -9,16 +9,16 @@ import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 import reactor.core.publisher.Flux
 
-@RestController
+@RestController("/ai")
 class ChatController(private val chatModel: OpenAiChatModel) {
-    @GetMapping("/ai/generate")
+    @GetMapping("/generate")
     fun generate(
         @RequestParam(value = "message", defaultValue = "Tell me a joke") message: String,
     ): Map<String, Any> {
         return mapOf("generation" to chatModel.call(message))
     }
 
-    @GetMapping("/ai/generateStream")
+    @GetMapping("/generateStream")
     fun generaeStream(
         @RequestParam(value = "message", defaultValue = "Tell me a joke") message: String,
     ): Flux<ChatResponse> {
