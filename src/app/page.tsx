@@ -52,17 +52,20 @@ export default function Home() {
         Share book information and engage in discussions!
       </p>
 
-      <div className="mb-6 flex gap-3">
-        <Link href="/auth" className="btn-outline">내 계정 관리 (로그인/회원가입)</Link>
-        <button className="btn" onClick={() => router.push("/post/create")}>Add Post ➕</button>
+      <div className="flex justify-center gap-6 mb-8">
+        <button
+          className="btn btn-lg hover:scale-105 transition-transform duration-200"
+          onClick={() => router.push("/post/create")}
+        >
+          Add Post ➕
+        </button>
+        <button
+          className="btn-outline btn-lg hover:scale-105 transition-transform duration-200"
+          onClick={toggleList}
+        >
+          {showList ? "Hide Posts ▲" : "View Posts ▼"}
+        </button>
       </div>
-
-      <button
-        className="btn-outline mb-4"
-        onClick={toggleList}
-      >
-        {showList ? "Hide Posts ▲" : "View Posts ▼"}
-      </button>
 
       <div
         className={`transition-all duration-300 overflow-hidden w-full ${
@@ -89,12 +92,16 @@ export default function Home() {
                         />
                       </div>
                     )}
-                    📖 <strong>{post.bookInfo.title}</strong>: {post.bookInfo.content}
+                    📖 <strong>{post.bookInfo.title}</strong>:{" "}
+                    {post.bookInfo.content}
                   </div>
                 )}
-                <p className="text-black/80 mb-2 line-clamp-2">{post.content}</p>
+                <p className="text-black/80 mb-2 line-clamp-2">
+                  {post.content}
+                </p>
                 <p className="text-sm text-black/60 mb-1">
-                  👍 {post.likeCount} | 🕒 {new Date(post.createdAt).toLocaleString()}
+                  👍 {post.likeCount} | 🕒{" "}
+                  {new Date(post.createdAt).toLocaleString()}
                 </p>
                 <Link href={`/post/${post.id}`} className="btn-link text-sm">
                   Read more →

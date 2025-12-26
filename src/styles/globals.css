@@ -99,6 +99,9 @@
   .btn-link {
     @apply text-link underline underline-offset-2 decoration-1 hover:decoration-2 px-0 py-0;
   }
+  .btn-lg {
+    @apply px-8 py-4 text-lg;
+  }
 }
 
 /* Component layer examples for reusable layout primitives */

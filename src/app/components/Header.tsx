@@ -12,9 +12,12 @@ export default function Header() {
           </Link>
         </div>
         <nav className="flex items-center gap-6 text-sm">
-          <Link href="/post" className="underline underline-offset-2 decoration-1 text-link hover:decoration-2">Posts</Link>
-          <Link href="/post/create" className="underline underline-offset-2 decoration-1 text-link hover:decoration-2">Write</Link>
-          <Link href="/auth" className="underline underline-offset-2 decoration-1 text-link hover:decoration-2">Account</Link>
+          <Link
+            href="/auth"
+            className="underline underline-offset-2 decoration-1 text-link hover:decoration-2"
+          >
+            Account
+          </Link>
         </nav>
       </div>
     </header>
