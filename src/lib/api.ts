@@ -86,7 +86,7 @@ export async function createReview(data: {
   try {
     const response = await fetch(`${serverUrl}/review`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: authHeaders(),
       body: JSON.stringify(data),
     });
     await handleResponse(response);
@@ -121,7 +121,7 @@ export async function updateReview({
 }) {
   const res = await fetch(`${serverUrl}/review`, {
     method: "PATCH",
-    headers: { "Content-Type": "application/json" },
+    headers: authHeaders(),
     body: JSON.stringify({ content, rating, reviewId }),
   });
   await handleResponse(res);
@@ -130,6 +130,7 @@ export async function updateReview({
 
 export async function deleteReview(reviewId: string) {
   const res = await fetch(`${serverUrl}/review/${reviewId}`, {
+    headers: authHeaders(),
     method: "DELETE",
   });
   await handleResponse(res);
@@ -196,7 +197,10 @@ async function handleResponse(res: Response) {
       setToken(null);
     } catch {}
     if (typeof window !== "undefined") {
-      const current = window.location.pathname + window.location.search + window.location.hash;
+      const current =
+        window.location.pathname +
+        window.location.search +
+        window.location.hash;
       const redirect = encodeURIComponent(current);
       window.location.href = `/auth?redirect=${redirect}`;
     }
