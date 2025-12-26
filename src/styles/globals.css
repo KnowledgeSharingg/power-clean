@@ -1,6 +1,7 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+@theme {
+  --color-link: #0a62ff;
+}
 
 /* Base layer to establish a clean blog look: white background, black text,
    generous spacing, blue underlined links, readable typography. */
@@ -13,7 +14,8 @@
     @apply bg-white text-black antialiased font-sans; /* #ffffff / #000000 */
   }
   /* Comfortable reading width and spacing defaults for prose content */
-  article, .prose-default {
+  article,
+  .prose-default {
     @apply max-w-prose mx-auto px-6 sm:px-8 lg:px-10; /* generous side padding */
   }
 
@@ -32,11 +34,15 @@
   a {
     @apply text-link underline underline-offset-2 decoration-1 hover:decoration-2;
   }
-  strong { @apply font-semibold; }
-  em { @apply italic; }
+  strong {
+    @apply font-semibold;
+  }
+  em {
+    @apply italic;
+  }
 
   blockquote {
-    @apply border-l-4 border-black/10 pl-4 ml-0 italic text-black/80 my-8; 
+    @apply border-l-4 border-black/10 pl-4 ml-0 italic text-black/80 my-8;
   }
 
   /* Inline code */
@@ -47,21 +53,39 @@
   pre {
     @apply font-mono text-sm leading-7 bg-black/5 border border-black/10 rounded-md p-4 overflow-x-auto my-8;
   }
-  pre code { @apply bg-transparent p-0; }
+  pre code {
+    @apply bg-transparent p-0;
+  }
 
   /* Lists */
-  ul { @apply list-disc pl-6 my-6 space-y-2; }
-  ol { @apply list-decimal pl-6 my-6 space-y-2; }
-  li { @apply leading-7; }
+  ul {
+    @apply list-disc pl-6 my-6 space-y-2;
+  }
+  ol {
+    @apply list-decimal pl-6 my-6 space-y-2;
+  }
+  li {
+    @apply leading-7;
+  }
 
   /* Tables */
-  table { @apply w-full border-collapse my-8 text-left; }
-  thead th { @apply border-b border-black/20 font-semibold py-3; }
-  tbody td { @apply border-b border-black/10 py-3 align-top; }
-  tbody tr:hover { @apply bg-black/5; }
+  table {
+    @apply w-full border-collapse my-8 text-left;
+  }
+  thead th {
+    @apply border-b border-black/20 font-semibold py-3;
+  }
+  tbody td {
+    @apply border-b border-black/10 py-3 align-top;
+  }
+  tbody tr:hover {
+    @apply bg-black/5;
+  }
 
   /* Forms */
-  input, textarea, select {
+  input,
+  textarea,
+  select {
     @apply w-full rounded-md border border-black/20 bg-white text-black placeholder-black/40 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-link focus:border-link/40;
   }
 
@@ -79,12 +103,23 @@
 
 /* Component layer examples for reusable layout primitives */
 @layer components {
-  .site-container { /* top-level page container */
+  .site-container {
+    /* top-level page container */
     @apply max-w-3xl mx-auto px-6 sm:px-8 lg:px-10; /* generous side padding */
   }
-  .post-title { @apply text-4xl sm:text-5xl font-extrabold leading-tight tracking-tight mt-10 mb-6; }
-  .post-meta { @apply text-sm text-black/60 mt-2; }
-  .prose-muted { @apply text-black/80; }
-  .card { @apply bg-white border border-black/10 rounded-lg shadow-sm; }
-  .card-padded { @apply card p-5 sm:p-6; }
+  .post-title {
+    @apply text-4xl sm:text-5xl font-extrabold leading-tight tracking-tight mt-10 mb-6;
+  }
+  .post-meta {
+    @apply text-sm text-black/60 mt-2;
+  }
+  .prose-muted {
+    @apply text-black/80;
+  }
+  .card {
+    @apply bg-white border border-black/10 rounded-lg shadow-sm;
+  }
+  .card-padded {
+    @apply bg-white border border-black/10 rounded-lg shadow-sm p-5 sm:p-6;
+  }
 }

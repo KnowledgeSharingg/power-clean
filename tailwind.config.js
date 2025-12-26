@@ -4,11 +4,7 @@ const lineClamp = require("@tailwindcss/line-clamp");
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: [
-    "./src/**/*.{js,ts,jsx,tsx}",
-    "./src/app/**/*.{js,ts,jsx,tsx}",
-    "./src/components/**/*.{js,ts,jsx,tsx}",
-  ],
+  content: ["./src/**/*.{js,ts,jsx,tsx,mdx}"],
   theme: {
     extend: {
       colors: {
@@ -29,8 +25,8 @@ module.exports = {
           "Cantarell",
           "Helvetica Neue",
           "Arial",
-          "\"Apple Color Emoji\"",
-          "\"Segoe UI Emoji\"",
+          '"Apple Color Emoji"',
+          '"Segoe UI Emoji"',
         ],
         mono: [
           "ui-monospace",
