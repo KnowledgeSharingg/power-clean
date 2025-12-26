@@ -106,7 +106,7 @@ export default function PostDetailPage({
 
   return (
     <div className="site-container">
-      <div className="card-padded">
+      <div className="max-w-3xl mx-auto card-padded">
         {isEditing ? (
           <>
             <input
@@ -155,42 +155,51 @@ export default function PostDetailPage({
               <button className="btn" onClick={handleUpdate}>
                 저장
               </button>
-              <button className="btn-outline" onClick={() => setIsEditing(false)}>
+              <button
+                className="btn-outline"
+                onClick={() => setIsEditing(false)}
+              >
                 취소
               </button>
             </div>
           </>
         ) : (
           <>
-            <h1 className="text-3xl font-bold mb-4">{post.title}</h1>
-            <p className="text-black/60">
+            <h1 className="text-3xl font-bold mb-6">{post.title}</h1>
+            <p className="text-sm text-gray-400 mb-8">
               작성일: {new Date(post.createdAt).toLocaleString()}
             </p>
-            <p className="text-lg mt-4">{post.content}</p>
+            <p className="leading-relaxed text-base sm:text-lg mt-4">
+              {post.content}
+            </p>
 
-            <div className="border-t border-black/10 pt-4 mt-6">
-              <h2 className="text-2xl font-semibold">📚 관련 도서 정보</h2>
-              {post.bookInfo?.coverImageUrl && (
-                <div className="my-4 flex justify-center">
-                  <Image
-                    src={toAbsoluteUrl(post.bookInfo.coverImageUrl)}
-                    alt={`${post.bookInfo.title} cover`}
-                    width={96}
-                    height={144}
-                    className="rounded shadow-sm object-contain"
-                  />
+            <div className="bg-gray-50 rounded-xl p-6 mb-10">
+              <h2 className="text-2xl font-semibold mb-4">📚 관련 도서 정보</h2>
+              <div className="flex gap-6">
+                {post.bookInfo?.coverImageUrl && (
+                  <div>
+                    <Image
+                      src={toAbsoluteUrl(post.bookInfo.coverImageUrl)}
+                      alt={`${post.bookInfo.title} cover`}
+                      width={112}
+                      height={160}
+                      className="w-28 h-40 object-cover rounded-lg"
+                    />
+                  </div>
+                )}
+                <div className="flex-1">
+                  <p className="text-xl font-bold">{post.bookInfo?.title}</p>
+                  <p className="text-black/80 mt-2">{post.bookInfo?.content}</p>
+                  <a
+                    href={post.bookInfo?.link}
+                    className="inline-flex items-center px-4 py-2 rounded-lg border border-black/20 text-sm mt-4 hover:bg-black hover:text-white hover:scale-105 transition"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    도서 링크
+                  </a>
                 </div>
-              )}
-              <p className="text-xl font-bold">{post.bookInfo?.title}</p>
-              <p className="text-black/80">{post.bookInfo?.content}</p>
-              <a
-                href={post.bookInfo?.link}
-                className="btn-link"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                도서 링크
-              </a>
+              </div>
               {post.bookInfo?.authorInfo?.name && (
                 <div className="border-t border-black/10 pt-4 mt-6">
                   <h2 className="text-2xl font-semibold">✍️ 작가 정보</h2>
@@ -203,12 +212,14 @@ export default function PostDetailPage({
                   </ul>
                 </div>
               )}
+            </div>
+            <div className="mt-12 pt-8 border-t">
               <button
-              className="bg-blue-600 text-white p-2 rounded mt-4"
-              onClick={() => setIsEditing(true)}
-            >
-              수정하기
-            </button>
+                className="px-4 py-2 rounded-lg bg-black text-white hover:scale-105 transition"
+                onClick={() => setIsEditing(true)}
+              >
+                수정하기
+              </button>
             </div>
           </>
         )}
