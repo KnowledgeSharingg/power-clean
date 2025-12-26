@@ -136,14 +136,19 @@ export default function ReviewSection({
         ) : (
           <ul className="list-none space-y-3">
             {reviews.map((r) => (
-              <li key={r.id} className="bg-white border border-gray-100 p-4 rounded-xl shadow-sm">
+              <li
+                key={r.id}
+                className="bg-white border border-gray-100 p-4 rounded-xl shadow-sm"
+              >
                 <div className="flex items-start justify-between mb-2">
                   <div className="flex items-center gap-2">
                     <span className="text-yellow-500">⭐</span>
                     <span className="text-base font-semibold">{r.rating}</span>
                   </div>
                   {r.createdAt && (
-                    <span className="text-gray-400 text-xs">{new Date(r.createdAt).toLocaleDateString()}</span>
+                    <span className="text-gray-400 text-xs">
+                      {new Date(r.createdAt).toLocaleDateString()}
+                    </span>
                   )}
                 </div>
 
