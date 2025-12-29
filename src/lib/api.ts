@@ -1,5 +1,34 @@
 export const serverUrl = process.env.SERVER_URL || "http://localhost:8080";
 
+export interface GetBookDetailResDto {
+  id: number | null;
+  title: string;
+  content: string;
+  link: string;
+  coverImageUrl: string;
+  authorInfo: string;
+}
+
+export interface GetCreatedPostByAIResDto {
+  title: string;
+  content: string;
+  bookInfo: GetBookDetailResDto;
+}
+
+export async function getCreatedPostByAI(
+  script: string
+): Promise<GetCreatedPostByAIResDto> {
+  const url = `${serverUrl}/post/ai?script=${encodeURIComponent(script)}`;
+  const res = await fetch(url, {
+    method: "GET",
+    headers: authHeadersNoContentType(),
+    cache: "no-store",
+  });
+  await handleResponse(res);
+  if (!res.ok) throw new Error("AI 자동 생성 실패");
+  return await res.json();
+}
+
 export async function createPost(data: {
   title: string;
   content: string;
