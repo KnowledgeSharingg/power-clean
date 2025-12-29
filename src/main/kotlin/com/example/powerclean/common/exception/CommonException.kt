@@ -1,21 +1,11 @@
 package com.example.powerclean.common.exception
 
-class CommonException(override val message: String, val code: ExceptionCode) : Exception()
+open class CommonException(message: String, val code: ExceptionCode) : RuntimeException(message)
 
-class CustomNotFoundException(override val message: String, val code: ExceptionCode = ExceptionCode.NOT_FOUND) :
-    Exception()
+class CustomNotFoundException(message: String) : CommonException(message, ExceptionCode.NOT_FOUND)
 
-class CustomIllegalArgumentException(
-    override val message: String,
-    val code: ExceptionCode = ExceptionCode.ILLEGAL_ARGUMENT,
-) : Exception()
+class CustomIllegalArgumentException(message: String) : CommonException(message, ExceptionCode.ILLEGAL_ARGUMENT)
 
-class CustomConflictException(
-    override val message: String,
-    val code: ExceptionCode = ExceptionCode.CONFLICT,
-) : Exception()
+class CustomConflictException(message: String) : CommonException(message, ExceptionCode.CONFLICT)
 
-class CustomInternalServerErrorException(
-    override val message: String,
-    val code: ExceptionCode = ExceptionCode.INTERNAL_ERROR,
-) : Exception()
+class CustomInternalServerErrorException(message: String) : CommonException(message, ExceptionCode.INTERNAL_ERROR)

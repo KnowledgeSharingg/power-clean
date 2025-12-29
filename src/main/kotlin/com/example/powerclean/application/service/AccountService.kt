@@ -3,6 +3,7 @@ package com.example.powerclean.application.service
 import com.example.powerclean.application.port.inbound.AccountAuthenticateUseCase
 import com.example.powerclean.application.port.inbound.AccountRegisterUseCase
 import com.example.powerclean.application.port.outbound.persistence.AccountRepository
+import com.example.powerclean.common.exception.CustomConflictException
 import com.example.powerclean.domain.model.Account
 import com.example.powerclean.presentation.dto.*
 import org.springframework.security.crypto.password.PasswordEncoder
@@ -21,9 +22,17 @@ class AccountService(
     private val logger = org.slf4j.LoggerFactory.getLogger(AccountService::class.java)
 
     override fun registerAccount(requestDto: RegisterAccountReqDto): Account {
-        return accountRepository.save(
-            Account.from(requestDto.apply { this.password = passwordEncoder.encode(this.password) }),
-        )
+        return requestDto
+            .also {
+                if (accountRepository.findByEmail(it.email) != null) {
+                    throw CustomConflictException(
+                        "Email already exists.",
+                    )
+                }
+            }
+            .apply { password = passwordEncoder.encode(password) }
+            .let { Account.from(it) }
+            .let { accountRepository.save(it) }
     }
 
     // TODO: usecase 이 메소드에 해당되는걸 만들까 ? 아님 accountRegisterUseCase랑 합칠까 ? => 강의 코드 확인해보기.

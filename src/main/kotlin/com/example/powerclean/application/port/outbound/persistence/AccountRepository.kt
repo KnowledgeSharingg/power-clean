@@ -22,5 +22,5 @@ public interface AccountRepository {
     fun updateNicknameById(
         @Param("accountId") accountId: UUID,
         @Param("nickname") nickname: String,
-    ): Int 
+    ): Int
 }

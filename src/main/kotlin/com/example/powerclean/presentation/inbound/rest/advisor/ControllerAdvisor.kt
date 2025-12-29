@@ -16,14 +16,13 @@ class ControllerAdvisor {
         val body =
             CommonExceptionResponse(
                 e.code.status,
-                e.message,
+                e.message ?: "Unknown error",
                 e.code.code,
                 LocalDateTime.now().toString(),
                 "",
             )
 
         logger.error("ControllerAdvisor:handleCommonException: e.message - ${e.message}", e)
-
         return ResponseEntity.status(e.code.status).body(body)
     }
 
