@@ -8,6 +8,7 @@ const nextConfig: NextConfig = {
       "localhost",
       "127.0.0.1",
       "image.aladin.co.kr",
+      "contents.kyobobook.co.kr",
     ],
   },
 };
