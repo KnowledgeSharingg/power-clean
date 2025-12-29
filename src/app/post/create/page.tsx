@@ -142,6 +142,7 @@ export default function CreatePost() {
                 type="text"
                 name="title"
                 placeholder="Post Title"
+                value={form.title}
                 onChange={handleChange}
                 required
               />
@@ -158,6 +159,7 @@ export default function CreatePost() {
               <textarea
                 name="content"
                 placeholder="Post Content"
+                value={form.content}
                 onChange={handleChange}
                 required
                 rows={6}
@@ -168,6 +170,7 @@ export default function CreatePost() {
                 type="text"
                 name="bookInfo.title"
                 placeholder="Book Title"
+                value={form.bookInfo.title}
                 onChange={handleChange}
               />
             </div>
@@ -176,6 +179,7 @@ export default function CreatePost() {
                 type="text"
                 name="bookInfo.content"
                 placeholder="Book Summary"
+                value={form.bookInfo.content}
                 onChange={handleChange}
               />
             </div>
@@ -184,6 +188,7 @@ export default function CreatePost() {
                 type="text"
                 name="bookInfo.link"
                 placeholder="Book Link"
+                value={form.bookInfo.link}
                 onChange={handleChange}
               />
             </div>
