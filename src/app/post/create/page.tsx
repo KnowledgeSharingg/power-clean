@@ -84,9 +84,7 @@ export default function CreatePost() {
             aiData.bookInfo?.coverImageUrl ?? prev.bookInfo.coverImageUrl,
           authorInfo: {
             ...prev.bookInfo.authorInfo,
-            history:
-              (aiData.bookInfo as any)?.authorInfo ??
-              prev.bookInfo.authorInfo.history,
+            history: prev.bookInfo.authorInfo.history,
           },
         },
       }));
