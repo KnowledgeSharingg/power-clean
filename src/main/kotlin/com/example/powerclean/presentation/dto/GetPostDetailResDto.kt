@@ -10,4 +10,6 @@ data class GetPostDetailResDto(
     val createdAt: String,
     val updatedAt: String,
     val bookInfo: GetBookDetailResDto,
+    val likedByMe: Boolean,
+    val bookmarkedByMe: Boolean,
 )
