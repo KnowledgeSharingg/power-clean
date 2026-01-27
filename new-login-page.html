@@ -1,0 +1,209 @@
+<!doctype html>
+<html class="dark" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap"
+      rel="stylesheet"
+    />
+    <script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              primary: "#137fec",
+              "background-light": "#f6f7f8",
+              "background-dark": "#101922",
+            },
+            fontFamily: {
+              display: ["Plus Jakarta Sans", "sans-serif"],
+            },
+            borderRadius: {
+              DEFAULT: "0.25rem",
+              lg: "0.5rem",
+              xl: "0.75rem",
+              "2xl": "1rem",
+              full: "9999px",
+            },
+          },
+        },
+      };
+    </script>
+    <style type="text/tailwindcss">
+      :root {
+        --glass-bg: rgba(255, 255, 255, 0.03);
+        --glass-border: rgba(255, 255, 255, 0.08);
+      }
+      body {
+        font-family: "Plus Jakarta Sans", sans-serif;
+        min-height: 100dvh;
+      }
+      .bg-mesh {
+        background-color: #101922;
+        background-image:
+          radial-gradient(
+            at 50% 0%,
+            rgba(19, 127, 236, 0.15) 0px,
+            transparent 50%
+          ),
+          radial-gradient(
+            at 100% 100%,
+            rgba(19, 127, 236, 0.08) 0px,
+            transparent 50%
+          );
+      }
+      .input-field {
+        @apply w-full bg-white/5 border border-white/10 rounded-xl h-14 px-4 text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all;
+      }
+      #nickname-field {
+        display: none;
+      }
+      .book-logo-gradient {
+        background: linear-gradient(135deg, #137fec 0%, #0a4d8f 100%);
+      }
+      .logo-shadow {
+        box-shadow: 0 20px 40px -12px rgba(19, 127, 236, 0.4);
+      }
+    </style>
+    <style>
+      body {
+        min-height: max(884px, 100dvh);
+      }
+    </style>
+  </head>
+  <body class="bg-background-dark font-display text-white">
+    <div
+      class="relative flex min-h-screen w-full flex-col overflow-x-hidden bg-mesh"
+    >
+      <div class="w-full h-[25vh] relative overflow-hidden">
+        <div
+          class="absolute inset-0 bg-center bg-no-repeat bg-cover opacity-40"
+          style="
+            background-image: url(&quot;https://lh3.googleusercontent.com/aida-public/AB6AXuB5xha_tE_EzkeVZmfduxskX759l7SyJFtnt594Xk8J478V4-2w7VmAFC-Je7rn7y4cazW7yHGPDRmCDDhGGDnzf_h9q9vw4_e2xjzgjX-sV8453N5yG7EOsKEUjEzHNnFAqljNmVHtPAEQi1s9J0fzolgiRlrm0P6BGwoH97r3xOJsCmRqNfNFLUZNDPMJKZFJpj682QUIifXRmUihhzzIBe03td_5yqVJAZ8eRAiwjiSSoi9UcnMx-gD54MPPdWZVfUAMWRluRKc&quot;);
+          "
+        ></div>
+        <div
+          class="absolute inset-0 bg-gradient-to-b from-transparent via-background-dark/60 to-background-dark"
+        ></div>
+      </div>
+      <div class="relative px-6 flex flex-col items-center -mt-16 z-10">
+        <div class="relative mb-6">
+          <div
+            class="absolute -inset-6 bg-primary/20 blur-3xl rounded-full opacity-60"
+          ></div>
+          <div class="relative">
+            <div
+              class="w-24 h-24 book-logo-gradient rounded-[2rem] flex items-center justify-center logo-shadow border border-white/20 transform -rotate-3 hover:rotate-0 transition-transform duration-500"
+            >
+              <span
+                class="material-symbols-outlined text-white text-6xl select-none"
+                style="
+                  font-variation-settings:
+                    &quot;FILL&quot; 1,
+                    &quot;wght&quot; 300,
+                    &quot;GRAD&quot; 0,
+                    &quot;opsz&quot; 48;
+                "
+                >menu_book</span
+              >
+            </div>
+            <div
+              class="absolute -bottom-2 -right-2 w-10 h-10 bg-white/10 backdrop-blur-xl rounded-xl border border-white/20 flex items-center justify-center shadow-lg transform rotate-12"
+            >
+              <span
+                class="material-symbols-outlined text-primary text-2xl font-bold"
+                >book_4</span
+              >
+            </div>
+          </div>
+        </div>
+        <h1
+          class="text-white tracking-tight text-4xl font-bold leading-tight text-center pb-1"
+        >
+          Bookly
+        </h1>
+        <p
+          class="text-slate-400 text-sm font-medium leading-relaxed text-center max-w-[280px]"
+        >
+          Your social gateway to a world of stories and shared discovery.
+        </p>
+      </div>
+      <div
+        class="mt-10 flex-1 flex flex-col px-6 max-w-[480px] mx-auto w-full gap-4"
+      >
+        <div class="space-y-4">
+          <div class="relative group">
+            <input
+              class="input-field"
+              placeholder="Email address"
+              type="email"
+            />
+          </div>
+          <div class="relative group">
+            <input class="input-field" placeholder="Password" type="password" />
+          </div>
+          <div class="space-y-2" id="nickname-field">
+            <p
+              class="text-xs text-primary font-medium px-1 flex items-center gap-1"
+            >
+              <span class="material-symbols-outlined text-sm">info</span>
+              New account? Choose a nickname to join.
+            </p>
+            <input
+              class="input-field border-primary/30"
+              placeholder="Your Nickname"
+              type="text"
+            />
+          </div>
+        </div>
+        <button
+          class="flex items-center justify-center rounded-xl h-14 bg-primary text-white text-base font-bold w-full shadow-lg shadow-primary/30 active:scale-[0.98] transition-all mt-4"
+        >
+          Sign In
+        </button>
+        <div class="flex flex-col items-center gap-6 mt-4">
+          <button
+            class="text-slate-500 text-sm font-semibold hover:text-slate-300 transition-colors"
+          >
+            Forgot your password?
+          </button>
+          <div class="w-full flex items-center gap-4">
+            <div class="h-[1px] flex-1 bg-white/10"></div>
+            <span
+              class="text-[10px] uppercase tracking-[0.2em] text-slate-600 font-bold"
+              >Secure Literary Access</span
+            >
+            <div class="h-[1px] flex-1 bg-white/10"></div>
+          </div>
+        </div>
+      </div>
+      <div class="pb-8 pt-8 flex flex-col items-center gap-6">
+        <div class="flex justify-center gap-8 px-6">
+          <a
+            class="text-[11px] text-slate-600 uppercase tracking-widest font-bold hover:text-primary transition-colors"
+            href="#"
+            >Terms</a
+          >
+          <a
+            class="text-[11px] text-slate-600 uppercase tracking-widest font-bold hover:text-primary transition-colors"
+            href="#"
+            >Privacy</a
+          >
+          <a
+            class="text-[11px] text-slate-600 uppercase tracking-widest font-bold hover:text-primary transition-colors"
+            href="#"
+            >Support</a
+          >
+        </div>
+        <div class="h-1 w-32 bg-white/5 rounded-full mb-2"></div>
+      </div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,342 @@
+<!doctype html>
+
+<html class="dark" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Bookly - Main Feed</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+      rel="stylesheet"
+    />
+    <script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              primary: "#137fec",
+              "background-light": "#f6f7f8",
+              "background-dark": "#101922",
+            },
+            fontFamily: {
+              display: ["Plus Jakarta Sans"],
+            },
+            borderRadius: {
+              DEFAULT: "0.25rem",
+              lg: "0.5rem",
+              xl: "0.75rem",
+              full: "9999px",
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      body {
+        font-family: "Plus Jakarta Sans", sans-serif;
+      }
+      .ios-tab-bar {
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+      }
+    </style>
+    <style>
+      body {
+        min-height: max(884px, 100dvh);
+      }
+    </style>
+  </head>
+  <body
+    class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-white min-h-screen"
+  >
+    <!-- Top Navigation Bar -->
+    <header
+      class="sticky top-0 z-50 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800"
+    >
+      <div class="flex items-center p-4 justify-between max-w-lg mx-auto">
+        <div class="flex items-center gap-3">
+          <div
+            class="bg-primary rounded-lg p-1 flex items-center justify-center"
+          >
+            <span class="material-symbols-outlined text-white text-2xl"
+              >menu_book</span
+            >
+          </div>
+          <h2 class="text-xl font-extrabold tracking-tight">Bookly</h2>
+        </div>
+        <div class="flex items-center gap-2">
+          <button
+            class="flex items-center justify-center rounded-full h-10 w-10 bg-primary/10 text-primary transition-colors hover:bg-primary/20"
+          >
+            <span class="material-symbols-outlined">add_circle</span>
+          </button>
+          <div
+            class="size-9 rounded-full bg-slate-300 dark:bg-slate-700 bg-cover bg-center"
+            data-alt="User profile avatar portrait"
+            style="
+              background-image: url(&quot;https://lh3.googleusercontent.com/aida-public/AB6AXuBpQT67oSN5AxuNv7Bxde3GAcpeLfdzomgujxTux3AYslxz6MQD-__o8yLuHAH-oSBmEr5MbC17IZm3PZeezmfieVHuiYjjerHVvZA9ibHvFPxkvw3u21sWk5LPkKFx6PiHp693OyHuYLXuVhnvrj20r4rs48Gd1JswXBavJRzH06JTj_v5C_w-MBU2q2uIrksLjP5FXDYtsTGU7phS-b9jKdoIYaG2x2ijQ8Px9mZ2hvGkoEwFgCx6YjUqUKDkDeUVm9Yo8lXcAXo&quot;);
+            "
+          ></div>
+        </div>
+      </div>
+    </header>
+    <main class="max-w-lg mx-auto pb-24">
+      <!-- Search Section -->
+      <div class="px-4 py-4">
+        <label class="relative flex items-center w-full">
+          <div class="absolute left-4 text-slate-400 pointer-events-none">
+            <span class="material-symbols-outlined">search</span>
+          </div>
+          <input
+            class="w-full h-12 pl-12 pr-4 rounded-xl border-none bg-slate-200/50 dark:bg-slate-800/50 focus:ring-2 focus:ring-primary focus:bg-white dark:focus:bg-slate-800 transition-all text-base placeholder:text-slate-500 dark:placeholder:text-slate-400"
+            placeholder="Books, authors, or users..."
+            type="text"
+          />
+        </label>
+      </div>
+      <!-- Feed Section -->
+      <div class="flex flex-col gap-6 px-4">
+        <!-- Post 1 -->
+        <div
+          class="bg-white dark:bg-[#192633] rounded-xl overflow-hidden shadow-sm border border-slate-100 dark:border-slate-800"
+        >
+          <div class="p-4 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+              <div
+                class="size-8 rounded-full bg-slate-200 bg-cover bg-center"
+                data-alt="AlexR user avatar"
+                style="
+                  background-image: url(&quot;https://lh3.googleusercontent.com/aida-public/AB6AXuBjKIrYw1fqULi0xjhRnamS-dMN-Fk0Wx2D1wAtUuLk-vHen4juSCOR2yLik9t21w8qvVesG8-pvILlR8siC2k-R0m1D_NhRXICH3MhX_caVOAlX4eznbThToHOP0OXAVCu63jSlA8c69z_LEkRv8zpCo7ooq1ZXj4i6LPf_YzYUzJhTMzNS2Qi4oq6JDGYMHGYdfJ8skw5NfGAwJ7vek_G_c4DXmZzjG2QABf3PIid_e4mB9wPIH2_jQwNNIptBAAZ0w0NxeNvEwQ&quot;);
+                "
+              ></div>
+              <div>
+                <p class="text-sm font-bold">AlexR</p>
+                <p class="text-xs text-slate-500 dark:text-slate-400">
+                  2 hours ago
+                </p>
+              </div>
+            </div>
+            <button class="text-slate-400">
+              <span class="material-symbols-outlined">more_horiz</span>
+            </button>
+          </div>
+          <div class="px-4">
+            <div
+              class="relative group aspect-[16/10] rounded-lg overflow-hidden bg-slate-900 shadow-inner"
+            >
+              <div
+                class="absolute inset-0 bg-cover bg-center opacity-90 transition-transform group-hover:scale-105 duration-500"
+                data-alt="Project Hail Mary book cover artwork"
+                style="
+                  background-image: url(&quot;https://lh3.googleusercontent.com/aida-public/AB6AXuCwfZrDrtulJ4gZbfhX6ByWFTyqt-bApVCYCG1aE3wtSfNWsWdPsJqApg_0AAWgfP6pYaPAqxYJT8wVLqavXg1m2w9CiJ79a0Etd5FO1ZeFS1xGrU-6LFIjRKdB3oT6Z7ycmtuD3pXOs_a-oBjy4wit-deWq3riz5dBYxS-QA4sMhDOx1UZsU9uKb3Nwc3gcZxI0HyR-usueyHNDY0B7gecsybwX1nwJsISCCr4MAkn6Nb3tRr4p0lrc9cVhDC5qsrzfWCOfVkyHaU&quot;);
+                "
+              ></div>
+              <div
+                class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"
+              ></div>
+              <div class="absolute bottom-4 left-4 right-4">
+                <span
+                  class="px-2 py-1 bg-primary text-white text-[10px] font-bold rounded uppercase tracking-wider"
+                  >Sci-Fi</span
+                >
+              </div>
+            </div>
+          </div>
+          <div class="p-4">
+            <div class="flex justify-between items-start mb-2">
+              <div>
+                <h3 class="text-lg font-bold leading-tight">
+                  Project Hail Mary
+                </h3>
+                <p class="text-primary text-sm font-medium">Andy Weir</p>
+              </div>
+              <div
+                class="flex items-center bg-yellow-500/10 text-yellow-500 px-2 py-1 rounded-lg"
+              >
+                <span class="material-symbols-outlined text-sm !text-yellow-500"
+                  >star</span
+                >
+                <span class="text-xs font-bold ml-1">4.9</span>
+              </div>
+            </div>
+            <p
+              class="text-slate-600 dark:text-slate-400 text-sm line-clamp-2 mb-4"
+            >
+              Incredible sci-fi journey. A must-read for space lovers! The
+              science is grounded yet mind-blowing.
+            </p>
+            <div
+              class="flex items-center justify-between pt-4 border-t border-slate-100 dark:border-slate-800"
+            >
+              <div class="flex gap-4">
+                <button
+                  class="flex items-center gap-1.5 text-slate-500 dark:text-slate-400 hover:text-primary transition-colors"
+                >
+                  <span class="material-symbols-outlined text-[22px]"
+                    >favorite</span
+                  >
+                  <span class="text-sm font-bold">1.2k</span>
+                </button>
+                <button
+                  class="flex items-center gap-1.5 text-slate-500 dark:text-slate-400 hover:text-primary transition-colors"
+                >
+                  <span class="material-symbols-outlined text-[22px]"
+                    >chat_bubble</span
+                  >
+                  <span class="text-sm font-bold">45</span>
+                </button>
+              </div>
+              <button
+                class="text-primary text-sm font-bold px-3 py-1.5 rounded-lg hover:bg-primary/10"
+              >
+                Read More
+              </button>
+            </div>
+          </div>
+        </div>
+        <!-- Post 2 -->
+        <div
+          class="bg-white dark:bg-[#192633] rounded-xl overflow-hidden shadow-sm border border-slate-100 dark:border-slate-800"
+        >
+          <div class="p-4 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+              <div
+                class="size-8 rounded-full bg-slate-200 bg-cover bg-center"
+                data-alt="SarahReads user avatar"
+                style="
+                  background-image: url(&quot;https://lh3.googleusercontent.com/aida-public/AB6AXuDSeH8wIXpSn1teq1MxEs-eILoHIiSWh7RA_Q83eZcuaY5bzFremzdt6tMtUDRn_DAs5EQd5pVH2T1F5gWvICnoivnJK_n2thE3Gtg-7-eJNkPCRs5iUGcNOGyBMNZpuHKLqDxC0Yi2cqPBuBEcYDrswJH8SsRtl9oOaH39coVU8KkBRyqyJ_58bESq7i7vLV5iFYzhUxOsOLcBgza3QLLTRW64973b9WN5nZz6zH7Q_HVDZOVPdFFxjMzYMPHyBniiEiBXc2xXx70&quot;);
+                "
+              ></div>
+              <div>
+                <p class="text-sm font-bold">SarahReads</p>
+                <p class="text-xs text-slate-500 dark:text-slate-400">
+                  5 hours ago
+                </p>
+              </div>
+            </div>
+            <button class="text-slate-400">
+              <span class="material-symbols-outlined">more_horiz</span>
+            </button>
+          </div>
+          <div class="px-4">
+            <div
+              class="relative group aspect-[16/10] rounded-lg overflow-hidden bg-slate-900 shadow-inner"
+            >
+              <div
+                class="absolute inset-0 bg-cover bg-center opacity-90 transition-transform group-hover:scale-105 duration-500"
+                data-alt="The Seven Husbands of Evelyn Hugo book aesthetic"
+                style="
+                  background-image: url(&quot;https://lh3.googleusercontent.com/aida-public/AB6AXuD5dnZTuQ-6OOyW76Un1Xao3sW8a5mwpLX7fp59OcCbAL_kIfunCZwA4AivAlNA2m6RUT3z1vFB9IyFc4FdRcsYjHsf6vv4y0WMZ-pi9rDPXXkjwhdedI34OjrjwdxkKHcshd1md1fNBaDe-GLkGZfpnTetgQpy7-L-wOwLVygjsJE7avB5o-bn-lMyeVQDfJ_B4Gez3z5SMT608FddOoyXAwRl3onKJRhcLIMpPgjNDmEqyoEh8qho75n3sJPFNT7BiXdZPM5bub0&quot;);
+                "
+              ></div>
+              <div
+                class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"
+              ></div>
+              <div class="absolute bottom-4 left-4 right-4">
+                <span
+                  class="px-2 py-1 bg-primary text-white text-[10px] font-bold rounded uppercase tracking-wider"
+                  >Fiction</span
+                >
+              </div>
+            </div>
+          </div>
+          <div class="p-4">
+            <div class="flex justify-between items-start mb-2">
+              <div>
+                <h3 class="text-lg font-bold leading-tight">
+                  The Seven Husbands of Evelyn Hugo
+                </h3>
+                <p class="text-primary text-sm font-medium">
+                  Taylor Jenkins Reid
+                </p>
+              </div>
+              <div
+                class="flex items-center bg-yellow-500/10 text-yellow-500 px-2 py-1 rounded-lg"
+              >
+                <span class="material-symbols-outlined text-sm !text-yellow-500"
+                  >star</span
+                >
+                <span class="text-xs font-bold ml-1">4.8</span>
+              </div>
+            </div>
+            <p
+              class="text-slate-600 dark:text-slate-400 text-sm line-clamp-2 mb-4"
+            >
+              An emotional rollercoaster through Old Hollywood glamour. I
+              haven't cried this much at a book in years.
+            </p>
+            <div
+              class="flex items-center justify-between pt-4 border-t border-slate-100 dark:border-slate-800"
+            >
+              <div class="flex gap-4">
+                <button
+                  class="flex items-center gap-1.5 text-slate-500 dark:text-slate-400 hover:text-primary transition-colors"
+                >
+                  <span class="material-symbols-outlined text-[22px]"
+                    >favorite</span
+                  >
+                  <span class="text-sm font-bold">892</span>
+                </button>
+                <button
+                  class="flex items-center gap-1.5 text-slate-500 dark:text-slate-400 hover:text-primary transition-colors"
+                >
+                  <span class="material-symbols-outlined text-[22px]"
+                    >chat_bubble</span
+                  >
+                  <span class="text-sm font-bold">12</span>
+                </button>
+              </div>
+              <button
+                class="text-primary text-sm font-bold px-3 py-1.5 rounded-lg hover:bg-primary/10"
+              >
+                Read More
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+    <!-- Post/Register Book FAB -->
+    <button
+      class="fixed right-6 bottom-24 bg-primary text-white size-14 rounded-full shadow-lg flex items-center justify-center hover:scale-110 active:scale-95 transition-transform z-40"
+    >
+      <span class="material-symbols-outlined text-3xl">add</span>
+    </button>
+    <!-- iOS Bottom Tab Bar -->
+    <nav
+      class="fixed bottom-0 left-0 right-0 ios-tab-bar bg-white/80 dark:bg-background-dark/80 border-t border-slate-200 dark:border-slate-800 px-6 py-3 flex justify-between items-center z-50"
+    >
+      <button class="flex flex-col items-center gap-1 text-primary">
+        <span class="material-symbols-outlined font-variation-fill">home</span>
+        <span class="text-[10px] font-bold">Home</span>
+      </button>
+      <button class="flex flex-col items-center gap-1 text-slate-400">
+        <span class="material-symbols-outlined">explore</span>
+        <span class="text-[10px] font-bold">Discover</span>
+      </button>
+      <button class="flex flex-col items-center gap-1 text-slate-400">
+        <span class="material-symbols-outlined">bookmarks</span>
+        <span class="text-[10px] font-bold">Library</span>
+      </button>
+      <button class="flex flex-col items-center gap-1 text-slate-400">
+        <span class="material-symbols-outlined">person</span>
+        <span class="text-[10px] font-bold">Profile</span>
+      </button>
+    </nav>
+    <style>
+      .font-variation-fill {
+        font-variation-settings: "FILL" 1;
+      }
+    </style>
+  </body>
+</html>

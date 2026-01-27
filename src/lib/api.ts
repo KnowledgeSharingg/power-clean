@@ -1,4 +1,4 @@
-export const serverUrl = process.env.SERVER_URL || "http://localhost:8080";
+export const serverUrl = process.env.NEXT_PUBLIC_SERVER_URL || "/api";
 
 export interface GetBookDetailResDto {
   id: number | null;
@@ -249,9 +249,17 @@ export async function signUp(data: {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data),
     });
-    return res.ok;
+    const ok = res.ok;
+    if (!ok) {
+      let bodyText = "";
+      try {
+        bodyText = await res.text();
+      } catch {}
+      console.error(`회원가입 실패: status=${res.status}, body=${bodyText}`);
+    }
+    return ok;
   } catch (e) {
-    console.error("회원가입 실패:", e);
+    console.error("회원가입 네트워크 오류:", e);
     return false;
   }
 }
@@ -263,8 +271,14 @@ export async function login(data: { email: string; password: string }) {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data),
     });
-    if (!res.ok) return null;
-    // 서버가 토큰을 문자열 혹은 {accessToken: string} 로 응답한다고 가정
+    if (!res.ok) {
+      let bodyText = "";
+      try {
+        bodyText = await res.text();
+      } catch {}
+      console.error(`로그인 실패 응답: status=${res.status}, body=${bodyText}`);
+      return null;
+    }
     const contentType = res.headers.get("content-type") || "";
     let token: string | null = null;
     if (contentType.includes("application/json")) {
@@ -276,7 +290,7 @@ export async function login(data: { email: string; password: string }) {
     if (token) setToken(token);
     return token;
   } catch (e) {
-    console.error("로그인 실패:", e);
+    console.error("로그인 네트워크 오류:", e);
     return null;
   }
 }
