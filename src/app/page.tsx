@@ -4,9 +4,9 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { getPostList, serverUrl } from "@/lib/api";
 import Link from "next/link";
+import Image from "next/image";
 import MaterialIcon from "./components/MaterialIcon";
 import PostCard from "./components/PostCard";
-import BottomTabBar from "./components/BottomTabBar";
 
 interface Post {
   id: number;
@@ -16,10 +16,14 @@ interface Post {
   createdAt: string;
   bookInfo?: {
     coverImageUrl: string;
-    title: string;
-    content: string;
   };
 }
+
+const toAbsoluteUrl = (url: string): string => {
+  if (!url) return "";
+  if (/^https?:\/\//i.test(url)) return url;
+  return `${serverUrl}${url.startsWith("/") ? url : "/" + url}`;
+};
 
 export default function Home() {
   const [posts, setPosts] = useState<Post[]>([]);
@@ -44,30 +48,24 @@ export default function Home() {
     };
   }, []);
 
-  const toAbsoluteUrl = (url: string): string => {
-    if (!url) return "";
-    if (/^https?:\/\//i.test(url)) return url;
-    return `${serverUrl}${url.startsWith("/") ? url : "/" + url}`;
-  };
-
   return (
     <div className="bg-background-light dark:bg-background-dark text-slate-900 dark:text-white min-h-screen">
       {/* Top Navigation Bar */}
       <header className="sticky top-0 z-50 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800">
         <div className="flex items-center p-4 justify-between max-w-lg mx-auto">
           <div className="flex items-center gap-3">
-            <div className="bg-primary rounded-lg p-1 flex items-center justify-center">
-              <MaterialIcon name="menu_book" className="text-white text-2xl" />
+            <div className="w-20 h-20 rounded-xl overflow-hidden flex-shrink-0">
+              <Image
+                src="/logo.png"
+                alt="서책의 파도 로고"
+                width={80}
+                height={80}
+                className="object-cover w-full h-full"
+              />
             </div>
-            <h2 className="text-xl font-extrabold tracking-tight">Bookly</h2>
+            <h2 className="text-xl font-extrabold tracking-tight">서책의 파도</h2>
           </div>
           <div className="flex items-center gap-2">
-            <button
-              className="flex items-center justify-center rounded-full h-10 w-10 bg-primary/10 text-primary transition-colors hover:bg-primary/20"
-              onClick={() => router.push("/post/create")}
-            >
-              <MaterialIcon name="add_circle" />
-            </button>
             <Link
               href="/auth"
               className="size-9 rounded-full bg-slate-300 dark:bg-slate-700 flex items-center justify-center"
@@ -114,14 +112,9 @@ export default function Home() {
                 content={post.content}
                 likeCount={post.likeCount}
                 createdAt={post.createdAt}
-                bookInfo={
-                  post.bookInfo
-                    ? {
-                        ...post.bookInfo,
-                        coverImageUrl: toAbsoluteUrl(
-                          post.bookInfo.coverImageUrl
-                        ),
-                      }
+                coverImageUrl={
+                  post.bookInfo?.coverImageUrl
+                    ? toAbsoluteUrl(post.bookInfo.coverImageUrl)
                     : undefined
                 }
               />
@@ -138,8 +131,6 @@ export default function Home() {
         <MaterialIcon name="add" size="3xl" />
       </button>
 
-      {/* Bottom Tab Bar */}
-      <BottomTabBar />
     </div>
   );
 }

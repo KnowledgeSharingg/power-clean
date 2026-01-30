@@ -124,7 +124,12 @@ export default function CreatePost() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const success = await createPost(form);
+    const postData = {
+      ...form,
+      title: form.bookInfo.title,
+      content: form.bookInfo.content,
+    };
+    const success = await createPost(postData);
     if (success) {
       alert("Post successfully created!");
       router.push("/");
@@ -149,11 +154,6 @@ export default function CreatePost() {
           <h2 className="text-lg font-bold leading-tight tracking-tight flex-1 text-center">
             Register New Book
           </h2>
-          <div className="flex size-10 items-center justify-end">
-            <button className="flex items-center justify-center rounded-lg text-primary">
-              <MaterialIcon name="barcode_scanner" />
-            </button>
-          </div>
         </div>
       </header>
 
@@ -236,43 +236,12 @@ export default function CreatePost() {
           </div>
         </section>
 
-        {/* 3. Your Social Post */}
+        {/* 3. Book Cover Photo */}
         <section className="px-4 mt-8 space-y-5">
           <h3 className="text-xs font-bold uppercase tracking-widest text-slate-500 dark:text-text-muted">
-            3. Your Social Post
+            3. Book Cover Photo
           </h3>
-          <div>
-            <label className="block text-[11px] font-bold text-slate-400 dark:text-slate-500 uppercase mb-1.5 ml-1">
-              Post Title
-            </label>
-            <input
-              className="w-full rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-card-dark-alt px-4 py-3 text-base font-semibold focus:ring-2 focus:ring-primary focus:border-transparent transition placeholder:font-normal"
-              placeholder="Catchy title for your review..."
-              type="text"
-              name="title"
-              value={form.title}
-              onChange={handleChange}
-              required
-            />
-          </div>
-          <div>
-            <label className="block text-[11px] font-bold text-slate-400 dark:text-slate-500 uppercase mb-1.5 ml-1">
-              Post Content
-            </label>
-            <textarea
-              className="w-full min-h-[140px] rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-card-dark-alt p-4 text-base focus:ring-2 focus:ring-primary focus:border-transparent transition"
-              placeholder="Share your personal thoughts, review, or favorite quotes..."
-              name="content"
-              value={form.content}
-              onChange={handleChange}
-              required
-            />
-          </div>
-          <div>
-            <label className="block text-[11px] font-bold text-slate-400 dark:text-slate-500 uppercase mb-1.5 ml-1">
-              Physical Book Photo
-            </label>
-            <div className="relative group">
+          <div className="relative group">
               {form.bookInfo.coverImageUrl ? (
                 <div className="w-full aspect-video rounded-xl overflow-hidden border border-slate-300 dark:border-slate-700">
                   <Image
@@ -301,7 +270,6 @@ export default function CreatePost() {
                   />
                 </label>
               )}
-            </div>
           </div>
         </section>
       </main>

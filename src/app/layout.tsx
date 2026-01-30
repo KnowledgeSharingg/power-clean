@@ -8,7 +8,7 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark">
       <head>
-        <title>Bookly - Book Sharing</title>
+        <title>서책의 파도</title>
         <meta
           name="description"
           content="A platform to share and discuss book information."

@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import { useRouter } from "next/navigation";
 import Image from "next/image";
 import MaterialIcon from "./MaterialIcon";
 
@@ -12,13 +12,7 @@ interface PostCardProps {
   createdAt: string;
   authorName?: string;
   authorAvatar?: string;
-  bookInfo?: {
-    coverImageUrl: string;
-    title: string;
-    content: string;
-  };
-  genre?: string;
-  rating?: number;
+  coverImageUrl?: string;
 }
 
 export default function PostCard({
@@ -27,16 +21,22 @@ export default function PostCard({
   content,
   likeCount,
   createdAt,
-  authorName = `Post #${id}`,
+  authorName = "Anonymous",
   authorAvatar,
-  bookInfo,
-  genre = "Book",
-  rating = 4.5,
+  coverImageUrl,
 }: PostCardProps) {
+  const router = useRouter();
   const timeAgo = getTimeAgo(createdAt);
 
+  const handleCardClick = () => {
+    router.push(`/post/${id}`);
+  };
+
   return (
-    <div className="bg-white dark:bg-card-dark rounded-xl overflow-hidden shadow-sm border border-slate-100 dark:border-slate-800">
+    <div
+      onClick={handleCardClick}
+      className="bg-white dark:bg-card-dark rounded-xl overflow-hidden shadow-sm border border-slate-100 dark:border-slate-800 cursor-pointer hover:shadow-md transition-shadow"
+    >
       {/* Author Header */}
       <div className="p-4 flex items-center justify-between">
         <div className="flex items-center gap-3">
@@ -55,70 +55,51 @@ export default function PostCard({
             </p>
           </div>
         </div>
-        <button className="text-slate-400">
+        <button className="text-slate-400" onClick={(e) => e.stopPropagation()}>
           <MaterialIcon name="more_horiz" />
         </button>
       </div>
 
       {/* Cover Image */}
-      {bookInfo?.coverImageUrl && (
+      {coverImageUrl && (
         <div className="px-4">
-          <div className="relative group aspect-[16/10] rounded-lg overflow-hidden bg-slate-900 shadow-inner">
+          <div className="relative aspect-[16/10] rounded-lg overflow-hidden bg-slate-900 shadow-inner">
             <Image
-              src={bookInfo.coverImageUrl}
-              alt={`${bookInfo.title} cover`}
+              src={coverImageUrl}
+              alt="Cover"
               fill
-              className="object-cover opacity-90 transition-transform group-hover:scale-105 duration-500"
+              className="object-cover"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-            <div className="absolute bottom-4 left-4 right-4">
-              <span className="px-2 py-1 bg-primary text-white text-[10px] font-bold rounded uppercase tracking-wider">
-                {genre}
-              </span>
-            </div>
           </div>
         </div>
       )}
 
       {/* Content */}
       <div className="p-4">
-        <div className="flex justify-between items-start mb-2">
-          <div>
-            <h3 className="text-lg font-bold leading-tight">{title}</h3>
-            {bookInfo?.title && (
-              <p className="text-primary text-sm font-medium">
-                {bookInfo.title}
-              </p>
-            )}
-          </div>
-          <div className="flex items-center bg-yellow-500/10 text-yellow-500 px-2 py-1 rounded-lg">
-            <MaterialIcon name="star" size="sm" filled />
-            <span className="text-xs font-bold ml-1">{rating.toFixed(1)}</span>
-          </div>
-        </div>
+        <h3 className="text-xl font-extrabold leading-tight mb-3 text-slate-900 dark:text-white">{title}</h3>
 
-        <p className="text-slate-600 dark:text-slate-400 text-sm line-clamp-2 mb-4">
+        <p className="text-slate-700 dark:text-slate-300 text-base leading-relaxed line-clamp-3 mb-4">
           {content}
         </p>
 
         {/* Actions */}
-        <div className="flex items-center justify-between pt-4 border-t border-slate-100 dark:border-slate-800">
+        <div className="flex items-center pt-4 border-t border-slate-100 dark:border-slate-800">
           <div className="flex gap-4">
-            <button className="flex items-center gap-1.5 text-slate-500 dark:text-slate-400 hover:text-primary transition-colors">
+            <button
+              onClick={(e) => e.stopPropagation()}
+              className="flex items-center gap-1.5 text-slate-500 dark:text-slate-400 hover:text-primary transition-colors"
+            >
               <MaterialIcon name="favorite" size="xl" />
               <span className="text-sm font-bold">{formatCount(likeCount)}</span>
             </button>
-            <button className="flex items-center gap-1.5 text-slate-500 dark:text-slate-400 hover:text-primary transition-colors">
+            <button
+              onClick={(e) => e.stopPropagation()}
+              className="flex items-center gap-1.5 text-slate-500 dark:text-slate-400 hover:text-primary transition-colors"
+            >
               <MaterialIcon name="chat_bubble" size="xl" />
               <span className="text-sm font-bold">0</span>
             </button>
           </div>
-          <Link
-            href={`/post/${id}`}
-            className="text-primary text-sm font-bold px-3 py-1.5 rounded-lg hover:bg-primary/10"
-          >
-            Read More
-          </Link>
         </div>
       </div>
     </div>

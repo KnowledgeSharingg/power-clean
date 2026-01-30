@@ -87,15 +87,22 @@ export default function PostDetailPage({
   const handleUpdate = async () => {
     if (!post) return;
 
+    const updatedBookInfo = {
+      ...bookInfo,
+      title,
+      content,
+    };
+
     const success = await updatePost({
       id: post.id,
       title,
       content,
-      bookInfo,
+      bookInfo: updatedBookInfo,
     });
     if (success) {
       alert("수정 성공!");
-      setPost({ ...post, title, content, bookInfo });
+      setPost({ ...post, title, content, bookInfo: updatedBookInfo });
+      setBookInfo(updatedBookInfo);
       setIsEditing(false);
     } else {
       alert("수정 실패!");
@@ -154,34 +161,6 @@ export default function PostDetailPage({
                 placeholder="Content"
               />
 
-              <div className="border-t border-gray-200 dark:border-gray-700 pt-4">
-                <h3 className="text-lg font-semibold mb-3">Book Information</h3>
-                <input
-                  className="w-full mb-2 bg-transparent border border-gray-200 dark:border-gray-700 rounded-lg p-3 focus:outline-none focus:border-primary"
-                  value={bookInfo?.title}
-                  onChange={(e) =>
-                    setBookInfo({ ...bookInfo, title: e.target.value })
-                  }
-                  placeholder="Book Title"
-                />
-                <textarea
-                  className="w-full min-h-[80px] bg-transparent border border-gray-200 dark:border-gray-700 rounded-lg p-3 focus:outline-none focus:border-primary"
-                  value={bookInfo?.content}
-                  onChange={(e) =>
-                    setBookInfo({ ...bookInfo, content: e.target.value })
-                  }
-                  placeholder="Book Description"
-                />
-                <input
-                  className="w-full mt-2 bg-transparent border border-gray-200 dark:border-gray-700 rounded-lg p-3 focus:outline-none focus:border-primary"
-                  value={bookInfo?.link}
-                  onChange={(e) =>
-                    setBookInfo({ ...bookInfo, link: e.target.value })
-                  }
-                  placeholder="Book Link"
-                />
-              </div>
-
               <div className="flex gap-3 pt-4">
                 <button
                   className="flex-1 bg-primary text-white py-3 rounded-xl font-bold"
@@ -200,22 +179,22 @@ export default function PostDetailPage({
           </div>
         ) : (
           <>
-            {/* Hero Image */}
+            {/* Cover Image */}
             {post.bookInfo?.coverImageUrl && (
-              <div className="relative w-full aspect-[3/4]">
-                <div
-                  className="w-full h-full bg-center bg-cover bg-no-repeat"
-                  style={{
-                    backgroundImage: `url(${toAbsoluteUrl(post.bookInfo.coverImageUrl)})`,
-                  }}
-                >
-                  <div className="absolute inset-0 bg-gradient-to-t from-background-dark via-transparent to-transparent" />
+              <div className="px-4 pt-4 flex justify-center">
+                <div className="relative w-48 aspect-[3/4] rounded-lg overflow-hidden shadow-md">
+                  <Image
+                    src={toAbsoluteUrl(post.bookInfo.coverImageUrl)}
+                    alt="Cover"
+                    fill
+                    className="object-cover"
+                  />
                 </div>
               </div>
             )}
 
-            {/* Floating Content Card */}
-            <div className="px-4 -mt-20 relative z-10">
+            {/* Content Card */}
+            <div className="px-4 pt-4 relative z-10">
               <div className="bg-white dark:bg-card-dark-alt rounded-xl p-5 shadow-xl border border-gray-100 dark:border-gray-800">
                 {/* User Info & Rating */}
                 <div className="flex justify-between items-start mb-4">
@@ -236,27 +215,10 @@ export default function PostDetailPage({
                   </div>
                 </div>
 
-                {/* Title & Author */}
-                <h1 className="text-2xl font-extrabold tracking-tight mb-1">
+                {/* Title */}
+                <h1 className="text-2xl font-extrabold tracking-tight mb-4">
                   {post.title}
                 </h1>
-                {post.bookInfo?.title && (
-                  <h2 className="text-gray-600 dark:text-gray-300 font-medium mb-4">
-                    by {post.bookInfo.title}
-                  </h2>
-                )}
-
-                {/* Genre Tags */}
-                <div className="flex gap-2 flex-wrap mb-4">
-                  <div className="flex h-7 items-center justify-center rounded-lg bg-primary/20 px-3">
-                    <p className="text-primary text-xs font-bold">Book</p>
-                  </div>
-                  <div className="flex h-7 items-center justify-center rounded-lg bg-gray-100 dark:bg-gray-800 px-3">
-                    <p className="text-gray-600 dark:text-gray-400 text-xs font-bold">
-                      Review
-                    </p>
-                  </div>
-                </div>
 
                 {/* Content */}
                 <p className="text-sm leading-relaxed text-gray-700 dark:text-gray-300">
@@ -264,24 +226,6 @@ export default function PostDetailPage({
                 </p>
               </div>
             </div>
-
-            {/* Poster's Perspective */}
-            {post.bookInfo?.coverImageUrl && (
-              <div className="px-4 mt-6">
-                <h3 className="text-sm font-bold uppercase tracking-widest text-gray-500 mb-3 px-1">
-                  Poster&apos;s Perspective
-                </h3>
-                <div className="w-full aspect-video rounded-xl overflow-hidden shadow-md border border-gray-100 dark:border-gray-800">
-                  <Image
-                    src={toAbsoluteUrl(post.bookInfo.coverImageUrl)}
-                    alt="Book perspective"
-                    width={800}
-                    height={450}
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-              </div>
-            )}
 
             {/* Action Bar */}
             <div className="flex items-center justify-between px-6 py-4 mt-2 border-b border-gray-100 dark:border-gray-800">
@@ -314,42 +258,7 @@ export default function PostDetailPage({
               </div>
             </div>
 
-            {/* Book Info Section */}
-            {post.bookInfo?.content && (
-              <div className="px-4 py-6">
-                <h3 className="text-lg font-bold mb-3">About the Book</h3>
-                <p className="text-gray-700 dark:text-gray-300 text-sm leading-relaxed">
-                  {post.bookInfo.content}
-                </p>
-                {post.bookInfo.link && (
-                  <a
-                    href={post.bookInfo.link}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 mt-4 text-primary font-medium text-sm hover:underline"
-                  >
-                    <MaterialIcon name="link" size="sm" />
-                    View on Bookstore
-                  </a>
-                )}
-              </div>
-            )}
-
-            {/* Author Info */}
-            {post.bookInfo?.authorInfo?.name && (
-              <div className="px-4 pb-6">
-                <h3 className="text-lg font-bold mb-3">About the Author</h3>
-                <div className="bg-gray-50 dark:bg-card-dark rounded-xl p-4">
-                  <p className="font-semibold">{post.bookInfo.authorInfo.name}</p>
-                  {post.bookInfo.authorInfo.history && (
-                    <p className="text-sm text-gray-600 dark:text-gray-400 mt-2">
-                      {post.bookInfo.authorInfo.history}
-                    </p>
-                  )}
-                </div>
-              </div>
-            )}
-          </>
+            </>
         )}
 
         {/* Review Section */}
