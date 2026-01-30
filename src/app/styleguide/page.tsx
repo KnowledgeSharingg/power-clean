@@ -73,7 +73,7 @@ export default function StyleGuidePage() {
           <tbody>
             <tr>
               <td>Color</td>
-              <td>Black (#000000), White (#ffffff), Link Blue (#0a62ff)</td>
+              <td>Black (#000000), White (#ffffff), Link Blue (#137fec)</td>
             </tr>
             <tr>
               <td>Spacing</td>

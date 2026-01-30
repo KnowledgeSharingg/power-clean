@@ -1,18 +1,9 @@
-import { Suspense } from "react";
-import AuthClient from "./AuthClient";
-
-export default function AuthPage({
-  searchParams,
-}: {
-  searchParams?: { redirect?: string };
-}) {
-  const redirect = searchParams?.redirect || "/";
-
-  return (
-    <div className="max-w-[480px] mx-auto w-full">
-      <Suspense fallback={<div className="text-center py-8">Loading...</div>}>
-        <AuthClient redirect={redirect} />
-      </Suspense>
-    </div>
-  );
+export default async function AuthPage({ searchParams }: { searchParams?: Promise<any> }) {
+  const sp = (await searchParams) ?? {};
+  const redirectParam = (sp as Record<string, string | string[] | undefined>)["redirect"];
+  const redirect = Array.isArray(redirectParam)
+    ? redirectParam[0] || "/"
+    : redirectParam || "/";
+  const AuthClient = (await import("./AuthClient")).default;
+  return <AuthClient redirect={redirect} />;
 }

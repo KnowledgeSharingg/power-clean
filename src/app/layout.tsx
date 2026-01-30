@@ -1,6 +1,4 @@
 import "@/styles/globals.css";
-import Header from "./components/Header";
-import Footer from "./components/Footer";
 
 export default function RootLayout({
   children,
@@ -8,23 +6,25 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html lang="en" className="dark">
       <head>
-        <title>Power Clean - Book Sharing</title>
+        <title>Bookly - Book Sharing</title>
         <meta
           name="description"
           content="A platform to share and discuss book information."
         />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+          rel="stylesheet"
+        />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+          rel="stylesheet"
+        />
       </head>
-      <body className="min-h-screen bg-white text-black">
-        <div className="flex min-h-screen flex-col">
-          <Header />
-          <main className="site-container flex-1 w-full py-8 sm:py-10 lg:py-12">
-            {children}
-          </main>
-          <Footer />
-        </div>
+      <body className="min-h-screen bg-background-light dark:bg-background-dark text-slate-900 dark:text-white font-display">
+        {children}
       </body>
     </html>
   );

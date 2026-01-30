@@ -1,6 +1,55 @@
 @import "tailwindcss";
 @theme {
-  --color-link: #0a62ff;
+  --color-link: #137fec;
+  --color-primary: #137fec;
+  --color-background-light: #f6f7f8;
+  --color-background-dark: #101922;
+  --color-card-dark: #192633;
+  --color-card-dark-alt: #1a2632;
+  --color-text-muted: #92adc9;
+}
+
+/* Mesh gradient background for auth page */
+.bg-mesh {
+  background-color: #101922;
+  background-image:
+    radial-gradient(at 50% 0%, rgba(19, 127, 236, 0.15) 0px, transparent 50%),
+    radial-gradient(at 100% 100%, rgba(19, 127, 236, 0.08) 0px, transparent 50%);
+}
+
+/* Dark mode input field */
+.input-field {
+  @apply w-full bg-white/5 border border-white/10 rounded-xl h-14 px-4 text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all;
+}
+
+/* iOS-style tab bar blur */
+.ios-tab-bar {
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+/* Book logo gradient */
+.book-logo-gradient {
+  background: linear-gradient(135deg, #137fec 0%, #0a4d8f 100%);
+}
+
+/* Logo shadow */
+.logo-shadow {
+  box-shadow: 0 20px 40px -12px rgba(19, 127, 236, 0.4);
+}
+
+/* Material Symbols filled variant */
+.font-variation-fill {
+  font-variation-settings: "FILL" 1;
+}
+
+/* Hide scrollbar utility */
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 
 /* Base layer to establish a clean blog look: white background, black text,

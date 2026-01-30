@@ -124,7 +124,7 @@ export default function AuthPanel() {
             <button
               disabled={loading}
               onClick={handleLogin}
-              className="bg-blue-600 text-white px-4 py-2 rounded"
+              className="bg-link hover:bg-link/90 text-white px-4 py-2 rounded"
             >
               {loading ? "처리중..." : "로그인"}
             </button>
@@ -178,7 +178,7 @@ export default function AuthPanel() {
             <button
               disabled={loading}
               onClick={handleUpdateNickname}
-              className="bg-purple-600 text-white px-3 py-2 rounded"
+              className="bg-link hover:bg-link/90 text-white px-3 py-2 rounded"
             >
               닉네임 변경
             </button>

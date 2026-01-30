@@ -4,7 +4,9 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { getPostList, serverUrl } from "@/lib/api";
 import Link from "next/link";
-import Image from "next/image";
+import MaterialIcon from "./components/MaterialIcon";
+import PostCard from "./components/PostCard";
+import BottomTabBar from "./components/BottomTabBar";
 
 interface Post {
   id: number;
@@ -49,139 +51,95 @@ export default function Home() {
   };
 
   return (
-    <div className="max-w-lg mx-auto min-h-screen bg-white text-black">
-      {/* 상단 네비(페이지 내부 헤더 대체) */}
-      <header className="sticky top-0 z-40 bg-white/80 backdrop-blur border-b border-black/10">
-        <div className="flex items-center p-4 justify-between">
+    <div className="bg-background-light dark:bg-background-dark text-slate-900 dark:text-white min-h-screen">
+      {/* Top Navigation Bar */}
+      <header className="sticky top-0 z-50 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800">
+        <div className="flex items-center p-4 justify-between max-w-lg mx-auto">
           <div className="flex items-center gap-3">
-            <div className="rounded-lg p-1 bg-black text-white">
-              <span className="text-sm font-bold">📚</span>
+            <div className="bg-primary rounded-lg p-1 flex items-center justify-center">
+              <MaterialIcon name="menu_book" className="text-white text-2xl" />
             </div>
             <h2 className="text-xl font-extrabold tracking-tight">Bookly</h2>
           </div>
           <div className="flex items-center gap-2">
             <button
-              className="inline-flex items-center justify-center rounded-full h-10 w-10 bg-black text-white hover:bg-black/90"
+              className="flex items-center justify-center rounded-full h-10 w-10 bg-primary/10 text-primary transition-colors hover:bg-primary/20"
               onClick={() => router.push("/post/create")}
             >
-              +
+              <MaterialIcon name="add_circle" />
             </button>
+            <Link
+              href="/auth"
+              className="size-9 rounded-full bg-slate-300 dark:bg-slate-700 flex items-center justify-center"
+            >
+              <MaterialIcon name="person" size="lg" />
+            </Link>
           </div>
         </div>
       </header>
 
-      {/* 검색 영역 */}
-      <div className="px-4 py-4">
-        <label className="relative flex items-center w-full">
-          <div className="absolute left-4 text-black/40 pointer-events-none">
-            🔎
-          </div>
-          <input
-            className="w-full h-12 pl-12 pr-4 rounded-xl border border-black/10 bg-black/5 focus:ring-2 focus:ring-link focus:bg-white transition-all text-base placeholder:text-black/40"
-            placeholder="Books, authors, or users..."
-            type="text"
-          />
-        </label>
-      </div>
+      <main className="max-w-lg mx-auto pb-24">
+        {/* Search Section */}
+        <div className="px-4 py-4">
+          <label className="relative flex items-center w-full">
+            <div className="absolute left-4 text-slate-400 pointer-events-none">
+              <MaterialIcon name="search" />
+            </div>
+            <input
+              className="w-full h-12 pl-12 pr-4 rounded-xl border-none bg-slate-200/50 dark:bg-slate-800/50 focus:ring-2 focus:ring-primary focus:bg-white dark:focus:bg-slate-800 transition-all text-base placeholder:text-slate-500 dark:placeholder:text-slate-400"
+              placeholder="Books, authors, or users..."
+              type="text"
+            />
+          </label>
+        </div>
 
-      {/* 피드 섹션 */}
-      <main className="px-4 pb-24">
-        <div className="w-full">
+        {/* Feed Section */}
+        <div className="flex flex-col gap-6 px-4">
           {loading ? (
-            <p className="text-center py-6">Loading...</p>
+            <div className="flex items-center justify-center py-20">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
+            </div>
+          ) : posts.length === 0 ? (
+            <div className="flex flex-col items-center justify-center py-20 text-slate-400">
+              <MaterialIcon name="menu_book" size="3xl" className="mb-4" />
+              <p className="text-lg font-medium">No posts yet</p>
+              <p className="text-sm">Be the first to share a book!</p>
+            </div>
           ) : (
-            <ul className="flex flex-col gap-6">
-              {posts.map((post) => (
-                <li
-                  key={post.id}
-                  className="bg-white rounded-xl overflow-hidden shadow-sm border border-black/10"
-                >
-                  {/* 작성자/메타 */}
-                  <div className="p-4 flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      <div className="size-8 rounded-full bg-black/10" />
-                      <div>
-                        <p className="text-sm font-bold">Post #{post.id}</p>
-                        <p className="text-xs text-black/50">
-                          {new Date(post.createdAt).toLocaleString()}
-                        </p>
-                      </div>
-                    </div>
-                    <button className="text-black/40">•••</button>
-                  </div>
-
-                  {/* 커버 이미지 */}
-                  {post.bookInfo?.coverImageUrl && (
-                    <div className="px-4">
-                      <div className="relative group aspect-[16/10] rounded-lg overflow-hidden bg-black/10">
-                        <Image
-                          src={toAbsoluteUrl(post.bookInfo.coverImageUrl)}
-                          alt={`${post.bookInfo.title} cover`}
-                          fill
-                          className="object-cover opacity-90"
-                        />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
-                        {post.bookInfo?.title && (
-                          <div className="absolute bottom-4 left-4 right-4">
-                            <span className="px-2 py-1 bg-black text-white text-[10px] font-bold rounded uppercase tracking-wider">
-                              {post.bookInfo.title}
-                            </span>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  )}
-
-                  {/* 본문 및 액션 */}
-                  <div className="p-4">
-                    <div className="flex justify-between items-start mb-2">
-                      <div>
-                        <h3 className="text-lg font-bold leading-tight">
-                          {post.title}
-                        </h3>
-                        {post.bookInfo?.title && (
-                          <p className="text-link text-sm font-medium">
-                            📖 {post.bookInfo.title}
-                          </p>
-                        )}
-                      </div>
-                      <div className="flex items-center bg-black/5 text-black px-2 py-1 rounded-lg">
-                        <span className="text-xs font-bold">👍</span>
-                        <span className="text-xs font-bold ml-1">
-                          {post.likeCount}
-                        </span>
-                      </div>
-                    </div>
-
-                    {post.bookInfo?.content && (
-                      <p className="text-black/70 text-sm line-clamp-2 mb-4">
-                        {post.bookInfo.content}
-                      </p>
-                    )}
-                    <p className="text-black/80 mb-2 line-clamp-2">
-                      {post.content}
-                    </p>
-
-                    <div className="flex items-center justify-between pt-4 border-t border-black/10">
-                      <div className="flex gap-4">
-                        <span className="text-sm font-bold text-black/60">
-                          Likes {post.likeCount}
-                        </span>
-                      </div>
-                      <Link
-                        href={`/post/${post.id}`}
-                        className="btn-link text-sm"
-                      >
-                        Read more →
-                      </Link>
-                    </div>
-                  </div>
-                </li>
-              ))}
-            </ul>
+            posts.map((post) => (
+              <PostCard
+                key={post.id}
+                id={post.id}
+                title={post.title}
+                content={post.content}
+                likeCount={post.likeCount}
+                createdAt={post.createdAt}
+                bookInfo={
+                  post.bookInfo
+                    ? {
+                        ...post.bookInfo,
+                        coverImageUrl: toAbsoluteUrl(
+                          post.bookInfo.coverImageUrl
+                        ),
+                      }
+                    : undefined
+                }
+              />
+            ))
           )}
         </div>
       </main>
+
+      {/* FAB */}
+      <button
+        onClick={() => router.push("/post/create")}
+        className="fixed right-6 bottom-24 bg-primary text-white size-14 rounded-full shadow-lg flex items-center justify-center hover:scale-110 active:scale-95 transition-transform z-40"
+      >
+        <MaterialIcon name="add" size="3xl" />
+      </button>
+
+      {/* Bottom Tab Bar */}
+      <BottomTabBar />
     </div>
   );
 }

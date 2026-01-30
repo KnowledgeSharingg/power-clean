@@ -1,4 +1,4 @@
-export const serverUrl = process.env.NEXT_PUBLIC_SERVER_URL || "/api";
+export const serverUrl = process.env.SERVER_URL || "http://localhost:8080";
 
 export interface GetBookDetailResDto {
   id: number | null;
