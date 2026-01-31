@@ -4,17 +4,24 @@ const lineClamp = require("@tailwindcss/line-clamp");
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
+  darkMode: "class",
   content: ["./src/**/*.{js,ts,jsx,tsx,mdx}"],
   theme: {
     extend: {
       colors: {
         black: "#000000",
         white: "#ffffff",
-        link: "#0a62ff",
+        link: "#137fec",
+        primary: "#137fec",
+        "background-light": "#f6f7f8",
+        "background-dark": "#101922",
+        "card-dark": "#192633",
+        "card-dark-alt": "#1a2632",
+        "text-muted": "#92adc9",
       },
       fontFamily: {
-        // System UI stack for a clean, readable look
         sans: [
+          "Plus Jakarta Sans",
           "ui-sans-serif",
           "system-ui",
           "-apple-system",
@@ -28,6 +35,7 @@ module.exports = {
           '"Apple Color Emoji"',
           '"Segoe UI Emoji"',
         ],
+        display: ["Plus Jakarta Sans", "sans-serif"],
         mono: [
           "ui-monospace",
           "SFMono-Regular",
@@ -40,7 +48,7 @@ module.exports = {
         ],
       },
       maxWidth: {
-        prose: "72ch", // comfortable reading width
+        prose: "72ch",
       },
     },
   },

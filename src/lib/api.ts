@@ -1,5 +1,34 @@
 export const serverUrl = process.env.SERVER_URL || "http://localhost:8080";
 
+export interface GetBookDetailResDto {
+  id: number | null;
+  title: string;
+  content: string;
+  link: string;
+  coverImageUrl: string;
+  authorInfo: string;
+}
+
+export interface GetCreatedPostByAIResDto {
+  title: string;
+  content: string;
+  bookInfo: GetBookDetailResDto;
+}
+
+export async function getCreatedPostByAI(
+  script: string
+): Promise<GetCreatedPostByAIResDto> {
+  const url = `${serverUrl}/post/ai?script=${encodeURIComponent(script)}`;
+  const res = await fetch(url, {
+    method: "GET",
+    headers: authHeadersNoContentType(),
+    cache: "no-store",
+  });
+  await handleResponse(res);
+  if (!res.ok) throw new Error("AI 자동 생성 실패");
+  return await res.json();
+}
+
 export async function createPost(data: {
   title: string;
   content: string;
@@ -86,7 +115,7 @@ export async function createReview(data: {
   try {
     const response = await fetch(`${serverUrl}/review`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: authHeaders(),
       body: JSON.stringify(data),
     });
     await handleResponse(response);
@@ -121,7 +150,7 @@ export async function updateReview({
 }) {
   const res = await fetch(`${serverUrl}/review`, {
     method: "PATCH",
-    headers: { "Content-Type": "application/json" },
+    headers: authHeaders(),
     body: JSON.stringify({ content, rating, reviewId }),
   });
   await handleResponse(res);
@@ -130,6 +159,7 @@ export async function updateReview({
 
 export async function deleteReview(reviewId: string) {
   const res = await fetch(`${serverUrl}/review/${reviewId}`, {
+    headers: authHeaders(),
     method: "DELETE",
   });
   await handleResponse(res);
@@ -196,7 +226,10 @@ async function handleResponse(res: Response) {
       setToken(null);
     } catch {}
     if (typeof window !== "undefined") {
-      const current = window.location.pathname + window.location.search + window.location.hash;
+      const current =
+        window.location.pathname +
+        window.location.search +
+        window.location.hash;
       const redirect = encodeURIComponent(current);
       window.location.href = `/auth?redirect=${redirect}`;
     }
@@ -216,9 +249,17 @@ export async function signUp(data: {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data),
     });
-    return res.ok;
+    const ok = res.ok;
+    if (!ok) {
+      let bodyText = "";
+      try {
+        bodyText = await res.text();
+      } catch {}
+      console.error(`회원가입 실패: status=${res.status}, body=${bodyText}`);
+    }
+    return ok;
   } catch (e) {
-    console.error("회원가입 실패:", e);
+    console.error("회원가입 네트워크 오류:", e);
     return false;
   }
 }
@@ -230,8 +271,14 @@ export async function login(data: { email: string; password: string }) {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data),
     });
-    if (!res.ok) return null;
-    // 서버가 토큰을 문자열 혹은 {accessToken: string} 로 응답한다고 가정
+    if (!res.ok) {
+      let bodyText = "";
+      try {
+        bodyText = await res.text();
+      } catch {}
+      console.error(`로그인 실패 응답: status=${res.status}, body=${bodyText}`);
+      return null;
+    }
     const contentType = res.headers.get("content-type") || "";
     let token: string | null = null;
     if (contentType.includes("application/json")) {
@@ -243,7 +290,7 @@ export async function login(data: { email: string; password: string }) {
     if (token) setToken(token);
     return token;
   } catch (e) {
-    console.error("로그인 실패:", e);
+    console.error("로그인 네트워크 오류:", e);
     return null;
   }
 }

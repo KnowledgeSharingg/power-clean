@@ -1,10 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { getPostList, serverUrl } from "@/lib/api";
 import Link from "next/link";
 import Image from "next/image";
+import MaterialIcon from "./components/MaterialIcon";
+import PostCard from "./components/PostCard";
 
 interface Post {
   id: number;
@@ -14,103 +16,121 @@ interface Post {
   createdAt: string;
   bookInfo?: {
     coverImageUrl: string;
-    title: string;
-    content: string;
   };
 }
 
+const toAbsoluteUrl = (url: string): string => {
+  if (!url) return "";
+  if (/^https?:\/\//i.test(url)) return url;
+  return `${serverUrl}${url.startsWith("/") ? url : "/" + url}`;
+};
+
 export default function Home() {
-  const [showList, setShowList] = useState(false);
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
-  const toggleList = async () => {
-    if (!showList && posts.length === 0) {
-      setLoading(true);
+  useEffect(() => {
+    let mounted = true;
+    setLoading(true);
+    (async () => {
       try {
         const data = await getPostList();
-        setPosts(data.postList);
+        if (mounted) setPosts(data.postList);
       } catch (error) {
         console.error("Failed to fetch posts:", error);
       } finally {
-        setLoading(false);
+        if (mounted) setLoading(false);
       }
-    }
-    setShowList((prev) => !prev); // 리스트 보여짐 상태 토글
-  };
-
-  const toAbsoluteUrl = (url: string): string => {
-    if (!url) return "";
-    if (/^https?:\/\//i.test(url)) return url;
-    return `${serverUrl}${url.startsWith("/") ? url : "/" + url}`;
-  };
+    })();
+    return () => {
+      mounted = false;
+    };
+  }, []);
 
   return (
-    <div className="site-container">
-      <p className="text-base sm:text-lg mb-8 text-center prose-muted">
-        Share book information and engage in discussions!
-      </p>
+    <div className="bg-background-light dark:bg-background-dark text-slate-900 dark:text-white min-h-screen">
+      {/* Top Navigation Bar */}
+      <header className="sticky top-0 z-50 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800">
+        <div className="flex items-center p-4 justify-between max-w-lg mx-auto">
+          <div className="flex items-center gap-3">
+            <div className="w-20 h-20 rounded-xl overflow-hidden flex-shrink-0">
+              <Image
+                src="/logo.png"
+                alt="서책의 파도 로고"
+                width={80}
+                height={80}
+                className="object-cover w-full h-full"
+              />
+            </div>
+            <h2 className="text-xl font-extrabold tracking-tight">서책의 파도</h2>
+          </div>
+          <div className="flex items-center gap-2">
+            <Link
+              href="/auth"
+              className="size-9 rounded-full bg-slate-300 dark:bg-slate-700 flex items-center justify-center"
+            >
+              <MaterialIcon name="person" size="lg" />
+            </Link>
+          </div>
+        </div>
+      </header>
 
-      <div className="flex justify-center gap-6 mb-8">
-        <button
-          className="btn btn-lg hover:scale-105 transition-transform duration-200"
-          onClick={() => router.push("/post/create")}
-        >
-          Add Post ➕
-        </button>
-        <button
-          className="btn-outline btn-lg hover:scale-105 transition-transform duration-200"
-          onClick={toggleList}
-        >
-          {showList ? "Hide Posts ▲" : "View Posts ▼"}
-        </button>
-      </div>
+      <main className="max-w-lg mx-auto pb-24">
+        {/* Search Section */}
+        <div className="px-4 py-4">
+          <label className="relative flex items-center w-full">
+            <div className="absolute left-4 text-slate-400 pointer-events-none">
+              <MaterialIcon name="search" />
+            </div>
+            <input
+              className="w-full h-12 pl-12 pr-4 rounded-xl border-none bg-slate-200/50 dark:bg-slate-800/50 focus:ring-2 focus:ring-primary focus:bg-white dark:focus:bg-slate-800 transition-all text-base placeholder:text-slate-500 dark:placeholder:text-slate-400"
+              placeholder="Books, authors, or users..."
+              type="text"
+            />
+          </label>
+        </div>
 
-      <div
-        className={`transition-all duration-300 overflow-hidden w-full ${
-          showList ? "max-h-[3000px] opacity-100" : "max-h-0 opacity-0"
-        }`}
+        {/* Feed Section */}
+        <div className="flex flex-col gap-6 px-4">
+          {loading ? (
+            <div className="flex items-center justify-center py-20">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
+            </div>
+          ) : posts.length === 0 ? (
+            <div className="flex flex-col items-center justify-center py-20 text-slate-400">
+              <MaterialIcon name="menu_book" size="3xl" className="mb-4" />
+              <p className="text-lg font-medium">No posts yet</p>
+              <p className="text-sm">Be the first to share a book!</p>
+            </div>
+          ) : (
+            posts.map((post) => (
+              <PostCard
+                key={post.id}
+                id={post.id}
+                title={post.title}
+                content={post.content}
+                likeCount={post.likeCount}
+                createdAt={post.createdAt}
+                coverImageUrl={
+                  post.bookInfo?.coverImageUrl
+                    ? toAbsoluteUrl(post.bookInfo.coverImageUrl)
+                    : undefined
+                }
+              />
+            ))
+          )}
+        </div>
+      </main>
+
+      {/* FAB */}
+      <button
+        onClick={() => router.push("/post/create")}
+        className="fixed right-6 bottom-24 bg-primary text-white size-14 rounded-full shadow-lg flex items-center justify-center hover:scale-110 active:scale-95 transition-transform z-40"
       >
-        {loading ? (
-          <p className="text-center">Loading...</p>
-        ) : (
-          <ul className="space-y-7">
-            {posts.map((post) => (
-              <li key={post.id} className="card-padded">
-                <h2 className="text-xl font-semibold mb-2">{post.title}</h2>
-                {post.bookInfo?.title && (
-                  <div className="mt-3 text-sm text-black/70">
-                    {post.bookInfo.coverImageUrl && (
-                      <div className="w-24 h-auto relative mb-2">
-                        <Image
-                          src={toAbsoluteUrl(post.bookInfo.coverImageUrl)}
-                          alt={`${post.bookInfo.title} cover`}
-                          width={96}
-                          height={144}
-                          className="rounded-md mb-2 shadow-sm object-contain"
-                        />
-                      </div>
-                    )}
-                    📖 <strong>{post.bookInfo.title}</strong>:{" "}
-                    {post.bookInfo.content}
-                  </div>
-                )}
-                <p className="text-black/80 mb-2 line-clamp-2">
-                  {post.content}
-                </p>
-                <p className="text-sm text-black/60 mb-1">
-                  👍 {post.likeCount} | 🕒{" "}
-                  {new Date(post.createdAt).toLocaleString()}
-                </p>
-                <Link href={`/post/${post.id}`} className="btn-link text-sm">
-                  Read more →
-                </Link>
-              </li>
-            ))}
-          </ul>
-        )}
-      </div>
+        <MaterialIcon name="add" size="3xl" />
+      </button>
+
     </div>
   );
 }
