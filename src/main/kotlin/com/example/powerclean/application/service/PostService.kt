@@ -2,15 +2,11 @@ package com.example.powerclean.application.service
 
 import com.example.powerclean.application.port.outbound.ai.AiProvider
 import com.example.powerclean.application.port.outbound.persistence.BookRepository
-import com.example.powerclean.application.port.outbound.persistence.PostBookmarkRepository
-import com.example.powerclean.application.port.outbound.persistence.PostLikeRepository
 import com.example.powerclean.application.port.outbound.persistence.PostRepository
 import com.example.powerclean.common.exception.CustomConflictException
 import com.example.powerclean.common.exception.CustomNotFoundException
 import com.example.powerclean.domain.model.Book
 import com.example.powerclean.domain.model.Post
-import com.example.powerclean.domain.model.PostBookmark
-import com.example.powerclean.domain.model.PostLike
 import com.example.powerclean.presentation.dto.CreatePostReqDto
 import com.example.powerclean.presentation.dto.CreatePostResDto
 import com.example.powerclean.presentation.dto.GetBookDetailResDto
@@ -30,8 +26,8 @@ class PostService(
     private val postRepository: PostRepository,
     private val bookRepository: BookRepository,
     private val aiProvider: AiProvider,
-    private val postLikeRepository: PostLikeRepository,
-    private val postBookmarkRepository: PostBookmarkRepository,
+    private val postLikeService: PostLikeService,
+    private val postBookmarkService: PostBookmarkService,
 ) {
     private val logger = LoggerFactory.getLogger(PostService::class.java)
 
@@ -75,7 +71,7 @@ class PostService(
             id = foundPost.id,
             title = foundPost.title,
             content = foundPost.content,
-            likeCount = postLikeRepository.countByPostId(foundPost.id).toInt(),
+            likeCount = postLikeService.countLikes(foundPost.id).toInt(),
             createdAt = foundPost.createdAt.toString(),
             updatedAt = foundPost.updatedAt.toString(),
             bookInfo =
@@ -87,8 +83,8 @@ class PostService(
                     coverImageUrl = foundPost.book?.coverImageUrl,
                     authorInfo = foundPost.book?.authorInfo,
                 ),
-            likedByMe = postLikeRepository.existsByPostIdAndAccountId(foundPost.id, accountId),
-            bookmarkedByMe = postBookmarkRepository.existsByPostIdAndAccountId(foundPost.id, accountId),
+            likedByMe = postLikeService.existsByPostIdAndAccountId(foundPost.id, accountId),
+            bookmarkedByMe = postBookmarkService.existsByPostIdAndAccountId(foundPost.id, accountId),
         )
     }
 
@@ -105,7 +101,7 @@ class PostService(
                         id = it.id,
                         title = it.title,
                         content = it.content,
-                        likeCount = postLikeRepository.countByPostId(it.id).toInt(),
+                        likeCount = postLikeService.countLikes(it.id).toInt(),
                         createdAt = it.createdAt.toString(),
                         updatedAt = it.updatedAt.toString(),
                         bookInfo =
@@ -163,84 +159,6 @@ class PostService(
                     coverImageUrl = result.coverImageUrl,
                     authorInfo = result.authorInfo,
                 ),
-        )
-    }
-
-    fun addLike(
-        postId: UUID,
-        accountId: UUID,
-    ): String {
-        if (postLikeRepository.existsByPostIdAndAccountId(postId, accountId)) {
-            throw CustomConflictException("이미 좋아요했습니다.")
-        }
-        postLikeRepository.save(PostLike(postId = postId, accountId = accountId))
-        return "ok"
-    }
-
-    fun removeLike(
-        postId: UUID,
-        accountId: UUID,
-    ): String {
-        if (!postLikeRepository.existsByPostIdAndAccountId(postId, accountId)) {
-            throw CustomNotFoundException("좋아요가 되어 있지 않습니다.")
-        }
-        postLikeRepository.deleteByPostIdAndAccountId(postId, accountId)
-        return "ok"
-    }
-
-    fun countLikes(postId: UUID): Long = postLikeRepository.countByPostId(postId)
-
-    fun addBookmark(
-        postId: UUID,
-        accountId: UUID,
-    ): String {
-        if (postBookmarkRepository.existsByPostIdAndAccountId(postId, accountId)) {
-            throw CustomConflictException("이미 북마크했습니다.")
-        }
-        postBookmarkRepository.save(PostBookmark(postId = postId, accountId = accountId))
-        return "ok"
-    }
-
-    fun removeBookmark(
-        postId: UUID,
-        accountId: UUID,
-    ): String {
-        if (!postBookmarkRepository.existsByPostIdAndAccountId(postId, accountId)) {
-            throw CustomNotFoundException("북마크가 되어 있지 않습니다.")
-        }
-        postBookmarkRepository.deleteByPostIdAndAccountId(postId, accountId)
-        return "ok"
-    }
-
-    fun findBookmarksByAccount(accountId: UUID): GetPostListResDto {
-        val bookmarks = postBookmarkRepository.findAllByAccountId(accountId)
-        val posts =
-            bookmarks.mapNotNull { bookmark ->
-                postRepository.findById(bookmark.postId).orElse(null)
-            }
-        return GetPostListResDto(
-            postList =
-                posts.map { p ->
-                    GetPostDetailResDto(
-                        id = p.id,
-                        title = p.title,
-                        content = p.content,
-                        likeCount = postLikeRepository.countByPostId(p.id).toInt(),
-                        createdAt = p.createdAt.toString(),
-                        updatedAt = p.updatedAt.toString(),
-                        bookInfo =
-                            GetBookDetailResDto(
-                                id = p.book?.id,
-                                title = p.book?.title,
-                                content = p.book?.content,
-                                link = p.book?.link,
-                                coverImageUrl = p.book?.coverImageUrl,
-                                authorInfo = p.book?.authorInfo,
-                            ),
-                        likedByMe = postLikeRepository.existsByPostIdAndAccountId(p.id, accountId),
-                        bookmarkedByMe = true,
-                    )
-                },
         )
     }
 }

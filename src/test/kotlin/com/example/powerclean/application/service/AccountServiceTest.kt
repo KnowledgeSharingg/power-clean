@@ -86,7 +86,7 @@ class AccountServiceTest {
         // Given
         val nickname = "new-nickname"
         val accountId = Generators.timeBasedEpochGenerator().generate()
-        `when`(accountRepository.updateNicknameById(accountId, nickname)).thenReturn("ok")
+        `when`(accountRepository.updateNicknameById(accountId, nickname)).thenReturn(1)
 
         // When
         val res = accountService.updateNickname(nickname, accountId)

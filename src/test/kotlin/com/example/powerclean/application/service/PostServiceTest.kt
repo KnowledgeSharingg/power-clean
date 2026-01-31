@@ -1,6 +1,8 @@
 import com.example.powerclean.application.port.outbound.ai.AiProvider
 import com.example.powerclean.application.port.outbound.persistence.BookRepository
 import com.example.powerclean.application.port.outbound.persistence.PostRepository
+import com.example.powerclean.application.service.PostBookmarkService
+import com.example.powerclean.application.service.PostLikeService
 import com.example.powerclean.application.service.PostService
 import com.example.powerclean.common.exception.CustomNotFoundException
 import com.example.powerclean.domain.model.Book
@@ -25,6 +27,8 @@ class PostServiceTest {
     private lateinit var postRepository: PostRepository
     private lateinit var bookRepository: BookRepository
     private lateinit var aiProvider: AiProvider
+    private lateinit var postLikeService: PostLikeService
+    private lateinit var postBookmarkService: PostBookmarkService
     private lateinit var postService: PostService
 
     @BeforeEach
@@ -32,7 +36,9 @@ class PostServiceTest {
         postRepository = mock(PostRepository::class.java)
         bookRepository = mock(BookRepository::class.java)
         aiProvider = mock(AiProvider::class.java)
-        postService = PostService(postRepository, bookRepository, aiProvider)
+        postLikeService = mock(PostLikeService::class.java)
+        postBookmarkService = mock(PostBookmarkService::class.java)
+        postService = PostService(postRepository, bookRepository, aiProvider, postLikeService, postBookmarkService)
     }
 
     @Test
@@ -96,6 +102,7 @@ class PostServiceTest {
     fun `포스트_상세_조회_시_책정보와_저자정보도_함께 조회된다`() {
         // Given
         val postId = UUID.randomUUID()
+        val accountId = UUID.randomUUID()
         val foundPost =
             Post(
                 title = "Test Title",
@@ -120,15 +127,18 @@ class PostServiceTest {
             )
         foundPost.book = foundBook
         `when`(postRepository.findById(postId)).thenReturn(java.util.Optional.of(foundPost))
+        `when`(postLikeService.countLikes(foundPost.id)).thenReturn(0L)
+        `when`(postLikeService.existsByPostIdAndAccountId(foundPost.id, accountId)).thenReturn(false)
+        `when`(postBookmarkService.existsByPostIdAndAccountId(foundPost.id, accountId)).thenReturn(false)
 
         // When
-        val result = postService.getPostDetail(postId)
+        val result = postService.getPostDetail(postId, accountId)
 
         // Then
         assertEquals(foundPost.id, result.id)
         assertEquals(foundPost.title, result.title)
         assertEquals(foundPost.content, result.content)
-        assertEquals(foundPost.likeCount, result.likeCount)
+        assertEquals(0, result.likeCount)
         assertNotNull(result.createdAt)
         assertNotNull(result.updatedAt)
         assertNotNull(result.bookInfo)
@@ -143,12 +153,13 @@ class PostServiceTest {
     fun `포스트_상세_조회시_조회된_포스트가_없는경우_NotFoundException을_발생시킨다`() {
         // Given
         val postId = UUID.randomUUID()
+        val accountId = UUID.randomUUID()
         `when`(postRepository.findById(postId)).thenReturn(java.util.Optional.empty())
 
         // When
         val exception =
             assertThrows(CustomNotFoundException::class.java) {
-                postService.getPostDetail(postId)
+                postService.getPostDetail(postId, accountId)
             }
 
         // Then
@@ -174,6 +185,7 @@ class PostServiceTest {
                 ),
             )
         `when`(postRepository.findAll()).thenReturn(foundPosts)
+        `when`(postLikeService.countLikes(any())).thenReturn(0L)
 
         // When
         val result = postService.getPostList(page = 1, size = 10)
@@ -186,7 +198,7 @@ class PostServiceTest {
             assertEquals(foundPost.id, resultPost.id)
             assertEquals(foundPost.title, resultPost.title)
             assertEquals(foundPost.content, resultPost.content)
-            assertEquals(foundPost.likeCount, resultPost.likeCount)
+            assertEquals(0, resultPost.likeCount)
             assertNotNull(resultPost.createdAt)
             assertNotNull(resultPost.updatedAt)
             assertNotNull(resultPost.bookInfo)
