@@ -3,11 +3,15 @@ package com.example.powerclean.config
 import com.example.powerclean.application.port.outbound.persistence.AccountRepository
 import com.example.powerclean.application.port.outbound.persistence.BookRepository
 import com.example.powerclean.application.port.outbound.persistence.OauthProfileRepository
+import com.example.powerclean.application.port.outbound.persistence.PostBookmarkRepository
+import com.example.powerclean.application.port.outbound.persistence.PostLikeRepository
 import com.example.powerclean.application.port.outbound.persistence.PostRepository
 import com.example.powerclean.application.port.outbound.persistence.ReviewRepository
 import com.example.powerclean.presentation.outbound.persistence.jpa.JpaAccountRepository
 import com.example.powerclean.presentation.outbound.persistence.jpa.JpaBookRepository
 import com.example.powerclean.presentation.outbound.persistence.jpa.JpaOauthProfileRepository
+import com.example.powerclean.presentation.outbound.persistence.jpa.JpaPostBookmarkRepository
+import com.example.powerclean.presentation.outbound.persistence.jpa.JpaPostLikeRepository
 import com.example.powerclean.presentation.outbound.persistence.jpa.JpaPostRepository
 import com.example.powerclean.presentation.outbound.persistence.jpa.JpaReviewRepository
 import org.springframework.context.annotation.Bean
@@ -36,4 +40,11 @@ class RepositoryConfig {
 
     @Bean
     fun reviewRepository(jpaReviewRepository: JpaReviewRepository): ReviewRepository = jpaReviewRepository
+
+    @Bean
+    fun postLikeRepository(jpaPostLikeRepository: JpaPostLikeRepository): PostLikeRepository = jpaPostLikeRepository
+
+    @Bean
+    fun postBookmarkRepository(jpaPostBookmarkRepository: JpaPostBookmarkRepository): PostBookmarkRepository =
+        jpaPostBookmarkRepository
 }

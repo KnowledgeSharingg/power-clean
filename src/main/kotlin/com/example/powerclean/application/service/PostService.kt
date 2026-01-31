@@ -26,6 +26,8 @@ class PostService(
     private val postRepository: PostRepository,
     private val bookRepository: BookRepository,
     private val aiProvider: AiProvider,
+    private val postLikeService: PostLikeService,
+    private val postBookmarkService: PostBookmarkService,
 ) {
     private val logger = LoggerFactory.getLogger(PostService::class.java)
 
@@ -60,13 +62,16 @@ class PostService(
         )
     }
 
-    fun getPostDetail(postId: UUID): GetPostDetailResDto {
+    fun getPostDetail(
+        postId: UUID,
+        accountId: UUID,
+    ): GetPostDetailResDto {
         val foundPost = postRepository.findById(postId).orElse(null) ?: throw CustomNotFoundException("Post not found")
         return GetPostDetailResDto(
             id = foundPost.id,
             title = foundPost.title,
             content = foundPost.content,
-            likeCount = foundPost.likeCount,
+            likeCount = postLikeService.countLikes(foundPost.id).toInt(),
             createdAt = foundPost.createdAt.toString(),
             updatedAt = foundPost.updatedAt.toString(),
             bookInfo =
@@ -78,6 +83,8 @@ class PostService(
                     coverImageUrl = foundPost.book?.coverImageUrl,
                     authorInfo = foundPost.book?.authorInfo,
                 ),
+            likedByMe = postLikeService.existsByPostIdAndAccountId(foundPost.id, accountId),
+            bookmarkedByMe = postBookmarkService.existsByPostIdAndAccountId(foundPost.id, accountId),
         )
     }
 
@@ -94,7 +101,7 @@ class PostService(
                         id = it.id,
                         title = it.title,
                         content = it.content,
-                        likeCount = it.likeCount,
+                        likeCount = postLikeService.countLikes(it.id).toInt(),
                         createdAt = it.createdAt.toString(),
                         updatedAt = it.updatedAt.toString(),
                         bookInfo =
@@ -106,6 +113,8 @@ class PostService(
                                 coverImageUrl = it.book?.coverImageUrl,
                                 authorInfo = it.book?.authorInfo,
                             ),
+                        likedByMe = false,
+                        bookmarkedByMe = false,
                     )
                 },
         )
