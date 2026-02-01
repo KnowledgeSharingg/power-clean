@@ -41,7 +41,7 @@ class PostController(private val postService: PostService) {
     @Operation(summary = "Post 상세 조회 API.", description = "포스트 상세 조회.")
     @GetMapping("/{postId}")
     fun getPostDetail(
-        @AuthenticationPrincipal(expression = "id") accountId: UUID,
+        @AuthenticationPrincipal(expression = "id") accountId: UUID?,
         @PathVariable postId: UUID,
     ): GetPostDetailResDto = postService.getPostDetail(postId, accountId)
 
