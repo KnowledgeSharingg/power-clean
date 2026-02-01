@@ -1,6 +1,7 @@
 package com.example.powerclean.presentation.inbound.rest
 
 import com.example.powerclean.application.service.PostService
+import com.example.powerclean.domain.model.Account
 import com.example.powerclean.presentation.dto.CreatePostReqDto
 import com.example.powerclean.presentation.dto.CreatePostResDto
 import com.example.powerclean.presentation.dto.GetCreatedPostByAIResDto
@@ -9,6 +10,7 @@ import com.example.powerclean.presentation.dto.GetPostListResDto
 import com.example.powerclean.presentation.dto.UpdatePostReqDto
 import io.swagger.v3.oas.annotations.Operation
 import org.springframework.security.core.annotation.AuthenticationPrincipal
+import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PatchMapping
@@ -41,9 +43,11 @@ class PostController(private val postService: PostService) {
     @Operation(summary = "Post 상세 조회 API.", description = "포스트 상세 조회.")
     @GetMapping("/{postId}")
     fun getPostDetail(
-        @AuthenticationPrincipal(expression = "id") accountId: UUID?,
         @PathVariable postId: UUID,
-    ): GetPostDetailResDto = postService.getPostDetail(postId, accountId)
+    ): GetPostDetailResDto {
+        val accountId = (SecurityContextHolder.getContext().authentication?.principal as? Account)?.id
+        return postService.getPostDetail(postId, accountId)
+    }
 
     @Operation(summary = "Post 리스트 조회 API.", description = "포스트 리스트 조회.")
     @GetMapping("/list")
