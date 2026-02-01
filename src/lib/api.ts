@@ -328,3 +328,108 @@ export async function updateNickname(nickname: string) {
     return false;
   }
 }
+
+// =========================
+// Like APIs
+// =========================
+export async function likePost(postId: string): Promise<boolean> {
+  try {
+    const res = await fetch(`${serverUrl}/post/${postId}/like`, {
+      method: "POST",
+      headers: authHeaders(),
+    });
+    await handleResponse(res);
+    return res.ok;
+  } catch (e) {
+    console.error("좋아요 추가 실패:", e);
+    return false;
+  }
+}
+
+export async function unlikePost(postId: string): Promise<boolean> {
+  try {
+    const res = await fetch(`${serverUrl}/post/${postId}/like`, {
+      method: "DELETE",
+      headers: authHeaders(),
+    });
+    await handleResponse(res);
+    return res.ok;
+  } catch (e) {
+    console.error("좋아요 제거 실패:", e);
+    return false;
+  }
+}
+
+export async function toggleLike(
+  postId: string,
+  currentlyLiked: boolean
+): Promise<boolean> {
+  return currentlyLiked ? unlikePost(postId) : likePost(postId);
+}
+
+// =========================
+// Bookmark APIs
+// =========================
+export async function bookmarkPost(postId: string): Promise<boolean> {
+  try {
+    const res = await fetch(`${serverUrl}/post/${postId}/bookmark`, {
+      method: "POST",
+      headers: authHeaders(),
+    });
+    await handleResponse(res);
+    return res.ok;
+  } catch (e) {
+    console.error("북마크 추가 실패:", e);
+    return false;
+  }
+}
+
+export async function unbookmarkPost(postId: string): Promise<boolean> {
+  try {
+    const res = await fetch(`${serverUrl}/post/${postId}/bookmark`, {
+      method: "DELETE",
+      headers: authHeaders(),
+    });
+    await handleResponse(res);
+    return res.ok;
+  } catch (e) {
+    console.error("북마크 제거 실패:", e);
+    return false;
+  }
+}
+
+export async function toggleBookmark(
+  postId: string,
+  currentlyBookmarked: boolean
+): Promise<boolean> {
+  return currentlyBookmarked ? unbookmarkPost(postId) : bookmarkPost(postId);
+}
+
+export interface Post {
+  id: number;
+  title: string;
+  content: string;
+  likeCount: number;
+  likedByMe?: boolean;
+  bookmarkedByMe?: boolean;
+  createdAt: string;
+  bookInfo?: {
+    coverImageUrl: string;
+  };
+}
+
+export async function getMyBookmarks(): Promise<{ postList: Post[] }> {
+  try {
+    const res = await fetch(`${serverUrl}/post/bookmark/list`, {
+      method: "GET",
+      headers: authHeaders(),
+      cache: "no-store",
+    });
+    await handleResponse(res);
+    if (!res.ok) return { postList: [] };
+    return await res.json();
+  } catch (e) {
+    console.error("북마크 목록 조회 실패:", e);
+    return { postList: [] };
+  }
+}
