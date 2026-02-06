@@ -64,7 +64,7 @@ class PostService(
 
     fun getPostDetail(
         postId: UUID,
-        accountId: UUID,
+        accountId: UUID?,
     ): GetPostDetailResDto {
         val foundPost = postRepository.findById(postId).orElse(null) ?: throw CustomNotFoundException("Post not found")
         return GetPostDetailResDto(
@@ -83,8 +83,10 @@ class PostService(
                     coverImageUrl = foundPost.book?.coverImageUrl,
                     authorInfo = foundPost.book?.authorInfo,
                 ),
-            likedByMe = postLikeService.existsByPostIdAndAccountId(foundPost.id, accountId),
-            bookmarkedByMe = postBookmarkService.existsByPostIdAndAccountId(foundPost.id, accountId),
+            likedByMe =
+                accountId?.let { postLikeService.existsByPostIdAndAccountId(foundPost.id, it) } ?: false,
+            bookmarkedByMe =
+                accountId?.let { postBookmarkService.existsByPostIdAndAccountId(foundPost.id, it) } ?: false,
         )
     }
 
