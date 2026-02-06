@@ -62,6 +62,7 @@ export async function createPost(data: {
 
 export async function getPostList(page: number = 1, size: number = 10) {
   const res = await fetch(`${serverUrl}/post/list?page=${page}&size=${size}`, {
+    headers: authHeaders(),
     cache: "no-store",
   });
   if (!res.ok) throw new Error("Failed to fetch posts");
@@ -69,7 +70,9 @@ export async function getPostList(page: number = 1, size: number = 10) {
 }
 
 export async function getPostDetail(postId: string) {
-  const response = await fetch(`${serverUrl}/post/${postId}`);
+  const response = await fetch(`${serverUrl}/post/${postId}`, {
+    headers: authHeaders(),
+  });
   if (!response.ok) throw new Error("게시글 조회 실패");
   return await response.json();
 }
