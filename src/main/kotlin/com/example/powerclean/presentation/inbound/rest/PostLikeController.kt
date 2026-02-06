@@ -2,6 +2,7 @@ package com.example.powerclean.presentation.inbound.rest
 
 import com.example.powerclean.application.service.PostLikeService
 import com.example.powerclean.presentation.dto.CountResDto
+import com.example.powerclean.presentation.dto.GetPostListResDto
 import io.swagger.v3.oas.annotations.Operation
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.DeleteMapping
@@ -36,4 +37,10 @@ class PostLikeController(
     fun countLikes(
         @PathVariable postId: UUID,
     ): CountResDto = CountResDto(postLikeService.countLikes(postId))
+
+    @Operation(summary = "내 좋아요 목록 조회 API.", description = "인증된 사용자의 좋아요한 포스트 목록 조회.")
+    @GetMapping("/me/likes")
+    fun getMyLikes(
+        @AuthenticationPrincipal(expression = "id") accountId: UUID,
+    ): GetPostListResDto = postLikeService.findLikesByAccount(accountId)
 }
