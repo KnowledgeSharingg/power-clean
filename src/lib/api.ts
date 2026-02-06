@@ -413,6 +413,7 @@ export interface Post {
   title: string;
   content: string;
   likeCount: number;
+  bookmarkCount: number;
   likedByMe?: boolean;
   bookmarkedByMe?: boolean;
   createdAt: string;

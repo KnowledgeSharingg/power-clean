@@ -48,6 +48,7 @@ export default function PostDetailPage({
     content: string;
     bookInfo: BookInfo;
     likeCount?: number;
+    bookmarkCount?: number;
     likedByMe?: boolean;
     bookmarkedByMe?: boolean;
   }
@@ -60,6 +61,7 @@ export default function PostDetailPage({
   const [liked, setLiked] = useState(false);
   const [bookmarked, setBookmarked] = useState(false);
   const [likeCount, setLikeCount] = useState(0);
+  const [bookmarkCount, setBookmarkCount] = useState(0);
   const [isLikeLoading, setIsLikeLoading] = useState(false);
   const [isBookmarkLoading, setIsBookmarkLoading] = useState(false);
   const [bookInfo, setBookInfo] = useState<{
@@ -94,6 +96,7 @@ export default function PostDetailPage({
         setLiked(postData.likedByMe || false);
         setBookmarked(postData.bookmarkedByMe || false);
         setLikeCount(postData.likeCount || 0);
+        setBookmarkCount(postData.bookmarkCount || 0);
       } catch (error) {
         console.error(error);
       }
@@ -134,14 +137,17 @@ export default function PostDetailPage({
 
     setIsBookmarkLoading(true);
     const prevBookmarked = bookmarked;
+    const prevCount = bookmarkCount;
 
     // 낙관적 업데이트
     setBookmarked(!bookmarked);
+    setBookmarkCount(bookmarked ? bookmarkCount - 1 : bookmarkCount + 1);
 
     const success = await toggleBookmark(postId, prevBookmarked);
     if (!success) {
       // 실패 시 롤백
       setBookmarked(prevBookmarked);
+      setBookmarkCount(prevCount);
     }
     setIsBookmarkLoading(false);
   };
@@ -319,13 +325,14 @@ export default function PostDetailPage({
                 <button
                   onClick={handleBookmarkClick}
                   disabled={isBookmarkLoading}
-                  className="flex items-center justify-center text-gray-500 hover:text-primary disabled:opacity-50"
+                  className="flex items-center gap-2 text-gray-500 hover:text-primary disabled:opacity-50"
                 >
                   <MaterialIcon
                     name="bookmark"
                     filled={bookmarked}
                     className={bookmarked ? "text-primary" : ""}
                   />
+                  <span className="text-sm font-bold">{bookmarkCount}</span>
                 </button>
               </div>
             </div>
