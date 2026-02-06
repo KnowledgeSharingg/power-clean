@@ -2,7 +2,14 @@
 
 import { use, useEffect, useState } from "react";
 import ReviewSection from "@/app/components/ReviewSection";
-import { getPostDetail, updatePost, serverUrl } from "@/lib/api";
+import {
+  getPostDetail,
+  updatePost,
+  serverUrl,
+  toggleLike,
+  toggleBookmark,
+  getToken,
+} from "@/lib/api";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import MaterialIcon from "@/app/components/MaterialIcon";
@@ -41,6 +48,8 @@ export default function PostDetailPage({
     content: string;
     bookInfo: BookInfo;
     likeCount?: number;
+    likedByMe?: boolean;
+    bookmarkedByMe?: boolean;
   }
 
   const router = useRouter();
@@ -48,6 +57,11 @@ export default function PostDetailPage({
   const [isEditing, setIsEditing] = useState(false);
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
+  const [liked, setLiked] = useState(false);
+  const [bookmarked, setBookmarked] = useState(false);
+  const [likeCount, setLikeCount] = useState(0);
+  const [isLikeLoading, setIsLikeLoading] = useState(false);
+  const [isBookmarkLoading, setIsBookmarkLoading] = useState(false);
   const [bookInfo, setBookInfo] = useState<{
     title: string;
     content: string;
@@ -77,12 +91,60 @@ export default function PostDetailPage({
         setTitle(postData.title);
         setContent(postData.content);
         setBookInfo(postData.bookInfo);
+        setLiked(postData.likedByMe || false);
+        setBookmarked(postData.bookmarkedByMe || false);
+        setLikeCount(postData.likeCount || 0);
       } catch (error) {
         console.error(error);
       }
     };
     fetchPost();
   }, [postId]);
+
+  const handleLikeClick = async () => {
+    if (!getToken()) {
+      router.push(`/auth?redirect=${encodeURIComponent(`/post/${postId}`)}`);
+      return;
+    }
+    if (isLikeLoading) return;
+
+    setIsLikeLoading(true);
+    const prevLiked = liked;
+    const prevCount = likeCount;
+
+    // 낙관적 업데이트
+    setLiked(!liked);
+    setLikeCount(liked ? likeCount - 1 : likeCount + 1);
+
+    const success = await toggleLike(postId, prevLiked);
+    if (!success) {
+      // 실패 시 롤백
+      setLiked(prevLiked);
+      setLikeCount(prevCount);
+    }
+    setIsLikeLoading(false);
+  };
+
+  const handleBookmarkClick = async () => {
+    if (!getToken()) {
+      router.push(`/auth?redirect=${encodeURIComponent(`/post/${postId}`)}`);
+      return;
+    }
+    if (isBookmarkLoading) return;
+
+    setIsBookmarkLoading(true);
+    const prevBookmarked = bookmarked;
+
+    // 낙관적 업데이트
+    setBookmarked(!bookmarked);
+
+    const success = await toggleBookmark(postId, prevBookmarked);
+    if (!success) {
+      // 실패 시 롤백
+      setBookmarked(prevBookmarked);
+    }
+    setIsBookmarkLoading(false);
+  };
 
   const handleUpdate = async () => {
     if (!post) return;
@@ -230,15 +292,17 @@ export default function PostDetailPage({
             {/* Action Bar */}
             <div className="flex items-center justify-between px-6 py-4 mt-2 border-b border-gray-100 dark:border-gray-800">
               <div className="flex items-center gap-6">
-                <button className="flex items-center gap-2 group">
+                <button
+                  onClick={handleLikeClick}
+                  disabled={isLikeLoading}
+                  className="flex items-center gap-2 group disabled:opacity-50"
+                >
                   <MaterialIcon
                     name="favorite"
-                    className="text-red-500"
-                    filled
+                    className={liked ? "text-red-500" : "text-gray-500"}
+                    filled={liked}
                   />
-                  <span className="text-sm font-bold">
-                    {post.likeCount || 0}
-                  </span>
+                  <span className="text-sm font-bold">{likeCount}</span>
                 </button>
                 <div className="flex items-center gap-2">
                   <MaterialIcon name="reviews" className="text-gray-500" />
@@ -252,8 +316,16 @@ export default function PostDetailPage({
                 >
                   <MaterialIcon name="edit" size="lg" />
                 </button>
-                <button className="flex items-center justify-center text-gray-500 hover:text-primary">
-                  <MaterialIcon name="bookmark" />
+                <button
+                  onClick={handleBookmarkClick}
+                  disabled={isBookmarkLoading}
+                  className="flex items-center justify-center text-gray-500 hover:text-primary disabled:opacity-50"
+                >
+                  <MaterialIcon
+                    name="bookmark"
+                    filled={bookmarked}
+                    className={bookmarked ? "text-primary" : ""}
+                  />
                 </button>
               </div>
             </div>

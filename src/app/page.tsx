@@ -13,6 +13,8 @@ interface Post {
   title: string;
   content: string;
   likeCount: number;
+  likedByMe?: boolean;
+  bookmarkedByMe?: boolean;
   createdAt: string;
   bookInfo?: {
     coverImageUrl: string;
@@ -111,6 +113,7 @@ export default function Home() {
                 title={post.title}
                 content={post.content}
                 likeCount={post.likeCount}
+                likedByMe={post.likedByMe}
                 createdAt={post.createdAt}
                 coverImageUrl={
                   post.bookInfo?.coverImageUrl
