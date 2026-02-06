@@ -17,4 +17,6 @@ interface PostBookmarkRepository {
     )
 
     fun findAllByAccountId(accountId: UUID): List<PostBookmark>
+
+    fun countByPostId(postId: UUID): Int
 }

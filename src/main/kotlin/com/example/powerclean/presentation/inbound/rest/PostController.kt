@@ -1,7 +1,7 @@
 package com.example.powerclean.presentation.inbound.rest
 
 import com.example.powerclean.application.service.PostService
-import com.example.powerclean.domain.model.Account
+import com.example.powerclean.config.security.CustomUser
 import com.example.powerclean.presentation.dto.CreatePostReqDto
 import com.example.powerclean.presentation.dto.CreatePostResDto
 import com.example.powerclean.presentation.dto.GetCreatedPostByAIResDto
@@ -45,7 +45,7 @@ class PostController(private val postService: PostService) {
     fun getPostDetail(
         @PathVariable postId: UUID,
     ): GetPostDetailResDto {
-        val accountId = (SecurityContextHolder.getContext().authentication?.principal as? Account)?.id
+        val accountId = (SecurityContextHolder.getContext().authentication?.principal as? CustomUser)?.id
         return postService.getPostDetail(postId, accountId)
     }
 
@@ -54,7 +54,10 @@ class PostController(private val postService: PostService) {
     fun getPostList(
         @RequestParam page: Int,
         @RequestParam size: Int,
-    ): GetPostListResDto = postService.getPostList(page, size)
+    ): GetPostListResDto {
+        val accountId = (SecurityContextHolder.getContext().authentication?.principal as? CustomUser)?.id
+        return postService.getPostList(page, size, accountId)
+    }
 
     @Operation(summary = "Post 수정 API.", description = "포스트 수정.")
     @PatchMapping()

@@ -77,4 +77,6 @@ class PostBookmarkService(
         postId: UUID,
         accountId: UUID,
     ): Boolean = postBookmarkRepository.existsByPostIdAndAccountId(postId, accountId)
+
+    fun countBookmarks(postId: UUID): Int = postBookmarkRepository.countByPostId(postId)
 }

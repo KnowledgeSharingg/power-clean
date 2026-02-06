@@ -2,11 +2,15 @@ package com.example.powerclean.application.service
 
 import com.example.powerclean.application.port.outbound.ai.AiProvider
 import com.example.powerclean.application.port.outbound.persistence.BookRepository
+import com.example.powerclean.application.port.outbound.persistence.PostBookmarkRepository
+import com.example.powerclean.application.port.outbound.persistence.PostLikeRepository
 import com.example.powerclean.application.port.outbound.persistence.PostRepository
 import com.example.powerclean.common.exception.CustomConflictException
 import com.example.powerclean.common.exception.CustomNotFoundException
 import com.example.powerclean.domain.model.Book
 import com.example.powerclean.domain.model.Post
+import com.example.powerclean.domain.model.PostBookmark
+import com.example.powerclean.domain.model.PostLike
 import com.example.powerclean.presentation.dto.CreatePostReqDto
 import com.example.powerclean.presentation.dto.CreatePostResDto
 import com.example.powerclean.presentation.dto.GetBookDetailResDto
@@ -25,6 +29,8 @@ import java.util.UUID
 class PostService(
     private val postRepository: PostRepository,
     private val bookRepository: BookRepository,
+    private val postLikeRepository: PostLikeRepository,
+    private val postBookmarkRepository: PostBookmarkRepository,
     private val aiProvider: AiProvider,
     private val postLikeService: PostLikeService,
     private val postBookmarkService: PostBookmarkService,
@@ -66,12 +72,12 @@ class PostService(
         postId: UUID,
         accountId: UUID?,
     ): GetPostDetailResDto {
+        logger.debug("getPostDetail: postId={}, accountId={}", postId, accountId)
         val foundPost = postRepository.findById(postId).orElse(null) ?: throw CustomNotFoundException("Post not found")
         return GetPostDetailResDto(
             id = foundPost.id,
             title = foundPost.title,
             content = foundPost.content,
-            likeCount = postLikeService.countLikes(foundPost.id).toInt(),
             createdAt = foundPost.createdAt.toString(),
             updatedAt = foundPost.updatedAt.toString(),
             bookInfo =
@@ -87,6 +93,8 @@ class PostService(
                 accountId?.let { postLikeService.existsByPostIdAndAccountId(foundPost.id, it) } ?: false,
             bookmarkedByMe =
                 accountId?.let { postBookmarkService.existsByPostIdAndAccountId(foundPost.id, it) } ?: false,
+            likeCount = postLikeService.countLikes(foundPost.id).toInt(),
+            bookmarkCount = postBookmarkService.countBookmarks(foundPost.id),
         )
     }
 
@@ -94,8 +102,33 @@ class PostService(
     fun getPostList(
         page: Int,
         size: Int,
+        accountId: UUID?,
     ): GetPostListResDto {
         val foundPosts: List<Post> = postRepository.findAll()
+        val foundPostLikes: List<PostLike> =
+            if (accountId !== null) {
+                postLikeRepository.findAllByAccountId(
+                    accountId,
+                )
+            } else {
+                emptyList()
+            }
+        val foundPostBookmarks: List<PostBookmark> =
+            if (accountId !== null) {
+                postBookmarkRepository.findAllByAccountId(
+                    accountId,
+                )
+            } else {
+                emptyList()
+            }
+        val postIdAndIsLikedMap: Map<UUID, Boolean> = foundPostLikes.associate { it.postId to true }
+        val postIdAndIsBookmarkedMap: Map<UUID, Boolean> = foundPostBookmarks.associate { it.postId to true }
+        val postIdAndLikeCountMap: Map<UUID, Int> = foundPosts.associate { it.id to postLikeService.countLikes(it.id) }
+        val postIdAndBookmarkCountMap: Map<UUID, Int> =
+            foundPosts.associate {
+                it.id to postBookmarkService.countBookmarks(it.id)
+            }
+
         return GetPostListResDto(
             postList =
                 foundPosts.map {
@@ -103,7 +136,6 @@ class PostService(
                         id = it.id,
                         title = it.title,
                         content = it.content,
-                        likeCount = postLikeService.countLikes(it.id).toInt(),
                         createdAt = it.createdAt.toString(),
                         updatedAt = it.updatedAt.toString(),
                         bookInfo =
@@ -115,8 +147,10 @@ class PostService(
                                 coverImageUrl = it.book?.coverImageUrl,
                                 authorInfo = it.book?.authorInfo,
                             ),
-                        likedByMe = false,
-                        bookmarkedByMe = false,
+                        likedByMe = postIdAndIsLikedMap[it.id] ?: false,
+                        bookmarkedByMe = postIdAndIsBookmarkedMap[it.id] ?: false,
+                        likeCount = postIdAndLikeCountMap[it.id] ?: 0,
+                        bookmarkCount = postIdAndBookmarkCountMap[it.id] ?: 0,
                     )
                 },
         )

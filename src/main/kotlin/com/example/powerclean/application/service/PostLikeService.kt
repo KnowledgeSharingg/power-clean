@@ -35,7 +35,7 @@ class PostLikeService(
         return "ok"
     }
 
-    fun countLikes(postId: UUID): Long = postLikeRepository.countByPostId(postId)
+    fun countLikes(postId: UUID): Int = postLikeRepository.countByPostId(postId)
 
     fun existsByPostIdAndAccountId(
         postId: UUID,
