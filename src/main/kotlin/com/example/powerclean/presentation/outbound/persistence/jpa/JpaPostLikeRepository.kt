@@ -16,7 +16,7 @@ interface JpaPostLikeRepository : JpaRepository<PostLike, UUID>, PostLikeReposit
         accountId: UUID,
     )
 
-    override fun countByPostId(postId: UUID): Long
+    override fun countByPostId(postId: UUID): Int
 
     override fun findAllByAccountId(accountId: UUID): List<PostLike>
 }
