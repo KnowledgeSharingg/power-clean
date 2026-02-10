@@ -110,18 +110,13 @@ export default function PostDetailPage({
       return;
     }
     if (isLikeLoading) return;
-
     setIsLikeLoading(true);
     const prevLiked = liked;
     const prevCount = likeCount;
-
-    // 낙관적 업데이트
     setLiked(!liked);
     setLikeCount(liked ? likeCount - 1 : likeCount + 1);
-
     const success = await toggleLike(postId, prevLiked);
     if (!success) {
-      // 실패 시 롤백
       setLiked(prevLiked);
       setLikeCount(prevCount);
     }
@@ -134,18 +129,13 @@ export default function PostDetailPage({
       return;
     }
     if (isBookmarkLoading) return;
-
     setIsBookmarkLoading(true);
     const prevBookmarked = bookmarked;
     const prevCount = bookmarkCount;
-
-    // 낙관적 업데이트
     setBookmarked(!bookmarked);
     setBookmarkCount(bookmarked ? bookmarkCount - 1 : bookmarkCount + 1);
-
     const success = await toggleBookmark(postId, prevBookmarked);
     if (!success) {
-      // 실패 시 롤백
       setBookmarked(prevBookmarked);
       setBookmarkCount(prevCount);
     }
@@ -154,13 +144,7 @@ export default function PostDetailPage({
 
   const handleUpdate = async () => {
     if (!post) return;
-
-    const updatedBookInfo = {
-      ...bookInfo,
-      title,
-      content,
-    };
-
+    const updatedBookInfo = { ...bookInfo, title, content };
     const success = await updatePost({
       id: post.id,
       title,
@@ -179,7 +163,7 @@ export default function PostDetailPage({
 
   if (!post) {
     return (
-      <div className="min-h-screen bg-background-light dark:bg-background-dark flex items-center justify-center">
+      <div className="min-h-screen bg-white flex items-center justify-center">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
       </div>
     );
@@ -188,58 +172,36 @@ export default function PostDetailPage({
   const timeAgo = getTimeAgo(post.createdAt);
 
   return (
-    <div className="bg-background-light dark:bg-background-dark text-slate-900 dark:text-white min-h-screen flex flex-col">
-      {/* Navigation */}
-      <nav className="sticky top-0 z-50 flex items-center bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-md p-4 justify-between border-b border-gray-200 dark:border-gray-800">
-        <div className="flex items-center gap-4">
-          <button
-            onClick={() => router.back()}
-            className="flex size-10 items-center justify-center rounded-full hover:bg-gray-200 dark:hover:bg-gray-800"
-          >
-            <MaterialIcon name="arrow_back_ios_new" />
-          </button>
-          <h2 className="text-lg font-bold leading-tight tracking-tight">
-            Post Details
-          </h2>
-        </div>
-        <div className="flex gap-2">
-          <button className="flex size-10 items-center justify-center rounded-full hover:bg-gray-200 dark:hover:bg-gray-800">
-            <MaterialIcon name="share" />
-          </button>
-          <button className="flex size-10 items-center justify-center rounded-full hover:bg-gray-200 dark:hover:bg-gray-800">
-            <MaterialIcon name="more_horiz" />
-          </button>
-        </div>
-      </nav>
-
-      <main className="flex-1 overflow-y-auto pb-32">
+    <div className="bg-white text-black min-h-screen">
+      <div className="site-container py-8">
         {isEditing ? (
-          <div className="max-w-lg mx-auto p-4">
-            <div className="bg-white dark:bg-card-dark-alt rounded-xl p-5 space-y-4">
-              <input
-                className="w-full text-2xl font-bold bg-transparent border-b border-gray-200 dark:border-gray-700 pb-2 focus:outline-none focus:border-primary"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-                placeholder="Title"
-              />
-              <textarea
-                className="w-full min-h-[120px] bg-transparent border border-gray-200 dark:border-gray-700 rounded-lg p-3 focus:outline-none focus:border-primary"
-                value={content}
-                onChange={(e) => setContent(e.target.value)}
-                placeholder="Content"
-              />
-
+          /* Edit Mode */
+          <div className="max-w-2xl mx-auto">
+            <div className="card-padded space-y-6">
+              <h2 className="text-xl font-bold">Edit Post</h2>
+              <div>
+                <label className="block text-sm font-medium mb-2">Title</label>
+                <input
+                  className="w-full text-lg font-bold"
+                  value={title}
+                  onChange={(e) => setTitle(e.target.value)}
+                  placeholder="Post title"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-2">Content</label>
+                <textarea
+                  className="w-full min-h-[200px] resize-y"
+                  value={content}
+                  onChange={(e) => setContent(e.target.value)}
+                  placeholder="Share your thoughts..."
+                />
+              </div>
               <div className="flex gap-3 pt-4">
-                <button
-                  className="flex-1 bg-primary text-white py-3 rounded-xl font-bold"
-                  onClick={handleUpdate}
-                >
-                  Save
+                <button className="btn-primary flex-1 py-3" onClick={handleUpdate}>
+                  Save Changes
                 </button>
-                <button
-                  className="flex-1 bg-gray-200 dark:bg-gray-700 py-3 rounded-xl font-bold"
-                  onClick={() => setIsEditing(false)}
-                >
+                <button className="btn flex-1 py-3" onClick={() => setIsEditing(false)}>
                   Cancel
                 </button>
               </div>
@@ -247,109 +209,121 @@ export default function PostDetailPage({
           </div>
         ) : (
           <>
-            {/* Cover Image */}
-            {post.bookInfo?.coverImageUrl && (
-              <div className="px-4 pt-4 flex justify-center">
-                <div className="relative w-48 aspect-[3/4] rounded-lg overflow-hidden shadow-md">
-                  <Image
-                    src={toAbsoluteUrl(post.bookInfo.coverImageUrl)}
-                    alt="Cover"
-                    fill
-                    className="object-cover"
+            {/* TheStoryGraph-style 2-column layout */}
+            <div className="grid lg:grid-cols-[240px_1fr_240px] gap-8">
+              {/* Left Column - Book Cover & Actions */}
+              <div className="flex flex-col items-center lg:items-start gap-4">
+                {post.bookInfo?.coverImageUrl ? (
+                  <div className="relative w-48 lg:w-full aspect-[3/4] rounded-lg overflow-hidden shadow-md">
+                    <Image
+                      src={toAbsoluteUrl(post.bookInfo.coverImageUrl)}
+                      alt="Cover"
+                      fill
+                      className="object-cover"
+                    />
+                  </div>
+                ) : (
+                  <div className="w-48 lg:w-full aspect-[3/4] rounded-lg bg-gray-100 flex items-center justify-center">
+                    <MaterialIcon name="menu_book" size="3xl" className="text-black/20" />
+                  </div>
+                )}
+
+                {/* Side Actions */}
+                <div className="w-full space-y-2">
+                  <button
+                    onClick={() => setIsEditing(true)}
+                    className="btn w-full text-sm gap-2"
+                  >
+                    <MaterialIcon name="edit" size="sm" />
+                    Edit Post
+                  </button>
+                </div>
+              </div>
+
+              {/* Center Column - Main Content */}
+              <div className="space-y-6">
+                {/* Title & Author */}
+                <div>
+                  <h1 className="text-3xl font-bold tracking-tight mb-2">
+                    {post.title}
+                  </h1>
+                  <p className="text-text-secondary">Anonymous User · {timeAgo}</p>
+                </div>
+
+                {/* Description */}
+                <div className="card-padded">
+                  <h2 className="text-sm font-bold uppercase tracking-wider text-text-secondary mb-3">
+                    DESCRIPTION
+                  </h2>
+                  <p className="text-base leading-relaxed text-black/80">
+                    {post.content}
+                  </p>
+                </div>
+
+                {/* Community Reviews */}
+                <div className="card-padded">
+                  <h2 className="text-sm font-bold uppercase tracking-wider text-text-secondary mb-4">
+                    COMMUNITY REVIEWS
+                  </h2>
+                  <ReviewSection
+                    postId={postId}
+                    creatorAccountId={"0197353d-b73f-7847-ae1c-1f4ff1839b67"}
                   />
                 </div>
               </div>
-            )}
 
-            {/* Content Card */}
-            <div className="px-4 pt-4 relative z-10">
-              <div className="bg-white dark:bg-card-dark-alt rounded-xl p-5 shadow-xl border border-gray-100 dark:border-gray-800">
-                {/* User Info & Rating */}
-                <div className="flex justify-between items-start mb-4">
-                  <div className="flex gap-3">
-                    <div className="size-12 rounded-full overflow-hidden border-2 border-primary bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
-                      <MaterialIcon name="person" size="xl" />
-                    </div>
-                    <div>
-                      <p className="font-bold text-sm">Anonymous User</p>
-                      <p className="text-xs text-gray-500 dark:text-gray-400">
-                        shared {timeAgo}
-                      </p>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-1 bg-primary text-white px-3 py-1 rounded-full text-xs font-bold">
-                    <MaterialIcon name="star" size="sm" filled />
-                    4.8
-                  </div>
-                </div>
-
-                {/* Title */}
-                <h1 className="text-2xl font-extrabold tracking-tight mb-4">
-                  {post.title}
-                </h1>
-
-                {/* Content */}
-                <p className="text-sm leading-relaxed text-gray-700 dark:text-gray-300">
-                  {post.content}
-                </p>
-              </div>
-            </div>
-
-            {/* Action Bar */}
-            <div className="flex items-center justify-between px-6 py-4 mt-2 border-b border-gray-100 dark:border-gray-800">
-              <div className="flex items-center gap-6">
+              {/* Right Column - Actions */}
+              <div className="hidden lg:flex flex-col gap-3">
                 <button
                   onClick={handleLikeClick}
                   disabled={isLikeLoading}
-                  className="flex items-center gap-2 group disabled:opacity-50"
+                  className={`btn w-full text-sm gap-2 ${
+                    liked ? "text-red-500 border-red-200 bg-red-50" : ""
+                  }`}
                 >
-                  <MaterialIcon
-                    name="favorite"
-                    className={liked ? "text-red-500" : "text-gray-500"}
-                    filled={liked}
-                  />
-                  <span className="text-sm font-bold">{likeCount}</span>
+                  <MaterialIcon name="favorite" size="sm" filled={liked} />
+                  {liked ? "Liked" : "Like"} ({likeCount})
                 </button>
-                <div className="flex items-center gap-2">
-                  <MaterialIcon name="reviews" className="text-gray-500" />
-                  <span className="text-sm font-bold">Reviews</span>
-                </div>
-              </div>
-              <div className="flex items-center gap-2">
-                <button
-                  onClick={() => setIsEditing(true)}
-                  className="flex items-center justify-center text-primary hover:bg-primary/10 px-3 py-1.5 rounded-lg"
-                >
-                  <MaterialIcon name="edit" size="lg" />
-                </button>
+
                 <button
                   onClick={handleBookmarkClick}
                   disabled={isBookmarkLoading}
-                  className="flex items-center gap-2 text-gray-500 hover:text-primary disabled:opacity-50"
+                  className={`btn w-full text-sm gap-2 ${
+                    bookmarked ? "text-primary border-primary/30 bg-primary-light" : ""
+                  }`}
                 >
-                  <MaterialIcon
-                    name="bookmark"
-                    filled={bookmarked}
-                    className={bookmarked ? "text-primary" : ""}
-                  />
-                  <span className="text-sm font-bold">{bookmarkCount}</span>
+                  <MaterialIcon name="bookmark" size="sm" filled={bookmarked} />
+                  {bookmarked ? "Saved" : "Save"} ({bookmarkCount})
                 </button>
               </div>
             </div>
 
-            </>
+            {/* Mobile Actions (below content on small screens) */}
+            <div className="flex lg:hidden gap-3 mt-6 pt-6 border-t border-border">
+              <button
+                onClick={handleLikeClick}
+                disabled={isLikeLoading}
+                className={`btn flex-1 text-sm gap-2 ${
+                  liked ? "text-red-500 border-red-200 bg-red-50" : ""
+                }`}
+              >
+                <MaterialIcon name="favorite" size="sm" filled={liked} />
+                {liked ? "Liked" : "Like"} ({likeCount})
+              </button>
+              <button
+                onClick={handleBookmarkClick}
+                disabled={isBookmarkLoading}
+                className={`btn flex-1 text-sm gap-2 ${
+                  bookmarked ? "text-primary border-primary/30 bg-primary-light" : ""
+                }`}
+              >
+                <MaterialIcon name="bookmark" size="sm" filled={bookmarked} />
+                {bookmarked ? "Saved" : "Save"} ({bookmarkCount})
+              </button>
+            </div>
+          </>
         )}
-
-        {/* Review Section */}
-        {!isEditing && (
-          <div className="px-4 pb-8">
-            <ReviewSection
-              postId={postId}
-              creatorAccountId={"0197353d-b73f-7847-ae1c-1f4ff1839b67"}
-            />
-          </div>
-        )}
-      </main>
+      </div>
     </div>
   );
 }
@@ -361,7 +335,6 @@ function getTimeAgo(dateString: string): string {
   const diffMins = Math.floor(diffMs / 60000);
   const diffHours = Math.floor(diffMins / 60);
   const diffDays = Math.floor(diffHours / 24);
-
   if (diffMins < 1) return "just now";
   if (diffMins < 60) return `${diffMins}m ago`;
   if (diffHours < 24) return `${diffHours}h ago`;

@@ -4,20 +4,21 @@ const lineClamp = require("@tailwindcss/line-clamp");
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  darkMode: "class",
   content: ["./src/**/*.{js,ts,jsx,tsx,mdx}"],
   theme: {
     extend: {
       colors: {
         black: "#000000",
         white: "#ffffff",
-        link: "#137fec",
-        primary: "#137fec",
-        "background-light": "#f6f7f8",
-        "background-dark": "#101922",
-        "card-dark": "#192633",
-        "card-dark-alt": "#1a2632",
-        "text-muted": "#92adc9",
+        link: "#1B7B6F",
+        primary: "#1B7B6F",
+        "primary-light": "#E8F5F3",
+        background: "#ffffff",
+        border: "#e5e5e5",
+        "text-secondary": "#6b7280",
+        "tag-bg": "#f0fdf9",
+        "tag-text": "#1B7B6F",
+        "tag-border": "#d1ede8",
       },
       fontFamily: {
         sans: [
@@ -36,16 +37,6 @@ module.exports = {
           '"Segoe UI Emoji"',
         ],
         display: ["Plus Jakarta Sans", "sans-serif"],
-        mono: [
-          "ui-monospace",
-          "SFMono-Regular",
-          "Menlo",
-          "Monaco",
-          "Consolas",
-          "Liberation Mono",
-          "Courier New",
-          "monospace",
-        ],
       },
       maxWidth: {
         prose: "72ch",

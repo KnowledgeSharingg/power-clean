@@ -1,4 +1,6 @@
 import "@/styles/globals.css";
+import Header from "./components/Header";
+import Footer from "./components/Footer";
 
 export default function RootLayout({
   children,
@@ -6,12 +8,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className="dark">
+    <html lang="en">
       <head>
         <title>서책의 파도</title>
         <meta
           name="description"
-          content="A platform to share and discuss book information."
+          content="다음에 무슨 책을 읽을지 인사이트를 얻을 수 있는 플랫폼"
         />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link
@@ -23,8 +25,10 @@ export default function RootLayout({
           rel="stylesheet"
         />
       </head>
-      <body className="min-h-screen bg-background-light dark:bg-background-dark text-slate-900 dark:text-white font-display">
-        {children}
+      <body className="min-h-screen bg-white text-black font-sans">
+        <Header />
+        <main>{children}</main>
+        <Footer />
       </body>
     </html>
   );
