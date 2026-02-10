@@ -1,8 +1,10 @@
 export default function Footer() {
   return (
-    <footer className="w-full bg-white border-t border-black/10 py-6">
+    <footer className="w-full border-t border-border py-8 mt-12">
       <div className="site-container text-center">
-        <p className="text-sm text-gray-500">Made by Rengoku & BB</p>
+        <p className="text-sm text-text-secondary">
+          © 2026 서책의 파도 · Made by Rengoku & BB
+        </p>
       </div>
     </footer>
   );
