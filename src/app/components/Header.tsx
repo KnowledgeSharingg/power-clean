@@ -21,7 +21,7 @@ export default function Header() {
         <div className="flex items-center gap-8">
           <Link href="/" className="flex items-center gap-2 no-underline">
             <svg width="28" height="28" viewBox="0 0 40 40" fill="none">
-              <path d="M8 6h6v28H8V6zm9 0h6v28h-6V6zm9 2h6v24h-6V8z" fill="#1B7B6F"/>
+              <path d="M8 6h6v28H8V6zm9 0h6v28h-6V6zm9 2h6v24h-6V8z" fill="#000000"/>
             </svg>
             <span className="text-lg font-bold text-black tracking-tight hidden sm:inline">
               서책의 파도

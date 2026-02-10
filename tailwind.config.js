@@ -10,15 +10,15 @@ module.exports = {
       colors: {
         black: "#000000",
         white: "#ffffff",
-        link: "#1B7B6F",
-        primary: "#1B7B6F",
-        "primary-light": "#E8F5F3",
+        link: "#000000",
+        primary: "#000000",
+        "primary-light": "#f5f5f5",
         background: "#ffffff",
         border: "#e5e5e5",
         "text-secondary": "#6b7280",
-        "tag-bg": "#f0fdf9",
-        "tag-text": "#1B7B6F",
-        "tag-border": "#d1ede8",
+        "tag-bg": "#f5f5f5",
+        "tag-text": "#000000",
+        "tag-border": "#d4d4d4",
       },
       fontFamily: {
         sans: [

@@ -42,7 +42,7 @@ export default function AuthClient({ redirect = "/" }: { redirect?: string }) {
           <div className="text-center mb-8">
             <div className="flex justify-center mb-4">
               <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
-                <path d="M8 6h6v28H8V6zm9 0h6v28h-6V6zm9 2h6v24h-6V8z" fill="#1B7B6F"/>
+                <path d="M8 6h6v28H8V6zm9 0h6v28h-6V6zm9 2h6v24h-6V8z" fill="#000000"/>
               </svg>
             </div>
             <h1 className="text-2xl font-bold tracking-tight text-black mb-1">
