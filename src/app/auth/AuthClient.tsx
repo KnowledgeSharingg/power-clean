@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 import AuthConfirmModal from "../components/AuthConfirmModal";
 import { login } from "@/lib/api";
 
@@ -41,9 +42,13 @@ export default function AuthClient({ redirect = "/" }: { redirect?: string }) {
           {/* Header */}
           <div className="text-center mb-8">
             <div className="flex justify-center mb-4">
-              <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
-                <path d="M8 6h6v28H8V6zm9 0h6v28h-6V6zm9 2h6v24h-6V8z" fill="#000000"/>
-              </svg>
+              <Image
+                src="/logo.png"
+                alt="서책의 파도"
+                width={48}
+                height={48}
+                className="object-contain"
+              />
             </div>
             <h1 className="text-2xl font-bold tracking-tight text-black mb-1">
               서책의 파도

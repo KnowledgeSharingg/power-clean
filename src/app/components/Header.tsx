@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useAuth } from "@/app/auth/useAuth";
 import { usePathname } from "next/navigation";
 
@@ -20,9 +21,13 @@ export default function Header() {
         {/* Logo */}
         <div className="flex items-center gap-8">
           <Link href="/" className="flex items-center gap-2 no-underline">
-            <svg width="28" height="28" viewBox="0 0 40 40" fill="none">
-              <path d="M8 6h6v28H8V6zm9 0h6v28h-6V6zm9 2h6v24h-6V8z" fill="#000000"/>
-            </svg>
+            <Image
+              src="/logo.png"
+              alt="서책의 파도"
+              width={32}
+              height={32}
+              className="object-contain"
+            />
             <span className="text-lg font-bold text-black tracking-tight hidden sm:inline">
               서책의 파도
             </span>
