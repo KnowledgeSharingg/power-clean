@@ -13,6 +13,7 @@ import {
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import MaterialIcon from "@/app/components/MaterialIcon";
+import TagInput from "@/app/components/TagInput";
 
 function toAbsoluteUrl(url: string): string {
   if (!url) return "";
@@ -62,6 +63,7 @@ export default function PostDetailPage({
   const [bookmarked, setBookmarked] = useState(false);
   const [likeCount, setLikeCount] = useState(0);
   const [bookmarkCount, setBookmarkCount] = useState(0);
+  const [tags, setTags] = useState<string[]>([]);
   const [isLikeLoading, setIsLikeLoading] = useState(false);
   const [isBookmarkLoading, setIsBookmarkLoading] = useState(false);
   const [bookInfo, setBookInfo] = useState<{
@@ -93,6 +95,7 @@ export default function PostDetailPage({
         setTitle(postData.title);
         setContent(postData.content);
         setBookInfo(postData.bookInfo);
+        setTags(postData.tags || []);
         setLiked(postData.likedByMe || false);
         setBookmarked(postData.bookmarkedByMe || false);
         setLikeCount(postData.likeCount || 0);
@@ -149,11 +152,12 @@ export default function PostDetailPage({
       id: post.id,
       title,
       content,
+      tags,
       bookInfo: updatedBookInfo,
     });
     if (success) {
       alert("수정 성공!");
-      setPost({ ...post, title, content, bookInfo: updatedBookInfo });
+      setPost({ ...post, title, content, bookInfo: updatedBookInfo, tags });
       setBookInfo(updatedBookInfo);
       setIsEditing(false);
     } else {
@@ -196,6 +200,10 @@ export default function PostDetailPage({
                   onChange={(e) => setContent(e.target.value)}
                   placeholder="Share your thoughts..."
                 />
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-2">Tags</label>
+                <TagInput tags={tags} onChange={setTags} />
               </div>
               <div className="flex gap-3 pt-4">
                 <button className="btn-primary flex-1 py-3" onClick={handleUpdate}>
@@ -248,6 +256,19 @@ export default function PostDetailPage({
                     {post.title}
                   </h1>
                   <p className="text-text-secondary">Anonymous User · {timeAgo}</p>
+                  {tags.length > 0 && (
+                    <div className="flex flex-wrap gap-1.5 mt-3">
+                      {tags.map((tag) => (
+                        <button
+                          key={tag}
+                          onClick={() => router.push(`/?tag=${encodeURIComponent(tag)}`)}
+                          className="bg-gray-100 text-black text-xs px-2.5 py-1 rounded-full hover:bg-gray-200 transition-colors"
+                        >
+                          {tag}
+                        </button>
+                      ))}
+                    </div>
+                  )}
                 </div>
 
                 {/* Description */}
