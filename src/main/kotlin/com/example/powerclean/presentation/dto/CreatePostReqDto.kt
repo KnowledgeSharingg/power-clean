@@ -18,4 +18,6 @@ data class CreatePostReqDto(
     var creatorAccountId: UUID?,
     @Schema(description = "포스트에 등록될 책 정보.")
     val bookInfo: CreateBookReqDto,
+    @Schema(description = "포스트에 등록될 태그 목록.", example = "[\"소설\", \"추천\"]")
+    val tags: List<String> = emptyList(),
 )
