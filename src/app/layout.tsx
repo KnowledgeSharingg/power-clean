@@ -16,6 +16,7 @@ export default function RootLayout({
           content="다음에 무슨 책을 읽을지 인사이트를 얻을 수 있는 플랫폼"
         />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="icon" href="/favicon.ico" />
         <link
           href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
           rel="stylesheet"
