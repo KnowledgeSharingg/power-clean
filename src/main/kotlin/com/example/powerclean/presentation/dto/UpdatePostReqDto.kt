@@ -16,4 +16,6 @@ data class UpdatePostReqDto(
     @get:Size(min = 1, max = 1000)
     val content: String,
     val bookInfo: UpdateBookReqDto,
+    @Schema(description = "포스트에 등록될 태그 목록.", example = "[\"소설\", \"추천\"]")
+    val tags: List<String> = emptyList(),
 )

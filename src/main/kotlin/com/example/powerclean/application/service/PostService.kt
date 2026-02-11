@@ -5,12 +5,16 @@ import com.example.powerclean.application.port.outbound.persistence.BookReposito
 import com.example.powerclean.application.port.outbound.persistence.PostBookmarkRepository
 import com.example.powerclean.application.port.outbound.persistence.PostLikeRepository
 import com.example.powerclean.application.port.outbound.persistence.PostRepository
+import com.example.powerclean.application.port.outbound.persistence.PostTagRepository
+import com.example.powerclean.application.port.outbound.persistence.TagRepository
 import com.example.powerclean.common.exception.CustomConflictException
 import com.example.powerclean.common.exception.CustomNotFoundException
 import com.example.powerclean.domain.model.Book
 import com.example.powerclean.domain.model.Post
 import com.example.powerclean.domain.model.PostBookmark
 import com.example.powerclean.domain.model.PostLike
+import com.example.powerclean.domain.model.PostTag
+import com.example.powerclean.domain.model.Tag
 import com.example.powerclean.presentation.dto.CreatePostReqDto
 import com.example.powerclean.presentation.dto.CreatePostResDto
 import com.example.powerclean.presentation.dto.GetBookDetailResDto
@@ -31,11 +35,40 @@ class PostService(
     private val bookRepository: BookRepository,
     private val postLikeRepository: PostLikeRepository,
     private val postBookmarkRepository: PostBookmarkRepository,
+    private val tagRepository: TagRepository,
+    private val postTagRepository: PostTagRepository,
     private val aiProvider: AiProvider,
     private val postLikeService: PostLikeService,
     private val postBookmarkService: PostBookmarkService,
 ) {
     private val logger = LoggerFactory.getLogger(PostService::class.java)
+
+    private fun findOrCreateTags(tagNames: List<String>): List<Tag> {
+        if (tagNames.isEmpty()) return emptyList()
+        val existingTags = tagRepository.findAllByNameIn(tagNames)
+        val existingTagNames = existingTags.map { it.name }.toSet()
+        val newTags =
+            tagNames.filter { it !in existingTagNames }.map { tagRepository.save(Tag(name = it)) }
+        return existingTags + newTags
+    }
+
+    private fun syncPostTags(
+        postId: java.util.UUID,
+        tags: List<Tag>,
+    ) {
+        postTagRepository.deleteAllByPostId(postId)
+        tags.forEach { tag ->
+            postTagRepository.save(PostTag(postId = postId, tagId = tag.id))
+        }
+    }
+
+    private fun getTagNamesForPost(postId: java.util.UUID): List<String> {
+        val postTags = postTagRepository.findAllByPostId(postId)
+        if (postTags.isEmpty()) return emptyList()
+        return postTags.mapNotNull { postTag ->
+            tagRepository.findById(postTag.tagId).orElse(null)?.name
+        }
+    }
 
     fun createPost(requestDto: CreatePostReqDto): CreatePostResDto {
         bookRepository.findByTitle(
@@ -51,6 +84,9 @@ class PostService(
             bookRepository.save(
                 Book.from(requestDto.bookInfo, savedPost),
             )
+
+        val tags = findOrCreateTags(requestDto.tags)
+        syncPostTags(savedPost.id, tags)
 
         return CreatePostResDto(
             id = savedPost.id,
@@ -95,6 +131,7 @@ class PostService(
                 accountId?.let { postBookmarkService.existsByPostIdAndAccountId(foundPost.id, it) } ?: false,
             likeCount = postLikeService.countLikes(foundPost.id).toInt(),
             bookmarkCount = postBookmarkService.countBookmarks(foundPost.id),
+            tags = getTagNamesForPost(foundPost.id),
         )
     }
 
@@ -103,8 +140,22 @@ class PostService(
         page: Int,
         size: Int,
         accountId: UUID?,
+        tag: String? = null,
     ): GetPostListResDto {
-        val foundPosts: List<Post> = postRepository.findAll()
+        val allPosts: List<Post> = postRepository.findAll()
+        val foundPosts: List<Post> =
+            if (tag != null) {
+                val foundTag = tagRepository.findByName(tag)
+                if (foundTag != null) {
+                    val postTagList = postTagRepository.findAllByTagId(foundTag.id)
+                    val postIds = postTagList.map { it.postId }.toSet()
+                    allPosts.filter { it.id in postIds }
+                } else {
+                    emptyList()
+                }
+            } else {
+                allPosts
+            }
         val foundPostLikes: List<PostLike> =
             if (accountId !== null) {
                 postLikeRepository.findAllByAccountId(
@@ -151,30 +202,37 @@ class PostService(
                         bookmarkedByMe = postIdAndIsBookmarkedMap[it.id] ?: false,
                         likeCount = postIdAndLikeCountMap[it.id] ?: 0,
                         bookmarkCount = postIdAndBookmarkCountMap[it.id] ?: 0,
+                        tags = getTagNamesForPost(it.id),
                     )
                 },
         )
     }
 
     fun updatePost(requestDto: UpdatePostReqDto): String {
-        (
-            postRepository.findByIdWithBook(requestDto.id).orElse(null)
-                ?: throw NotFoundException("Post not found")
-        )
-            .apply {
-                updateInfo(requestDto.title, requestDto.content)
-                this.book?.updateInfo(
-                    requestDto.bookInfo.title,
-                    requestDto.bookInfo.content,
-                    requestDto.bookInfo.link,
-                )
-            }
-            .also {
-                postRepository.save(it)
-            }
+        val post =
+            (
+                postRepository.findByIdWithBook(requestDto.id).orElse(null)
+                    ?: throw NotFoundException("Post not found")
+            )
+                .apply {
+                    updateInfo(requestDto.title, requestDto.content)
+                    this.book?.updateInfo(
+                        requestDto.bookInfo.title,
+                        requestDto.bookInfo.content,
+                        requestDto.bookInfo.link,
+                    )
+                }
+                .also {
+                    postRepository.save(it)
+                }
+
+        val tags = findOrCreateTags(requestDto.tags)
+        syncPostTags(post.id, tags)
 
         return "ok"
     }
+
+    fun getAllTags(): List<String> = tagRepository.findAll().map { it.name }
 
     fun deletePost(postId: UUID): String {
         postRepository.deleteById(postId)

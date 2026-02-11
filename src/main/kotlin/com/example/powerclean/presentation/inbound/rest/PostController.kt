@@ -49,14 +49,15 @@ class PostController(private val postService: PostService) {
         return postService.getPostDetail(postId, accountId)
     }
 
-    @Operation(summary = "Post 리스트 조회 API.", description = "포스트 리스트 조회.")
+    @Operation(summary = "Post 리스트 조회 API.", description = "포스트 리스트 조회. tag 파라미터로 태그별 필터링 가능.")
     @GetMapping("/list")
     fun getPostList(
         @RequestParam page: Int,
         @RequestParam size: Int,
+        @RequestParam(required = false) tag: String?,
     ): GetPostListResDto {
         val accountId = (SecurityContextHolder.getContext().authentication?.principal as? CustomUser)?.id
-        return postService.getPostList(page, size, accountId)
+        return postService.getPostList(page, size, accountId, tag)
     }
 
     @Operation(summary = "Post 수정 API.", description = "포스트 수정.")

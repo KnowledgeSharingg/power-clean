@@ -13,4 +13,5 @@ data class GetPostDetailResDto(
     val bookInfo: GetBookDetailResDto,
     val likedByMe: Boolean,
     val bookmarkedByMe: Boolean,
+    val tags: List<String> = emptyList(),
 )
