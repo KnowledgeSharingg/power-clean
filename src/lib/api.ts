@@ -33,6 +33,7 @@ export async function createPost(data: {
   title: string;
   content: string;
   creatorAccountId: string;
+  tags?: string[];
   bookInfo: {
     title: string;
     content: string;
@@ -60,12 +61,23 @@ export async function createPost(data: {
   }
 }
 
-export async function getPostList(page: number = 1, size: number = 10) {
-  const res = await fetch(`${serverUrl}/post/list?page=${page}&size=${size}`, {
+export async function getPostList(page: number = 1, size: number = 10, tag?: string) {
+  let url = `${serverUrl}/post/list?page=${page}&size=${size}`;
+  if (tag) url += `&tag=${encodeURIComponent(tag)}`;
+  const res = await fetch(url, {
     headers: authHeaders(),
     cache: "no-store",
   });
   if (!res.ok) throw new Error("Failed to fetch posts");
+  return res.json();
+}
+
+export async function getTags(): Promise<{ tags: { id: number; name: string }[] }> {
+  const res = await fetch(`${serverUrl}/tags`, {
+    headers: authHeaders(),
+    cache: "no-store",
+  });
+  if (!res.ok) return { tags: [] };
   return res.json();
 }
 
@@ -81,6 +93,7 @@ export async function updatePost(data: {
   id: string;
   title: string;
   content: string;
+  tags?: string[];
   bookInfo: {
     title: string;
     content: string;
@@ -417,6 +430,7 @@ export interface Post {
   likedByMe?: boolean;
   bookmarkedByMe?: boolean;
   createdAt: string;
+  tags?: string[];
   bookInfo?: {
     coverImageUrl: string;
   };

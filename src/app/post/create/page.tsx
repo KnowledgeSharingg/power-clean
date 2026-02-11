@@ -6,6 +6,7 @@ import { createPost, uploadImage, getCreatedPostByAI } from "@/lib/api";
 import Image from "next/image";
 import AIInputPopover from "@/app/components/AIInputPopover";
 import MaterialIcon from "@/app/components/MaterialIcon";
+import TagInput from "@/app/components/TagInput";
 
 export default function CreatePost() {
   const router = useRouter();
@@ -13,6 +14,7 @@ export default function CreatePost() {
   const [aiScript, setAiScript] = useState("");
   const [isLoadingAI, setIsLoadingAI] = useState(false);
   const [aiError, setAiError] = useState<string | null>(null);
+  const [tags, setTags] = useState<string[]>([]);
   const [form, setForm] = useState({
     title: "",
     content: "",
@@ -122,6 +124,7 @@ export default function CreatePost() {
       ...form,
       title: form.bookInfo.title,
       content: form.bookInfo.content,
+      tags,
     };
     const success = await createPost(postData);
     if (success) {
@@ -239,6 +242,14 @@ export default function CreatePost() {
                   />
                 </label>
               )}
+            </section>
+
+            {/* 4. Tags */}
+            <section className="card-padded space-y-4">
+              <h2 className="text-sm font-bold uppercase tracking-wider text-text-secondary">
+                Tags
+              </h2>
+              <TagInput tags={tags} onChange={setTags} />
             </section>
 
             {/* Submit */}

@@ -17,6 +17,7 @@ interface PostCardProps {
   authorName?: string;
   authorAvatar?: string;
   coverImageUrl?: string;
+  tags?: string[];
   onLikeChange?: (id: number, liked: boolean, newCount: number) => void;
 }
 
@@ -29,6 +30,7 @@ export default function PostCard({
   createdAt,
   authorName = "Anonymous",
   coverImageUrl,
+  tags,
   onLikeChange,
 }: PostCardProps) {
   const router = useRouter();
@@ -109,6 +111,24 @@ export default function PostCard({
         <p className="text-sm text-black/70 leading-relaxed line-clamp-2 mb-3">
           {content}
         </p>
+
+        {/* Tags */}
+        {tags && tags.length > 0 && (
+          <div className="flex flex-wrap gap-1.5 mb-3">
+            {tags.map((tag) => (
+              <button
+                key={tag}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  router.push(`/?tag=${encodeURIComponent(tag)}`);
+                }}
+                className="bg-gray-100 text-black text-xs px-2.5 py-1 rounded-full hover:bg-gray-200 transition-colors"
+              >
+                {tag}
+              </button>
+            ))}
+          </div>
+        )}
 
         {/* Actions */}
         <div className="flex items-center gap-4">
