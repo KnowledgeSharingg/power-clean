@@ -48,6 +48,7 @@ export default function PostDetailPage({
     title: string;
     content: string;
     bookInfo: BookInfo;
+    tags?: string[];
     likeCount?: number;
     bookmarkCount?: number;
     likedByMe?: boolean;

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { Suspense, useState, useEffect } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { getPostList, getTags, serverUrl } from "@/lib/api";
 import PostCard from "./components/PostCard";
@@ -29,6 +29,18 @@ const toAbsoluteUrl = (url: string): string => {
 };
 
 export default function Home() {
+  return (
+    <Suspense fallback={
+      <div className="bg-white min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
+      </div>
+    }>
+      <HomeContent />
+    </Suspense>
+  );
+}
+
+function HomeContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const activeTag = searchParams.get("tag") || "";
