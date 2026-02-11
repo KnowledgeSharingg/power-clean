@@ -2,10 +2,11 @@ interface MaterialIconProps {
   name: string;
   className?: string;
   filled?: boolean;
-  size?: "sm" | "md" | "lg" | "xl" | "2xl" | "3xl";
+  size?: "xs" | "sm" | "md" | "lg" | "xl" | "2xl" | "3xl";
 }
 
 const sizeClasses = {
+  xs: "text-xs",
   sm: "text-sm",
   md: "text-base",
   lg: "text-lg",
