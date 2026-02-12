@@ -1,6 +1,7 @@
 package com.example.powerclean.config
 
 import com.example.powerclean.application.port.outbound.persistence.AccountRepository
+import com.example.powerclean.application.port.outbound.persistence.BookDataRepository
 import com.example.powerclean.application.port.outbound.persistence.BookRepository
 import com.example.powerclean.application.port.outbound.persistence.OauthProfileRepository
 import com.example.powerclean.application.port.outbound.persistence.PostBookmarkRepository
@@ -8,6 +9,7 @@ import com.example.powerclean.application.port.outbound.persistence.PostLikeRepo
 import com.example.powerclean.application.port.outbound.persistence.PostRepository
 import com.example.powerclean.application.port.outbound.persistence.ReviewRepository
 import com.example.powerclean.presentation.outbound.persistence.jpa.JpaAccountRepository
+import com.example.powerclean.presentation.outbound.persistence.jpa.JpaBookDataRepository
 import com.example.powerclean.presentation.outbound.persistence.jpa.JpaBookRepository
 import com.example.powerclean.presentation.outbound.persistence.jpa.JpaOauthProfileRepository
 import com.example.powerclean.presentation.outbound.persistence.jpa.JpaPostBookmarkRepository
@@ -30,6 +32,9 @@ class RepositoryConfig {
 
     @Bean
     fun bookRepository(jpaBookRepository: JpaBookRepository): BookRepository = jpaBookRepository
+
+    @Bean
+    fun bookDataRepository(jpaBookDataRepository: JpaBookDataRepository): BookDataRepository = jpaBookDataRepository
 
     @Bean
     fun oauthProfileRepository(jpaOauthProfileRepository: JpaOauthProfileRepository): OauthProfileRepository =
