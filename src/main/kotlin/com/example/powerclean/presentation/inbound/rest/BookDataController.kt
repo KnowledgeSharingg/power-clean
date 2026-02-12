@@ -20,25 +20,34 @@ class BookDataController(
     private val bookDataRepository: BookDataRepository,
 ) {
 
-    @Operation(summary = "수동 수집 트리거", description = "베스트셀러/신간 데이터를 즉시 수집합니다.")
+    @Operation(summary = "수동 수집 트리거", description = "베스트셀러/신간 데이터를 즉시 수집하고 INSERT SQL 파일을 생성합니다.")
     @PostMapping("/collect")
     fun triggerCollect(): ResponseEntity<Map<String, Any>> {
-        bookCollectorService.collectDaily()
+        val result = bookCollectorService.collectDaily()
         val count = bookDataRepository.count()
         return ResponseEntity.ok(
-            mapOf("message" to "수집 완료", "totalBooks" to count),
+            mapOf(
+                "message" to "수집 완료",
+                "newBooksSaved" to result.savedCount,
+                "totalBooks" to count,
+                "sqlFiles" to result.sqlFiles,
+            ),
         )
     }
 
-    @Operation(summary = "키워드 검색 & 수집", description = "알라딘에서 키워드로 검색하고 DB에 저장합니다.")
+    @Operation(summary = "키워드 검색 & 수집", description = "알라딘에서 키워드로 검색하고 DB에 저장 + INSERT SQL 파일 생성합니다.")
     @PostMapping("/search")
     fun searchAndCollect(
         @RequestParam query: String,
         @RequestParam(defaultValue = "20") maxResults: Int,
     ): ResponseEntity<Map<String, Any>> {
-        val saved = bookCollectorService.searchAndCollect(query, maxResults)
+        val result = bookCollectorService.searchAndCollect(query, maxResults)
         return ResponseEntity.ok(
-            mapOf("query" to query, "newBooksSaved" to saved),
+            mapOf(
+                "query" to query,
+                "newBooksSaved" to result.savedCount,
+                "sqlFiles" to result.sqlFiles,
+            ),
         )
     }
 

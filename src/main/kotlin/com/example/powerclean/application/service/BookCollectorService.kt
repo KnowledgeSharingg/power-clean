@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service
 class BookCollectorService(
     private val aladinApiClient: AladinApiClient,
     private val bookDataRepository: BookDataRepository,
+    private val sqlExporter: BookDataSqlExporter,
 ) {
     private val logger = LoggerFactory.getLogger(BookCollectorService::class.java)
 
@@ -42,23 +43,27 @@ class BookCollectorService(
      * 매일 새벽 3시(KST)에 자동 수집. cron = 초 분 시 일 월 요일
      */
     @Scheduled(cron = "0 0 18 * * *") // UTC 18:00 = KST 03:00
-    fun collectDaily() {
+    fun collectDaily(): CollectResult {
         logger.info("=== 일일 도서 데이터 수집 시작 ===")
         var totalCollected = 0
+        val allNewBooks = mutableListOf<BookData>()
+        val sqlFiles = mutableListOf<String>()
 
         TARGET_CATEGORIES.forEach { (categoryId, categoryName) ->
             try {
                 // 베스트셀러
                 val bestSellers = aladinApiClient.getBestSellers(categoryId, 50)
                 val savedBest = saveNewBooks(bestSellers.items, "BESTSELLER")
-                logger.info("[$categoryName] 베스트셀러: ${bestSellers.items.size}건 조회, ${savedBest}건 신규 저장")
-                totalCollected += savedBest
+                allNewBooks.addAll(savedBest)
+                logger.info("[$categoryName] 베스트셀러: ${bestSellers.items.size}건 조회, ${savedBest.size}건 신규 저장")
+                totalCollected += savedBest.size
 
                 // 신간
                 val newBooks = aladinApiClient.getNewBooks(categoryId, 50)
                 val savedNew = saveNewBooks(newBooks.items, "NEW")
-                logger.info("[$categoryName] 신간: ${newBooks.items.size}건 조회, ${savedNew}건 신규 저장")
-                totalCollected += savedNew
+                allNewBooks.addAll(savedNew)
+                logger.info("[$categoryName] 신간: ${newBooks.items.size}건 조회, ${savedNew.size}건 신규 저장")
+                totalCollected += savedNew.size
 
                 // API rate limit 방지
                 Thread.sleep(300)
@@ -71,35 +76,52 @@ class BookCollectorService(
         try {
             val special = aladinApiClient.getNewSpecialBooks(0, 50)
             val savedSpecial = saveNewBooks(special.items, "NEW_SPECIAL")
-            logger.info("[주목할만한 신간] ${special.items.size}건 조회, ${savedSpecial}건 신규 저장")
-            totalCollected += savedSpecial
+            allNewBooks.addAll(savedSpecial)
+            logger.info("[주목할만한 신간] ${special.items.size}건 조회, ${savedSpecial.size}건 신규 저장")
+            totalCollected += savedSpecial.size
         } catch (e: Exception) {
             logger.error("[주목할만한 신간] 수집 실패", e)
         }
 
+        // SQL 파일 생성
+        if (allNewBooks.isNotEmpty()) {
+            sqlExporter.export(allNewBooks, "DAILY_COLLECT")?.let { sqlFiles.add(it) }
+        }
+
         logger.info("=== 일일 도서 데이터 수집 완료: 총 ${totalCollected}건 신규 저장 ===")
+        return CollectResult(totalCollected, sqlFiles)
     }
 
     /**
      * 키워드로 수동 검색 & 저장
      */
-    fun searchAndCollect(query: String, maxResults: Int = 20): Int {
+    fun searchAndCollect(query: String, maxResults: Int = 20): CollectResult {
         val result = aladinApiClient.searchBooks(query, maxResults)
-        return saveNewBooks(result.items, "SEARCH")
+        val saved = saveNewBooks(result.items, "SEARCH")
+        val sqlFiles = mutableListOf<String>()
+        if (saved.isNotEmpty()) {
+            sqlExporter.export(saved, "SEARCH_${query.replace(" ", "_")}")?.let { sqlFiles.add(it) }
+        }
+        return CollectResult(saved.size, sqlFiles)
     }
 
     /**
-     * ISBN 중복 체크 후 저장. 신규 저장 건수 반환.
+     * ISBN 중복 체크 후 저장. 신규 저장된 BookData 리스트 반환.
      */
-    private fun saveNewBooks(items: List<AladinBookItem>, source: String): Int {
-        var count = 0
+    private fun saveNewBooks(items: List<AladinBookItem>, source: String): List<BookData> {
+        val saved = mutableListOf<BookData>()
         items.forEach { item ->
             if (item.isbn13.isNotBlank() && !bookDataRepository.existsByIsbn13(item.isbn13)) {
                 val bookData = BookData.fromAladin(item, source)
                 bookDataRepository.save(bookData)
-                count++
+                saved.add(bookData)
             }
         }
-        return count
+        return saved
     }
+
+    data class CollectResult(
+        val savedCount: Int,
+        val sqlFiles: List<String>,
+    )
 }

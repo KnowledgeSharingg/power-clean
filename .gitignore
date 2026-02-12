@@ -38,3 +38,5 @@ out/
 
 ### Kotlin ###
 .kotlin
+# SQL export files
+sql-exports/
