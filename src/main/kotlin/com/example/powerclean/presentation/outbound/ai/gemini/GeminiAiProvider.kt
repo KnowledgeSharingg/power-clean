@@ -3,7 +3,6 @@ package com.example.powerclean.presentation.outbound.ai.gemini
 import com.example.powerclean.application.port.outbound.ai.AiProvider
 import com.example.powerclean.application.port.outbound.ai.dto.AiBookInfoResult
 import com.example.powerclean.common.exception.CustomInternalServerErrorException
-import com.example.powerclean.domain.valueobject.AuthorInfo
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
@@ -41,7 +40,7 @@ class GeminiAiProvider(
                 20,
             )}...의 요약","postContent":"$prompt","bookTitle":"${prompt.take(
                 10,
-            )} 추천 도서","bookContent":"이 스크립트를 기반으로 한 도서 소개입니다.","bookLink":"https://example.com/book","coverImageUrl":"","authorInfo":{"name":"알 수 없음","dateOfBirth":"","phoneNumber":"","gender":"","history":""}}
+            )} 추천 도서","bookContent":"이 스크립트를 기반으로 한 도서 소개입니다.","bookLink":"https://example.com/book","coverImageUrl":"","author":"알 수 없음"}
             """.trimIndent()
         } else {
             try {
@@ -64,13 +63,7 @@ class GeminiAiProvider(
           "bookContent": "도서 소개(최대 1000자)",
           "bookLink": "도서 링크(URL 없으면 빈 문자열)",
           "coverImageUrl": "표지 이미지 URL(없으면 빈 문자열)",
-          "authorInfo": {
-            "name":"저자명(없으면 '알 수 없음')",
-            "dateOfBirth":"생년월일(없으면 빈 문자열)",
-            "phoneNumber":"전화번호(없으면 빈 문자열)",
-            "gender":"성별(없으면 빈 문자열)",
-            "history":"경력/이력(없으면 빈 문자열)"
-          }
+          "author": "저자명(없으면 '알 수 없음')"
         }
         사용자 스크립트:
         $script
@@ -95,12 +88,7 @@ class GeminiAiProvider(
         val bookContent = pick("bookContent") ?: "사용자 스크립트를 기반으로 한 도서 소개"
         val bookLink = pick("bookLink") ?: ""
         val cover = pick("coverImageUrl")
-        val authorName = pick("name") ?: "알 수 없음"
-        val dob = pick("dateOfBirth") ?: ""
-        val phone = pick("phoneNumber") ?: ""
-        val gender = pick("gender") ?: ""
-        val history = pick("history") ?: ""
-        val author = AuthorInfo(authorName, dob, phone, gender, history)
+        val authorName = pick("author") ?: "알 수 없음"
         return AiBookInfoResult(
             postTitle = postTitle,
             postContent = postContent,
@@ -108,7 +96,7 @@ class GeminiAiProvider(
             bookContent = bookContent,
             bookLink = bookLink,
             coverImageUrl = if (cover.isNullOrBlank()) null else cover,
-            authorInfo = author,
+            author = authorName,
         )
     }
 

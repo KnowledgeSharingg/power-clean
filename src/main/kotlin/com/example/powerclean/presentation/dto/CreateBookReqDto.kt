@@ -1,6 +1,5 @@
 package com.example.powerclean.presentation.dto
 
-import com.example.powerclean.domain.valueobject.AuthorInfo
 import com.example.powerclean.utils.DEFAULT_BOOK_COVER_IMAGE_URL
 import io.swagger.v3.oas.annotations.media.Schema
 import jakarta.validation.constraints.NotBlank
@@ -31,6 +30,6 @@ data class CreateBookReqDto(
     @get:NotBlank()
     @get:URL()
     val link: String,
-    @Schema(description = "저자 정보.")
-    var authorInfo: AuthorInfo,
+    @Schema(description = "저자명.", example = "알베르 카뮈")
+    val author: String = "",
 )

@@ -99,7 +99,7 @@ class PostService(
                     content = savedBook.content,
                     link = savedBook.link,
                     coverImageUrl = savedBook.coverImageUrl,
-                    authorInfo = savedBook.authorInfo,
+                    author = savedBook.author,
                 ),
         )
     }
@@ -123,7 +123,7 @@ class PostService(
                     content = foundPost.book?.content,
                     link = foundPost.book?.link,
                     coverImageUrl = foundPost.book?.coverImageUrl,
-                    authorInfo = foundPost.book?.authorInfo,
+                    author = foundPost.book?.author,
                 ),
             likedByMe =
                 accountId?.let { postLikeService.existsByPostIdAndAccountId(foundPost.id, it) } ?: false,
@@ -196,7 +196,7 @@ class PostService(
                                 content = it.book?.content,
                                 link = it.book?.link,
                                 coverImageUrl = it.book?.coverImageUrl,
-                                authorInfo = it.book?.authorInfo,
+                                author = it.book?.author,
                             ),
                         likedByMe = postIdAndIsLikedMap[it.id] ?: false,
                         bookmarkedByMe = postIdAndIsBookmarkedMap[it.id] ?: false,
@@ -251,7 +251,7 @@ class PostService(
                     content = result.bookContent,
                     link = result.bookLink,
                     coverImageUrl = result.coverImageUrl,
-                    authorInfo = result.authorInfo,
+                    author = result.author,
                 ),
         )
     }

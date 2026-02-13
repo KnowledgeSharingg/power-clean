@@ -67,7 +67,7 @@ class PostLikeService(
                                 content = p.book?.content,
                                 link = p.book?.link,
                                 coverImageUrl = p.book?.coverImageUrl,
-                                authorInfo = p.book?.authorInfo,
+                                author = p.book?.author,
                             ),
                         likedByMe = true,
                         bookmarkedByMe = postBookmarkRepository.existsByPostIdAndAccountId(p.id, accountId),

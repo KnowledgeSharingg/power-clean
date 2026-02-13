@@ -2,8 +2,8 @@ package com.example.powerclean.application.service
 
 import com.example.powerclean.application.port.outbound.api.AladinApiClient
 import com.example.powerclean.application.port.outbound.api.dto.AladinBookItem
-import com.example.powerclean.application.port.outbound.persistence.BookDataRepository
-import com.example.powerclean.domain.model.BookData
+import com.example.powerclean.application.port.outbound.persistence.BookRepository
+import com.example.powerclean.domain.model.Book
 import org.slf4j.LoggerFactory
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
@@ -16,8 +16,8 @@ import org.springframework.stereotype.Service
 @Service
 class BookCollectorService(
     private val aladinApiClient: AladinApiClient,
-    private val bookDataRepository: BookDataRepository,
-    private val sqlExporter: BookDataSqlExporter,
+    private val bookRepository: BookRepository,
+    private val sqlExporter: BookSqlExporter,
 ) {
     private val logger = LoggerFactory.getLogger(BookCollectorService::class.java)
 
@@ -46,7 +46,7 @@ class BookCollectorService(
     fun collectDaily(): CollectResult {
         logger.info("=== 일일 도서 데이터 수집 시작 ===")
         var totalCollected = 0
-        val allNewBooks = mutableListOf<BookData>()
+        val allNewBooks = mutableListOf<Book>()
         val sqlFiles = mutableListOf<String>()
 
         TARGET_CATEGORIES.forEach { (categoryId, categoryName) ->
@@ -106,15 +106,15 @@ class BookCollectorService(
     }
 
     /**
-     * ISBN 중복 체크 후 저장. 신규 저장된 BookData 리스트 반환.
+     * ISBN 중복 체크 후 저장. 신규 저장된 Book 리스트 반환.
      */
-    private fun saveNewBooks(items: List<AladinBookItem>, source: String): List<BookData> {
-        val saved = mutableListOf<BookData>()
+    private fun saveNewBooks(items: List<AladinBookItem>, source: String): List<Book> {
+        val saved = mutableListOf<Book>()
         items.forEach { item ->
-            if (item.isbn13.isNotBlank() && !bookDataRepository.existsByIsbn13(item.isbn13)) {
-                val bookData = BookData.fromAladin(item, source)
-                bookDataRepository.save(bookData)
-                saved.add(bookData)
+            if (item.isbn13.isNotBlank() && !bookRepository.existsByIsbn13(item.isbn13)) {
+                val book = Book.fromAladin(item, source)
+                bookRepository.save(book)
+                saved.add(book)
             }
         }
         return saved

@@ -1,6 +1,5 @@
 package com.example.powerclean.presentation.dto
 
-import com.example.powerclean.domain.valueobject.AuthorInfo
 import io.swagger.v3.oas.annotations.media.Schema
 import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.Size
@@ -24,6 +23,6 @@ data class UpdateBookReqDto(
     @get:NotBlank()
     @get:URL()
     val link: String,
-    @Schema(description = "저자 정보.")
-    val authorInfo: AuthorInfo? = null,
+    @Schema(description = "저자명.", example = "알베르 카뮈")
+    val author: String? = null,
 )
