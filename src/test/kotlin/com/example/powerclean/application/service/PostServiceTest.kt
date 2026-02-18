@@ -49,10 +49,11 @@ class PostServiceTest {
         aiProvider = mock(AiProvider::class.java)
         postLikeService = mock(PostLikeService::class.java)
         postBookmarkService = mock(PostBookmarkService::class.java)
-        postService = PostService(
-            postRepository, bookRepository, postLikeRepository, postBookmarkRepository,
-            tagRepository, postTagRepository, aiProvider, postLikeService, postBookmarkService,
-        )
+        postService =
+            PostService(
+                postRepository, bookRepository, postLikeRepository, postBookmarkRepository,
+                tagRepository, postTagRepository, aiProvider, postLikeService, postBookmarkService,
+            )
     }
 
     @Test

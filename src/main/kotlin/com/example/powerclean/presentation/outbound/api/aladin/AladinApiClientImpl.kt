@@ -20,50 +20,64 @@ import java.net.URI
 class AladinApiClientImpl(
     @Value("\${aladin.api.ttb-key:}") private val ttbKey: String,
 ) : AladinApiClient {
-
     private val logger = LoggerFactory.getLogger(AladinApiClientImpl::class.java)
     private val mapper = jacksonObjectMapper()
     private val baseUrl = "http://www.aladin.co.kr/ttb/api"
 
-    override fun searchBooks(query: String, maxResults: Int, start: Int): AladinSearchResult {
-        val url = UriComponentsBuilder.fromHttpUrl("$baseUrl/ItemSearch.aspx")
-            .queryParam("ttbkey", ttbKey)
-            .queryParam("Query", query)
-            .queryParam("QueryType", "Keyword")
-            .queryParam("MaxResults", maxResults.coerceIn(1, 50))
-            .queryParam("start", start)
-            .queryParam("SearchTarget", "Book")
-            .queryParam("output", "js")
-            .queryParam("Version", "20131101")
-            .queryParam("Cover", "Big")
-            .build()
-            .toUriString()
+    override fun searchBooks(
+        query: String,
+        maxResults: Int,
+        start: Int,
+    ): AladinSearchResult {
+        val url =
+            UriComponentsBuilder.fromHttpUrl("$baseUrl/ItemSearch.aspx")
+                .queryParam("ttbkey", ttbKey)
+                .queryParam("Query", query)
+                .queryParam("QueryType", "Keyword")
+                .queryParam("MaxResults", maxResults.coerceIn(1, 50))
+                .queryParam("start", start)
+                .queryParam("SearchTarget", "Book")
+                .queryParam("output", "js")
+                .queryParam("Version", "20131101")
+                .queryParam("Cover", "Big")
+                .build()
+                .toUriString()
 
         return fetchAndParse(url)
     }
 
-    override fun getBestSellers(categoryId: Int, maxResults: Int): AladinSearchResult {
+    override fun getBestSellers(
+        categoryId: Int,
+        maxResults: Int,
+    ): AladinSearchResult {
         return fetchList("Bestseller", categoryId, maxResults)
     }
 
-    override fun getNewBooks(categoryId: Int, maxResults: Int): AladinSearchResult {
+    override fun getNewBooks(
+        categoryId: Int,
+        maxResults: Int,
+    ): AladinSearchResult {
         return fetchList("ItemNewAll", categoryId, maxResults)
     }
 
-    override fun getNewSpecialBooks(categoryId: Int, maxResults: Int): AladinSearchResult {
+    override fun getNewSpecialBooks(
+        categoryId: Int,
+        maxResults: Int,
+    ): AladinSearchResult {
         return fetchList("ItemNewSpecial", categoryId, maxResults)
     }
 
     override fun getBookDetail(isbn13: String): AladinBookItem? {
-        val url = UriComponentsBuilder.fromHttpUrl("$baseUrl/ItemLookUp.aspx")
-            .queryParam("ttbkey", ttbKey)
-            .queryParam("itemIdType", "ISBN13")
-            .queryParam("ItemId", isbn13)
-            .queryParam("output", "js")
-            .queryParam("Version", "20131101")
-            .queryParam("Cover", "Big")
-            .build()
-            .toUriString()
+        val url =
+            UriComponentsBuilder.fromHttpUrl("$baseUrl/ItemLookUp.aspx")
+                .queryParam("ttbkey", ttbKey)
+                .queryParam("itemIdType", "ISBN13")
+                .queryParam("ItemId", isbn13)
+                .queryParam("output", "js")
+                .queryParam("Version", "20131101")
+                .queryParam("Cover", "Big")
+                .build()
+                .toUriString()
 
         return fetchAndParse(url).items.firstOrNull()
     }
@@ -71,19 +85,24 @@ class AladinApiClientImpl(
     /**
      * 리스트 API (베스트셀러, 신간 등) 공통 호출
      */
-    private fun fetchList(queryType: String, categoryId: Int, maxResults: Int): AladinSearchResult {
-        val url = UriComponentsBuilder.fromHttpUrl("$baseUrl/ItemList.aspx")
-            .queryParam("ttbkey", ttbKey)
-            .queryParam("QueryType", queryType)
-            .queryParam("MaxResults", maxResults.coerceIn(1, 50))
-            .queryParam("start", 1)
-            .queryParam("SearchTarget", "Book")
-            .queryParam("output", "js")
-            .queryParam("Version", "20131101")
-            .queryParam("CategoryId", categoryId)
-            .queryParam("Cover", "Big")
-            .build()
-            .toUriString()
+    private fun fetchList(
+        queryType: String,
+        categoryId: Int,
+        maxResults: Int,
+    ): AladinSearchResult {
+        val url =
+            UriComponentsBuilder.fromHttpUrl("$baseUrl/ItemList.aspx")
+                .queryParam("ttbkey", ttbKey)
+                .queryParam("QueryType", queryType)
+                .queryParam("MaxResults", maxResults.coerceIn(1, 50))
+                .queryParam("start", 1)
+                .queryParam("SearchTarget", "Book")
+                .queryParam("output", "js")
+                .queryParam("Version", "20131101")
+                .queryParam("CategoryId", categoryId)
+                .queryParam("Cover", "Big")
+                .build()
+                .toUriString()
 
         return fetchAndParse(url)
     }

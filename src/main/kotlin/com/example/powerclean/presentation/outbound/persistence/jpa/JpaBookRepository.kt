@@ -7,5 +7,6 @@ import java.util.UUID
 
 public interface JpaBookRepository : JpaRepository<Book, UUID>, BookRepository {
     override fun findByTitleContaining(keyword: String): List<Book>
+
     override fun findByAuthorContaining(keyword: String): List<Book>
 }

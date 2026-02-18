@@ -22,7 +22,10 @@ class BookSqlExporter(
      * Book 리스트를 INSERT SQL 파일로 생성.
      * @return 생성된 파일 경로 (생성된 항목이 없으면 null)
      */
-    fun export(books: List<Book>, source: String): String? {
+    fun export(
+        books: List<Book>,
+        source: String,
+    ): String? {
         if (books.isEmpty()) return null
 
         val dir = File(exportDir)
@@ -50,7 +53,29 @@ class BookSqlExporter(
 
     private fun toInsertSql(book: Book): String {
         val now = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
-        return """INSERT INTO book (id, title, author, content, description, isbn13, isbn10, publisher, pub_date, price_sales, price_standard, cover_image_url, link, category_id, category_name, customer_review_rank, best_rank, source, created_at, updated_at, deleted_at) VALUES ('${book.id}', ${esc(book.title)}, ${esc(book.author)}, ${esc(book.content)}, ${esc(book.description)}, ${esc(book.isbn13)}, ${esc(book.isbn10)}, ${esc(book.publisher)}, ${esc(book.pubDate)}, ${book.priceSales}, ${book.priceStandard}, ${esc(book.coverImageUrl)}, ${esc(book.link)}, ${book.categoryId}, ${esc(book.categoryName)}, ${book.customerReviewRank}, ${book.bestRank ?: "NULL"}, ${esc(book.source)}, '$now', '$now', NULL);"""
+        return """INSERT INTO book (id, title, author, content, description, isbn13, isbn10, publisher, pub_date, price_sales, price_standard, cover_image_url, link, category_id, category_name, customer_review_rank, best_rank, source, created_at, updated_at, deleted_at) VALUES ('${book.id}', ${esc(
+            book.title,
+        )}, ${esc(
+            book.author,
+        )}, ${esc(
+            book.content,
+        )}, ${esc(
+            book.description,
+        )}, ${esc(
+            book.isbn13,
+        )}, ${esc(
+            book.isbn10,
+        )}, ${esc(
+            book.publisher,
+        )}, ${esc(
+            book.pubDate,
+        )}, ${book.priceSales}, ${book.priceStandard}, ${esc(
+            book.coverImageUrl,
+        )}, ${esc(
+            book.link,
+        )}, ${book.categoryId}, ${esc(
+            book.categoryName,
+        )}, ${book.customerReviewRank}, ${book.bestRank ?: "NULL"}, ${esc(book.source)}, '$now', '$now', NULL);"""
     }
 
     private fun esc(value: String): String {

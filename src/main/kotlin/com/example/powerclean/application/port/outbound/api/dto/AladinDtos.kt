@@ -23,16 +23,24 @@ data class AladinBookItem(
     val title: String = "",
     val link: String = "",
     val author: String = "",
-    val pubDate: String = "",           // yyyy-MM-dd
+    // yyyy-MM-dd
+    val pubDate: String = "",
     val description: String = "",
-    val isbn: String = "",              // ISBN-10
-    val isbn13: String = "",            // ISBN-13
-    val priceSales: Int = 0,            // 판매가
-    val priceStandard: Int = 0,         // 정가
+    // ISBN-10
+    val isbn: String = "",
+    // ISBN-13
+    val isbn13: String = "",
+    // 판매가
+    val priceSales: Int = 0,
+    // 정가
+    val priceStandard: Int = 0,
     val publisher: String = "",
-    val cover: String = "",             // 표지 이미지 URL
+    // 표지 이미지 URL
+    val cover: String = "",
     val categoryId: Int = 0,
     val categoryName: String = "",
-    val customerReviewRank: Int = 0,    // 리뷰 평점 (0-10)
-    val bestRank: Int? = null,          // 베스트셀러 순위
+    // 리뷰 평점 (0-10)
+    val customerReviewRank: Int = 0,
+    // 베스트셀러 순위
+    val bestRank: Int? = null,
 )

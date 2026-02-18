@@ -19,7 +19,6 @@ class BookDataController(
     private val bookCollectorService: BookCollectorService,
     private val bookRepository: BookRepository,
 ) {
-
     @Operation(summary = "수동 수집 트리거", description = "베스트셀러/신간 데이터를 즉시 수집하고 INSERT SQL 파일을 생성합니다.")
     @PostMapping("/collect")
     fun triggerCollect(): ResponseEntity<Map<String, Any>> {
@@ -59,13 +58,17 @@ class BookDataController(
 
     @Operation(summary = "카테고리별 도서 조회")
     @GetMapping("/category")
-    fun getByCategory(@RequestParam categoryId: Int): ResponseEntity<List<Book>> {
+    fun getByCategory(
+        @RequestParam categoryId: Int,
+    ): ResponseEntity<List<Book>> {
         return ResponseEntity.ok(bookRepository.findByCategoryId(categoryId))
     }
 
     @Operation(summary = "제목 키워드로 조회")
     @GetMapping("/search")
-    fun searchByTitle(@RequestParam keyword: String): ResponseEntity<List<Book>> {
+    fun searchByTitle(
+        @RequestParam keyword: String,
+    ): ResponseEntity<List<Book>> {
         return ResponseEntity.ok(bookRepository.findByTitleContaining(keyword))
     }
 

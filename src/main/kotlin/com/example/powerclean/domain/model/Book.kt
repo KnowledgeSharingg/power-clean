@@ -24,65 +24,54 @@ import jakarta.persistence.Table
 class Book(
     @Column(nullable = false)
     var title: String,
-
     @Column(length = 10000)
     var content: String = "",
-
     var link: String = "",
-
     var coverImageUrl: String = DEFAULT_BOOK_COVER_IMAGE_URL,
-
     // Replace embedded AuthorInfo with simple string
     var author: String = "",
-
     // Post relationship - NOW NULLABLE (collected books won't have posts)
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id", foreignKey = ForeignKey(ConstraintMode.NO_CONSTRAINT))
     var post: Post? = null,
-
     // --- Fields from BookData ---
     @Column(length = 5000)
     var description: String = "",
-
     @Column(unique = true)
     var isbn13: String = "",
-
     var isbn10: String = "",
-
     var publisher: String = "",
-
     var pubDate: String = "",
-
     var priceSales: Int = 0,
-
     var priceStandard: Int = 0,
-
     var categoryId: Int = 0,
-
     var categoryName: String = "",
-
     var customerReviewRank: Int = 0,
-
     var bestRank: Int? = null,
-
     /** 수집 출처: BESTSELLER, NEW, NEW_SPECIAL, SEARCH, MANUAL */
     var source: String = "",
 ) : BaseEntity() {
-
     companion object {
-        fun from(requestDto: CreateBookReqDto, post: Post): Book =
+        fun from(
+            requestDto: CreateBookReqDto,
+            post: Post,
+        ): Book =
             Book(
                 title = requestDto.title,
                 content = requestDto.content,
                 link = requestDto.link,
-                coverImageUrl = requestDto.coverImageUrl.takeIf { it.isNotBlank() }
-                    ?: DEFAULT_BOOK_COVER_IMAGE_URL,
+                coverImageUrl =
+                    requestDto.coverImageUrl.takeIf { it.isNotBlank() }
+                        ?: DEFAULT_BOOK_COVER_IMAGE_URL,
                 author = requestDto.author,
                 post = post,
                 source = "MANUAL",
             )
 
-        fun fromAladin(item: AladinBookItem, source: String): Book =
+        fun fromAladin(
+            item: AladinBookItem,
+            source: String,
+        ): Book =
             Book(
                 title = item.title,
                 author = item.author,
@@ -103,7 +92,11 @@ class Book(
             )
     }
 
-    fun updateInfo(title: String, content: String, link: String): Book =
+    fun updateInfo(
+        title: String,
+        content: String,
+        link: String,
+    ): Book =
         this.apply {
             this.title = title
             this.content = content

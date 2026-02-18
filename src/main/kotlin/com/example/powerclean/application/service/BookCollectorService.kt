@@ -27,16 +27,17 @@ class BookCollectorService(
      *              798(IT/컴퓨터), 51071(인문), 170(과학)
      */
     companion object {
-        val TARGET_CATEGORIES = mapOf(
-            0 to "종합",
-            1 to "소설/시/희곡",
-            55890 to "경제경영",
-            656 to "자기계발",
-            798 to "컴퓨터/모바일",
-            51071 to "인문학",
-            170 to "과학",
-            987 to "에세이",
-        )
+        val TARGET_CATEGORIES =
+            mapOf(
+                0 to "종합",
+                1 to "소설/시/희곡",
+                55890 to "경제경영",
+                656 to "자기계발",
+                798 to "컴퓨터/모바일",
+                51071 to "인문학",
+                170 to "과학",
+                987 to "에세이",
+            )
     }
 
     /**
@@ -95,7 +96,10 @@ class BookCollectorService(
     /**
      * 키워드로 수동 검색 & 저장
      */
-    fun searchAndCollect(query: String, maxResults: Int = 20): CollectResult {
+    fun searchAndCollect(
+        query: String,
+        maxResults: Int = 20,
+    ): CollectResult {
         val result = aladinApiClient.searchBooks(query, maxResults)
         val saved = saveNewBooks(result.items, "SEARCH")
         val sqlFiles = mutableListOf<String>()
@@ -108,7 +112,10 @@ class BookCollectorService(
     /**
      * ISBN 중복 체크 후 저장. 신규 저장된 Book 리스트 반환.
      */
-    private fun saveNewBooks(items: List<AladinBookItem>, source: String): List<Book> {
+    private fun saveNewBooks(
+        items: List<AladinBookItem>,
+        source: String,
+    ): List<Book> {
         val saved = mutableListOf<Book>()
         items.forEach { item ->
             if (item.isbn13.isNotBlank() && !bookRepository.existsByIsbn13(item.isbn13)) {
