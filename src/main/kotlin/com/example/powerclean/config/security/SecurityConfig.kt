@@ -67,6 +67,7 @@ class SecurityConfig {
                     "/swagger-ui/**",
                     "/v3/api-docs/**",
                     "/exception-test/**",
+                    "/api/v1/book-data/**",
                 )
                     .permitAll()
                     .requestMatchers(HttpMethod.GET, "/**").permitAll()

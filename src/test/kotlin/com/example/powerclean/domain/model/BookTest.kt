@@ -1,6 +1,5 @@
 package com.example.powerclean.domain.model
 
-import com.example.powerclean.domain.valueobject.AuthorInfo
 import com.example.powerclean.utils.DEFAULT_BOOK_COVER_IMAGE_URL
 import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.matchers.shouldBe
@@ -8,18 +7,23 @@ import io.mockk.mockk
 
 class BookTest : BehaviorSpec({
     Given("a Book object") {
-        val authorInfo =
-            AuthorInfo("John Doe", "960707", "01012341234", "male", "Borned in Ulsaan.")
         val post = mockk<Post>()
         val book =
-            Book("Sample Book", "Sample Content", "samplelink.com", DEFAULT_BOOK_COVER_IMAGE_URL, authorInfo, post)
+            Book(
+                title = "Sample Book",
+                content = "Sample Content",
+                link = "samplelink.com",
+                coverImageUrl = DEFAULT_BOOK_COVER_IMAGE_URL,
+                author = "John Doe",
+                post = post,
+            )
 
         When("getting the book properties") {
             Then("the properties should match the values set during creation") {
                 book.title shouldBe "Sample Book"
                 book.content shouldBe "Sample Content"
                 book.link shouldBe "samplelink.com"
-                book.authorInfo shouldBe authorInfo
+                book.author shouldBe "John Doe"
                 book.post shouldBe post
             }
         }
@@ -51,13 +55,12 @@ class BookTest : BehaviorSpec({
             }
         }
 
-        When("setting a new author info") {
-            val newAuthorInfo =
-                AuthorInfo("Jane Smith", "950101", "01098765432", "female", "Borned in Seoul.")
-            book.authorInfo = newAuthorInfo
+        When("setting a new author") {
+            val newAuthor = "Jane Smith"
+            book.author = newAuthor
 
-            Then("the author info should be updated") {
-                book.authorInfo shouldBe newAuthorInfo
+            Then("the author should be updated") {
+                book.author shouldBe newAuthor
             }
         }
 

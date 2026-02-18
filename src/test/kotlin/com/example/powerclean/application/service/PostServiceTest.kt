@@ -1,13 +1,16 @@
 import com.example.powerclean.application.port.outbound.ai.AiProvider
 import com.example.powerclean.application.port.outbound.persistence.BookRepository
+import com.example.powerclean.application.port.outbound.persistence.PostBookmarkRepository
+import com.example.powerclean.application.port.outbound.persistence.PostLikeRepository
 import com.example.powerclean.application.port.outbound.persistence.PostRepository
+import com.example.powerclean.application.port.outbound.persistence.PostTagRepository
+import com.example.powerclean.application.port.outbound.persistence.TagRepository
 import com.example.powerclean.application.service.PostBookmarkService
 import com.example.powerclean.application.service.PostLikeService
 import com.example.powerclean.application.service.PostService
 import com.example.powerclean.common.exception.CustomNotFoundException
 import com.example.powerclean.domain.model.Book
 import com.example.powerclean.domain.model.Post
-import com.example.powerclean.domain.valueobject.AuthorInfo
 import com.example.powerclean.presentation.dto.CreateBookReqDto
 import com.example.powerclean.presentation.dto.CreatePostReqDto
 import com.example.powerclean.presentation.dto.UpdateBookReqDto
@@ -26,6 +29,10 @@ import java.util.UUID
 class PostServiceTest {
     private lateinit var postRepository: PostRepository
     private lateinit var bookRepository: BookRepository
+    private lateinit var postLikeRepository: PostLikeRepository
+    private lateinit var postBookmarkRepository: PostBookmarkRepository
+    private lateinit var tagRepository: TagRepository
+    private lateinit var postTagRepository: PostTagRepository
     private lateinit var aiProvider: AiProvider
     private lateinit var postLikeService: PostLikeService
     private lateinit var postBookmarkService: PostBookmarkService
@@ -35,10 +42,17 @@ class PostServiceTest {
     fun setUp() {
         postRepository = mock(PostRepository::class.java)
         bookRepository = mock(BookRepository::class.java)
+        postLikeRepository = mock(PostLikeRepository::class.java)
+        postBookmarkRepository = mock(PostBookmarkRepository::class.java)
+        tagRepository = mock(TagRepository::class.java)
+        postTagRepository = mock(PostTagRepository::class.java)
         aiProvider = mock(AiProvider::class.java)
         postLikeService = mock(PostLikeService::class.java)
         postBookmarkService = mock(PostBookmarkService::class.java)
-        postService = PostService(postRepository, bookRepository, aiProvider, postLikeService, postBookmarkService)
+        postService = PostService(
+            postRepository, bookRepository, postLikeRepository, postBookmarkRepository,
+            tagRepository, postTagRepository, aiProvider, postLikeService, postBookmarkService,
+        )
     }
 
     @Test
@@ -54,14 +68,7 @@ class PostServiceTest {
                         title = "Test Book Title",
                         content = "Test Book Content",
                         link = "Test Book Link",
-                        authorInfo =
-                            AuthorInfo(
-                                name = "Test Author",
-                                dateOfBirth = "2000-01-01",
-                                phoneNumber = "010-3333-4444",
-                                gender = "male",
-                                history = "hihihi",
-                            ),
+                        author = "Test Author",
                     ),
             )
         val savedPost =
@@ -78,7 +85,7 @@ class PostServiceTest {
                 title = requestDto.bookInfo.title,
                 content = requestDto.bookInfo.content,
                 link = requestDto.bookInfo.link,
-                authorInfo = requestDto.bookInfo.authorInfo,
+                author = requestDto.bookInfo.author,
                 post = savedPost,
             )
         `when`(postRepository.save(any<Post>())).thenReturn(savedPost)
@@ -95,7 +102,7 @@ class PostServiceTest {
         assertEquals(requestDto.bookInfo.title, result.bookInfo.title)
         assertEquals(requestDto.bookInfo.content, result.bookInfo.content)
         assertEquals(requestDto.bookInfo.link, result.bookInfo.link)
-        assertEquals(requestDto.bookInfo.authorInfo, result.bookInfo.authorInfo)
+        assertEquals(requestDto.bookInfo.author, result.bookInfo.author)
     }
 
     @Test
@@ -115,19 +122,12 @@ class PostServiceTest {
                 title = "Test Book Title",
                 content = "Test Book Content",
                 link = "Test Book Link",
-                authorInfo =
-                    AuthorInfo(
-                        name = "Test Author",
-                        dateOfBirth = "2000-01-01",
-                        phoneNumber = "010-3333-4444",
-                        gender = "male",
-                        history = "hihihi",
-                    ),
+                author = "Test Author",
                 post = foundPost,
             )
         foundPost.book = foundBook
         `when`(postRepository.findById(postId)).thenReturn(java.util.Optional.of(foundPost))
-        `when`(postLikeService.countLikes(foundPost.id)).thenReturn(0L)
+        `when`(postLikeService.countLikes(foundPost.id)).thenReturn(0)
         `when`(postLikeService.existsByPostIdAndAccountId(foundPost.id, accountId)).thenReturn(false)
         `when`(postBookmarkService.existsByPostIdAndAccountId(foundPost.id, accountId)).thenReturn(false)
 
@@ -146,7 +146,7 @@ class PostServiceTest {
         assertEquals(foundBook.title, result.bookInfo.title)
         assertEquals(foundBook.content, result.bookInfo.content)
         assertEquals(foundBook.link, result.bookInfo.link)
-        assertEquals(foundBook.authorInfo, result.bookInfo.authorInfo)
+        assertEquals(foundBook.author, result.bookInfo.author)
     }
 
     @Test
@@ -185,10 +185,10 @@ class PostServiceTest {
                 ),
             )
         `when`(postRepository.findAll()).thenReturn(foundPosts)
-        `when`(postLikeService.countLikes(any())).thenReturn(0L)
+        `when`(postLikeService.countLikes(any())).thenReturn(0)
 
         // When
-        val result = postService.getPostList(page = 1, size = 10)
+        val result = postService.getPostList(page = 1, size = 10, accountId = null)
 
         // Then
         assertEquals(foundPosts.size, result.postList.size)
@@ -206,7 +206,7 @@ class PostServiceTest {
             assertEquals(foundPost.book?.title, resultPost.bookInfo.title)
             assertEquals(foundPost.book?.content, resultPost.bookInfo.content)
             assertEquals(foundPost.book?.link, resultPost.bookInfo.link)
-            assertEquals(foundPost.book?.authorInfo, resultPost.bookInfo.authorInfo)
+            assertEquals(foundPost.book?.author, resultPost.bookInfo.author)
         }
     }
 

@@ -1,6 +1,5 @@
 package com.example.powerclean.presentation.dto
 
-import com.example.powerclean.domain.valueobject.AuthorInfo
 import java.util.UUID
 
 data class GetBookDetailResDto(
@@ -9,5 +8,5 @@ data class GetBookDetailResDto(
     val content: String?,
     val link: String?,
     val coverImageUrl: String?,
-    val authorInfo: AuthorInfo?,
+    val author: String?,
 )

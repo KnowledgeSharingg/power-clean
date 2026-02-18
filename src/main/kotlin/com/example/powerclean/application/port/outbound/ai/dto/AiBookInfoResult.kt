@@ -1,7 +1,5 @@
 package com.example.powerclean.application.port.outbound.ai.dto
 
-import com.example.powerclean.domain.valueobject.AuthorInfo
-
 /**
  * Result from AI for creating a Post and Book suggestion based on a script.
  */
@@ -12,5 +10,5 @@ data class AiBookInfoResult(
     val bookContent: String,
     val bookLink: String,
     val coverImageUrl: String?,
-    val authorInfo: AuthorInfo?,
+    val author: String?,
 )
