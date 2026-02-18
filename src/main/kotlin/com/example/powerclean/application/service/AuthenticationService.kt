@@ -39,8 +39,8 @@ class AuthenticationService(
         val user = userDetailsService.loadUserByUsername(authenticationRequest.email)
 
         // jwt 생성.
-        val accessToken = createAccessToken(user)
-        val refreshToken = createRefreshToken(user)
+        val accessToken = _createAccessToken(user)
+        val refreshToken = _createRefreshToken(user)
 
         return AuthenticationResDto(
             accessToken = accessToken,
@@ -56,21 +56,21 @@ class AuthenticationService(
             val foundAccount = accountRepository.findByPersonalInfo_Name(username)
 
             if (currentUserDetails.getEmail() == foundAccount?.email) {
-                createAccessToken(currentUserDetails)
+                _createAccessToken(currentUserDetails)
             } else {
                 throw AuthenticationServiceException("Invalid refresh token")
             }
         }
     }
 
-    private fun createAccessToken(user: UserDetails): String {
+    private fun _createAccessToken(user: UserDetails): String {
         return tokenService.generateToken(
             subject = user.username,
             expiration = Date(System.currentTimeMillis() + accessTokenExpiration * 60 * 60 * 1000),
         )
     }
 
-    private fun createRefreshToken(user: UserDetails) =
+    private fun _createRefreshToken(user: UserDetails) =
         tokenService.generateToken(
             subject = user.username,
             expiration = Date(System.currentTimeMillis() + refreshTokenExpiration * 60 * 60 * 1000),

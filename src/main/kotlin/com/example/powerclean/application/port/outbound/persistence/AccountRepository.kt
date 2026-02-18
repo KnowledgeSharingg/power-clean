@@ -4,8 +4,7 @@ import com.example.powerclean.domain.model.Account
 import org.springframework.data.jpa.repository.Modifying
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
-import java.util.Optional
-import java.util.UUID
+import java.util.*
 
 public interface AccountRepository {
     fun save(account: Account): Account
@@ -14,7 +13,6 @@ public interface AccountRepository {
 
     fun findByEmail(email: String): Account?
 
-    @Suppress("ktlint:standard:function-naming")
     fun findByPersonalInfo_Name(name: String): Account?
 
     fun findById(id: UUID): Optional<Account>
