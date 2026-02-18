@@ -28,8 +28,7 @@ class SecurityConfig {
     private val logger = org.slf4j.LoggerFactory.getLogger(SecurityConfig::class.java)
 
     @Bean
-    fun userDetailsService(accountRepository: AccountRepository): JwtUserDetailsService =
-        JwtUserDetailsService(accountRepository)
+    fun userDetailsService(accountRepository: AccountRepository): JwtUserDetailsService = JwtUserDetailsService(accountRepository)
 
     @Bean
     fun authenticationManager(config: AuthenticationConfiguration): AuthenticationManager = config.authenticationManager
