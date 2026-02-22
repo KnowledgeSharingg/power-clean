@@ -7,7 +7,7 @@ import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 import java.net.HttpURLConnection
-import java.net.URL
+import java.net.URI
 
 @Service
 class GeminiAiProvider(
@@ -115,7 +115,7 @@ class GeminiAiProvider(
               ]
             }
             """.trimIndent()
-        val url = URL(endpoint)
+        val url = URI(endpoint).toURL()
         val conn =
             (url.openConnection() as HttpURLConnection).apply {
                 requestMethod = "POST"

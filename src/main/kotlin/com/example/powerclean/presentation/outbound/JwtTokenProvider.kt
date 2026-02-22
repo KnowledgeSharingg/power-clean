@@ -25,10 +25,10 @@ class JwtTokenProvider(
         additionalClaims: Map<String, Any>,
     ): String {
         return Jwts.builder()
-            .setClaims(additionalClaims)
-            .setSubject(subject)
-            .setIssuedAt(Date(System.currentTimeMillis()))
-            .setExpiration(expiration)
+            .claims(additionalClaims)
+            .subject(subject)
+            .issuedAt(Date(System.currentTimeMillis()))
+            .expiration(expiration)
             .signWith(signingKey)
             .compact()
     }
@@ -39,9 +39,9 @@ class JwtTokenProvider(
 
     private fun extractAllClaims(token: String): Claims {
         return Jwts.parser()
-            .setSigningKey(signingKey)
+            .verifyWith(signingKey)
             .build()
-            .parseClaimsJws(token)
-            .body
+            .parseSignedClaims(token)
+            .payload
     }
 }
