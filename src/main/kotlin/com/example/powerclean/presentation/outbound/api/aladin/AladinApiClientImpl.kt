@@ -30,7 +30,7 @@ class AladinApiClientImpl(
         start: Int,
     ): AladinSearchResult {
         val url =
-            UriComponentsBuilder.fromHttpUrl("$baseUrl/ItemSearch.aspx")
+            UriComponentsBuilder.fromUriString("$baseUrl/ItemSearch.aspx")
                 .queryParam("ttbkey", ttbKey)
                 .queryParam("Query", query)
                 .queryParam("QueryType", "Keyword")
@@ -69,7 +69,7 @@ class AladinApiClientImpl(
 
     override fun getBookDetail(isbn13: String): AladinBookItem? {
         val url =
-            UriComponentsBuilder.fromHttpUrl("$baseUrl/ItemLookUp.aspx")
+            UriComponentsBuilder.fromUriString("$baseUrl/ItemLookUp.aspx")
                 .queryParam("ttbkey", ttbKey)
                 .queryParam("itemIdType", "ISBN13")
                 .queryParam("ItemId", isbn13)
@@ -91,7 +91,7 @@ class AladinApiClientImpl(
         maxResults: Int,
     ): AladinSearchResult {
         val url =
-            UriComponentsBuilder.fromHttpUrl("$baseUrl/ItemList.aspx")
+            UriComponentsBuilder.fromUriString("$baseUrl/ItemList.aspx")
                 .queryParam("ttbkey", ttbKey)
                 .queryParam("QueryType", queryType)
                 .queryParam("MaxResults", maxResults.coerceIn(1, 50))
