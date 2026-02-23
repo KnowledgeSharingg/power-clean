@@ -4,11 +4,14 @@ import com.example.powerclean.application.port.outbound.persistence.BookReposito
 import com.example.powerclean.application.service.BookCollectorService
 import com.example.powerclean.domain.model.Book
 import com.example.powerclean.presentation.outbound.persistence.jpa.JpaBookRepository
+import com.example.powerclean.presentation.dto.RegisterPostsReqDto
+import com.example.powerclean.presentation.dto.RegisterPostsResDto
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
@@ -48,6 +51,20 @@ class BookDataController(
                 "query" to query,
                 "newBooksSaved" to result.savedCount,
                 "sqlFiles" to result.sqlFiles,
+            ),
+        )
+    }
+
+    @Operation(summary = "수집된 Book → Post 일괄 등록", description = "post가 null인 수집된 Book 데이터를 Post로 일괄 등록합니다.")
+    @PostMapping("/register-posts")
+    fun registerBooksToPosts(
+        @RequestBody request: RegisterPostsReqDto,
+    ): ResponseEntity<RegisterPostsResDto> {
+        val result = bookCollectorService.registerBooksToPosts(request.bookIds)
+        return ResponseEntity.ok(
+            RegisterPostsResDto(
+                message = "등록 완료",
+                registeredCount = result.registeredCount,
             ),
         )
     }

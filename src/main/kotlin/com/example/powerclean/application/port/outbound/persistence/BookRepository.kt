@@ -19,5 +19,7 @@ public interface BookRepository {
 
     fun findAll(): List<Book>
 
+    fun findByPostIsNull(): List<Book>
+
     fun count(): Long
 }

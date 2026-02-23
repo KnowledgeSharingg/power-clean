@@ -32,8 +32,9 @@ class RepositoryConfig {
     fun bookRepository(jpaBookRepository: JpaBookRepository): BookRepository = jpaBookRepository
 
     @Bean
-    fun oauthProfileRepository(jpaOauthProfileRepository: JpaOauthProfileRepository): OauthProfileRepository =
-        jpaOauthProfileRepository
+    fun oauthProfileRepository(jpaOauthProfileRepository: JpaOauthProfileRepository): OauthProfileRepository {
+        return jpaOauthProfileRepository
+    }
 
     @Bean
     fun postRepository(jpaPostRepository: JpaPostRepository): PostRepository = jpaPostRepository
@@ -45,6 +46,7 @@ class RepositoryConfig {
     fun postLikeRepository(jpaPostLikeRepository: JpaPostLikeRepository): PostLikeRepository = jpaPostLikeRepository
 
     @Bean
-    fun postBookmarkRepository(jpaPostBookmarkRepository: JpaPostBookmarkRepository): PostBookmarkRepository =
-        jpaPostBookmarkRepository
+    fun postBookmarkRepository(jpaPostBookmarkRepository: JpaPostBookmarkRepository): PostBookmarkRepository {
+        return jpaPostBookmarkRepository
+    }
 }
