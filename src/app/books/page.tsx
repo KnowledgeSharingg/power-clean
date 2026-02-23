@@ -6,7 +6,7 @@ import Header from "@/components/Header";
 import { apiFetch } from "@/lib/api";
 
 interface BookData {
-  id: number;
+  id: string;
   title: string;
   author: string;
   description: string;
@@ -24,6 +24,11 @@ interface BookData {
   bestRank: number;
   source: string;
   createdAt: string;
+  post: {
+    id: string;
+    title: string;
+    content: string;
+  } | null;
 }
 
 interface BookStats {
@@ -38,6 +43,11 @@ interface CollectResult {
   sqlFiles: string[];
 }
 
+interface RegisterPostsResult {
+  message: string;
+  registeredCount: number;
+}
+
 export default function BooksPage() {
   const [books, setBooks] = useState<BookData[]>([]);
   const [stats, setStats] = useState<BookStats | null>(null);
@@ -49,6 +59,91 @@ export default function BooksPage() {
   const [searchCollectResult, setSearchCollectResult] = useState<string | null>(null);
   const [searchKeyword, setSearchKeyword] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
+  
+  // Post registration state
+  const [selectedBookIds, setSelectedBookIds] = useState<Set<string>>(new Set());
+  const [registrationLoading, setRegistrationLoading] = useState(false);
+  const [bulkRegistrationLoading, setBulkRegistrationLoading] = useState(false);
+  const [registrationResult, setRegistrationResult] = useState<RegisterPostsResult | null>(null);
+
+  // Post registration functions
+  const handleSelectBook = (bookId: string, checked: boolean) => {
+    const newSelected = new Set(selectedBookIds);
+    if (checked) {
+      newSelected.add(bookId);
+    } else {
+      newSelected.delete(bookId);
+    }
+    setSelectedBookIds(newSelected);
+  };
+
+  const handleSelectAllUnregisteredBooks = (checked: boolean) => {
+    if (checked) {
+      const unregisteredBookIds = books
+        .filter((book) => !book.post)
+        .map((book) => book.id);
+      setSelectedBookIds(new Set(unregisteredBookIds));
+    } else {
+      setSelectedBookIds(new Set());
+    }
+  };
+
+  const registerSelectedBooksToPosts = async () => {
+    if (selectedBookIds.size === 0) {
+      alert("등록할 도서를 선택해주세요.");
+      return;
+    }
+
+    setRegistrationLoading(true);
+    setRegistrationResult(null);
+    try {
+      const res = await apiFetch("/api/v1/book-data/register-posts", {
+        method: "POST",
+        body: JSON.stringify({
+          bookIds: Array.from(selectedBookIds),
+        }),
+      });
+      if (res.ok) {
+        const data: RegisterPostsResult = await res.json();
+        setRegistrationResult(data);
+        setSelectedBookIds(new Set());
+        fetchBooks(); // Refresh the book list
+      } else {
+        alert("Post 등록 실패: " + res.statusText);
+      }
+    } catch (error) {
+      alert("Post 등록 중 오류가 발생했습니다.");
+      console.error("Registration error:", error);
+    } finally {
+      setRegistrationLoading(false);
+    }
+  };
+
+  const registerAllUnregisteredBooksToPosts = async () => {
+    setBulkRegistrationLoading(true);
+    setRegistrationResult(null);
+    try {
+      const res = await apiFetch("/api/v1/book-data/register-posts", {
+        method: "POST",
+        body: JSON.stringify({
+          bookIds: [], // Empty array means all unregistered books
+        }),
+      });
+      if (res.ok) {
+        const data: RegisterPostsResult = await res.json();
+        setRegistrationResult(data);
+        setSelectedBookIds(new Set());
+        fetchBooks(); // Refresh the book list
+      } else {
+        alert("전체 Post 등록 실패: " + res.statusText);
+      }
+    } catch (error) {
+      alert("전체 Post 등록 중 오류가 발생했습니다.");
+      console.error("Bulk registration error:", error);
+    } finally {
+      setBulkRegistrationLoading(false);
+    }
+  };
 
   const fetchBooks = useCallback(async () => {
     setLoading(true);
@@ -231,6 +326,42 @@ export default function BooksPage() {
           </div>
         </div>
 
+        {/* Post Registration Actions */}
+        <div className="bg-white rounded-lg shadow-sm border p-6">
+          <h3 className="text-base font-semibold text-gray-800 mb-4">
+            📝 수집된 Book → Post 등록
+          </h3>
+          <div className="flex flex-col md:flex-row gap-4 items-start">
+            <div className="flex gap-3">
+              <button
+                onClick={registerSelectedBooksToPosts}
+                disabled={registrationLoading || selectedBookIds.size === 0}
+                className="px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 disabled:opacity-50 transition-colors text-sm"
+              >
+                {registrationLoading
+                  ? "등록 중..."
+                  : `선택 도서 Post 등록 (${selectedBookIds.size}개)`}
+              </button>
+              <button
+                onClick={registerAllUnregisteredBooksToPosts}
+                disabled={bulkRegistrationLoading}
+                className="px-4 py-2 bg-orange-600 text-white rounded-md hover:bg-orange-700 disabled:opacity-50 transition-colors text-sm"
+              >
+                {bulkRegistrationLoading
+                  ? "등록 중..."
+                  : "전체 미등록 Post 일괄 등록"}
+              </button>
+            </div>
+            
+            {registrationResult && (
+              <div className="p-3 bg-green-50 border border-green-200 rounded text-sm text-green-800">
+                <p>{registrationResult.message}</p>
+                <p>등록된 Post 수: {registrationResult.registeredCount}개</p>
+              </div>
+            )}
+          </div>
+        </div>
+
         {/* Filters */}
         <div className="bg-white rounded-lg shadow-sm border p-6">
           <h3 className="text-base font-semibold text-gray-800 mb-4">
@@ -281,6 +412,17 @@ export default function BooksPage() {
               <thead className="bg-gray-50 border-b">
                 <tr>
                   <th className="text-left px-4 py-3 text-gray-600 font-medium">
+                    <input
+                      type="checkbox"
+                      checked={
+                        books.filter((book) => !book.post).length > 0 &&
+                        selectedBookIds.size === books.filter((book) => !book.post).length
+                      }
+                      onChange={(e) => handleSelectAllUnregisteredBooks(e.target.checked)}
+                      className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
+                    />
+                  </th>
+                  <th className="text-left px-4 py-3 text-gray-600 font-medium">
                     표지
                   </th>
                   <th className="text-left px-4 py-3 text-gray-600 font-medium">
@@ -304,6 +446,9 @@ export default function BooksPage() {
                   <th className="text-left px-4 py-3 text-gray-600 font-medium">
                     출처
                   </th>
+                  <th className="text-center px-4 py-3 text-gray-600 font-medium">
+                    Post 상태
+                  </th>
                   <th className="text-right px-4 py-3 text-gray-600 font-medium">
                     리뷰 점수
                   </th>
@@ -312,13 +457,13 @@ export default function BooksPage() {
               <tbody>
                 {loading ? (
                   <tr>
-                    <td colSpan={9} className="text-center py-8 text-gray-500">
+                    <td colSpan={11} className="text-center py-8 text-gray-500">
                       로딩 중...
                     </td>
                   </tr>
                 ) : books.length === 0 ? (
                   <tr>
-                    <td colSpan={9} className="text-center py-8 text-gray-500">
+                    <td colSpan={11} className="text-center py-8 text-gray-500">
                       도서 데이터가 없습니다.
                     </td>
                   </tr>
@@ -328,6 +473,18 @@ export default function BooksPage() {
                       key={book.id}
                       className="border-b hover:bg-gray-50 transition-colors"
                     >
+                      <td className="px-4 py-3">
+                        {!book.post ? (
+                          <input
+                            type="checkbox"
+                            checked={selectedBookIds.has(book.id)}
+                            onChange={(e) => handleSelectBook(book.id, e.target.checked)}
+                            className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
+                          />
+                        ) : (
+                          <span className="text-gray-400">—</span>
+                        )}
+                      </td>
                       <td className="px-4 py-3">
                         {book.coverImageUrl ? (
                           <img
@@ -374,6 +531,17 @@ export default function BooksPage() {
                         <span className="text-xs bg-blue-50 text-blue-600 px-2 py-1 rounded">
                           {book.source || "—"}
                         </span>
+                      </td>
+                      <td className="px-4 py-3 text-center">
+                        {book.post ? (
+                          <span className="text-xs bg-green-50 text-green-600 px-2 py-1 rounded">
+                            ✅ Post 등록됨
+                          </span>
+                        ) : (
+                          <span className="text-xs bg-yellow-50 text-yellow-600 px-2 py-1 rounded">
+                            ⏳ 미등록
+                          </span>
+                        )}
                       </td>
                       <td className="px-4 py-3 text-right text-gray-600">
                         {book.customerReviewRank ?? "—"}
