@@ -2,6 +2,7 @@ package com.example.powerclean.presentation.inbound.rest
 
 import com.example.powerclean.application.port.outbound.persistence.BookRepository
 import com.example.powerclean.application.service.BookCollectorService
+import com.example.powerclean.presentation.dto.BookDataResDto
 import com.example.powerclean.domain.model.Book
 import com.example.powerclean.presentation.dto.RegisterPostsReqDto
 import com.example.powerclean.presentation.dto.RegisterPostsResDto
@@ -24,7 +25,10 @@ class BookDataController(
     private val bookRepository: BookRepository,
     private val jpaBookRepository: JpaBookRepository,
 ) {
-    @Operation(summary = "수동 수집 트리거", description = "베스트셀러/신간 데이터를 즉시 수집하고 INSERT SQL 파일을 생성합니다.")
+    @Operation(
+        summary = "수동 수집 트리거",
+        description = "베스트셀러/신간 데이터를 즉시 수집하고 INSERT SQL 파일을 생성합니다.",
+    )
     @PostMapping("/collect")
     fun triggerCollect(): ResponseEntity<Map<String, Any>> {
         val result = bookCollectorService.collectDaily()
@@ -39,7 +43,10 @@ class BookDataController(
         )
     }
 
-    @Operation(summary = "키워드 검색 & 수집", description = "알라딘에서 키워드로 검색하고 DB에 저장 + INSERT SQL 파일 생성합니다.")
+    @Operation(
+        summary = "키워드 검색 & 수집",
+        description = "알라딘에서 키워드로 검색하고 DB에 저장 + INSERT SQL 파일 생성합니다.",
+    )
     @PostMapping("/search")
     fun searchAndCollect(
         @RequestParam query: String,
@@ -71,9 +78,8 @@ class BookDataController(
 
     @Operation(summary = "수집된 도서 목록 조회")
     @GetMapping
-    fun getAllBooks(): ResponseEntity<List<Book>> {
-        return ResponseEntity.ok(bookRepository.findAll())
-    }
+    fun getAllBooks(): ResponseEntity<List<BookDataResDto>> =
+        ResponseEntity.ok(bookRepository.findAll().map { BookDataResDto.from(it) })
 
     @Operation(summary = "도서 상세 조회")
     @GetMapping("/{id}")
@@ -92,17 +98,19 @@ class BookDataController(
     @GetMapping("/category")
     fun getByCategory(
         @RequestParam categoryId: Int,
-    ): ResponseEntity<List<Book>> {
-        return ResponseEntity.ok(bookRepository.findByCategoryId(categoryId))
-    }
+    ): ResponseEntity<List<BookDataResDto>> =
+        ResponseEntity.ok(
+            bookRepository.findByCategoryId(categoryId).map { BookDataResDto.from(it) },
+        )
 
     @Operation(summary = "제목 키워드로 조회")
     @GetMapping("/search")
     fun searchByTitle(
         @RequestParam keyword: String,
-    ): ResponseEntity<List<Book>> {
-        return ResponseEntity.ok(bookRepository.findByTitleContaining(keyword))
-    }
+    ): ResponseEntity<List<BookDataResDto>> =
+        ResponseEntity.ok(
+            bookRepository.findByTitleContaining(keyword).map { BookDataResDto.from(it) },
+        )
 
     @Operation(summary = "수집 통계")
     @GetMapping("/stats")
