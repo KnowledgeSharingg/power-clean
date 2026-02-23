@@ -3,6 +3,7 @@ package com.example.powerclean.presentation.inbound.rest
 import com.example.powerclean.application.port.outbound.persistence.BookRepository
 import com.example.powerclean.application.service.BookCollectorService
 import com.example.powerclean.domain.model.Book
+import com.example.powerclean.presentation.outbound.persistence.jpa.JpaBookRepository
 import com.example.powerclean.presentation.dto.RegisterPostsReqDto
 import com.example.powerclean.presentation.dto.RegisterPostsResDto
 import io.swagger.v3.oas.annotations.Operation
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController
 class BookDataController(
     private val bookCollectorService: BookCollectorService,
     private val bookRepository: BookRepository,
+    private val jpaBookRepository: JpaBookRepository,
 ) {
     @Operation(summary = "수동 수집 트리거", description = "베스트셀러/신간 데이터를 즉시 수집하고 INSERT SQL 파일을 생성합니다.")
     @PostMapping("/collect")
@@ -71,6 +73,19 @@ class BookDataController(
     @GetMapping
     fun getAllBooks(): ResponseEntity<List<Book>> {
         return ResponseEntity.ok(bookRepository.findAll())
+    }
+
+    @Operation(summary = "도서 상세 조회")
+    @GetMapping("/{id}")
+    fun getBookById(
+        @org.springframework.web.bind.annotation.PathVariable id: java.util.UUID,
+    ): ResponseEntity<Book> {
+        val bookOptional = jpaBookRepository.findById(id)
+        return if (bookOptional.isPresent) {
+            ResponseEntity.ok(bookOptional.get())
+        } else {
+            ResponseEntity.notFound().build()
+        }
     }
 
     @Operation(summary = "카테고리별 도서 조회")
