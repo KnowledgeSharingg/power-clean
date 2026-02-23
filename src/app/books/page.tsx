@@ -1,9 +1,10 @@
 "use client";
 
 import { useEffect, useState, useCallback } from "react";
-import AdminLayout from "@/components/AdminLayout";
-import Header from "@/components/Header";
-import { apiFetch } from "@/lib/api";
+import Link from "next/link";
+import AdminLayout from "../../components/AdminLayout";
+import Header from "../../components/Header";
+import { apiFetch } from "../../lib/api";
 
 interface BookData {
   id: string;
@@ -499,12 +500,13 @@ export default function BooksPage() {
                         )}
                       </td>
                       <td className="px-4 py-3">
-                        <div
-                          className="max-w-[200px] truncate font-medium text-gray-800"
+                        <Link 
+                          href={`/books/${book.id}`}
+                          className="max-w-[200px] truncate font-medium text-blue-600 hover:text-blue-800 hover:underline block"
                           title={book.title}
                         >
                           {book.title}
-                        </div>
+                        </Link>
                       </td>
                       <td className="px-4 py-3 text-gray-600">
                         <div className="max-w-[120px] truncate" title={book.author}>
