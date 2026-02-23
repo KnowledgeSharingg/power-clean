@@ -19,6 +19,7 @@ interface Post {
     coverImageUrl: string;
     title?: string;
     content?: string;
+    author?: string;
   };
 }
 
@@ -163,6 +164,7 @@ function HomeContent() {
                 likedByMe={post.likedByMe}
                 createdAt={post.createdAt}
                 tags={post.tags}
+                authorName={post.bookInfo?.author || "Anonymous"}
                 coverImageUrl={
                   post.bookInfo?.coverImageUrl
                     ? toAbsoluteUrl(post.bookInfo.coverImageUrl)
