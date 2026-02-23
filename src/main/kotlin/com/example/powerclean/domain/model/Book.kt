@@ -3,7 +3,6 @@ package com.example.powerclean.domain.model
 import com.example.powerclean.application.port.outbound.api.dto.AladinBookItem
 import com.example.powerclean.presentation.dto.CreateBookReqDto
 import com.example.powerclean.utils.DEFAULT_BOOK_COVER_IMAGE_URL
-import com.fasterxml.jackson.annotation.JsonIgnore
 import jakarta.persistence.Column
 import jakarta.persistence.ConstraintMode
 import jakarta.persistence.Entity
@@ -32,7 +31,6 @@ class Book(
     // Replace embedded AuthorInfo with simple string
     var author: String = "",
     // Post relationship - NOW NULLABLE (collected books won't have posts)
-    @JsonIgnore
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id", foreignKey = ForeignKey(ConstraintMode.NO_CONSTRAINT))
     var post: Post? = null,

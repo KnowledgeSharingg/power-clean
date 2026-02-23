@@ -1,7 +1,6 @@
 package com.example.powerclean.domain.model
 
 import com.example.powerclean.presentation.dto.CreatePostReqDto
-import com.fasterxml.jackson.annotation.JsonIgnore
 import jakarta.persistence.CascadeType
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
@@ -21,7 +20,6 @@ class Post(
     var creatorAccountId: UUID,
     @Column(name = "like_count", nullable = false)
     var likeCount: Int,
-    @JsonIgnore
     @OneToOne(mappedBy = "post", cascade = [CascadeType.ALL], fetch = FetchType.LAZY, optional = true)
     var book: Book? = null,
 ) : BaseEntity() {
