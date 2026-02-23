@@ -3,10 +3,13 @@ package com.example.powerclean.application.service
 import com.example.powerclean.application.port.outbound.api.AladinApiClient
 import com.example.powerclean.application.port.outbound.api.dto.AladinBookItem
 import com.example.powerclean.application.port.outbound.persistence.BookRepository
+import com.example.powerclean.application.port.outbound.persistence.PostRepository
 import com.example.powerclean.domain.model.Book
+import com.example.powerclean.domain.model.Post
 import org.slf4j.LoggerFactory
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
+import java.util.UUID
 
 /**
  * 알라딘 API로부터 도서 데이터를 수집하는 서비스.
@@ -17,6 +20,7 @@ import org.springframework.stereotype.Service
 class BookCollectorService(
     private val aladinApiClient: AladinApiClient,
     private val bookRepository: BookRepository,
+    private val postRepository: PostRepository,
     private val sqlExporter: BookSqlExporter,
 ) {
     private val logger = LoggerFactory.getLogger(BookCollectorService::class.java)
@@ -127,8 +131,55 @@ class BookCollectorService(
         return saved
     }
 
+    /**
+     * 수집된 Book 데이터를 Post로 일괄 등록
+     */
+    fun registerBooksToPosts(bookIds: List<UUID> = emptyList()): RegisterPostsResult {
+        val targetBooks =
+            if (bookIds.isEmpty()) {
+                bookRepository.findByPostIsNull()
+            } else {
+                bookIds.mapNotNull { bookId ->
+                    bookRepository.findAll().find { book ->
+                        book.id == bookId && book.post == null
+                    }
+                }
+            }
+
+        var registeredCount = 0
+        val systemAccountId = UUID.fromString("00000000-0000-0000-0000-000000000000")
+
+        targetBooks.forEach { book ->
+            try {
+                val post =
+                    Post(
+                        title = book.title,
+                        content = book.description,
+                        creatorAccountId = systemAccountId,
+                        likeCount = 0,
+                    )
+                val savedPost = postRepository.save(post)
+
+                book.post = savedPost
+                bookRepository.save(book)
+                registeredCount++
+
+                logger.info("Book '${book.title}' registered as Post with ID: ${savedPost.id}")
+            } catch (e: Exception) {
+                logger.error("Failed to register book '${book.title}' as post", e)
+            }
+        }
+
+        logger.info("Registered $registeredCount books as posts")
+        return RegisterPostsResult(registeredCount)
+    }
+
     data class CollectResult(
         val savedCount: Int,
         val sqlFiles: List<String>,
+    )
+
+    data class RegisterPostsResult(
+        val registeredCount: Int,
     )
 }
