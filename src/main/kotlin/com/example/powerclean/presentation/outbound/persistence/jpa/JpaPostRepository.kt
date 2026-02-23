@@ -10,4 +10,7 @@ import java.util.UUID
 public interface JpaPostRepository : JpaRepository<Post, UUID>, PostRepository {
     @Query("SELECT p FROM Post p JOIN FETCH p.book WHERE p.id = :id")
     override fun findByIdWithBook(id: UUID): Optional<Post>
+
+    @Query("SELECT p FROM Post p LEFT JOIN FETCH p.book")
+    override fun findAllWithBook(): List<Post>
 }
