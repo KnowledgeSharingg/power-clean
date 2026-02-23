@@ -2,6 +2,7 @@ package com.example.powerclean.presentation.inbound.rest.advisor
 
 import com.example.powerclean.common.exception.CommonException
 import org.slf4j.LoggerFactory
+import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.RestControllerAdvice
@@ -23,7 +24,9 @@ class ControllerAdvisor {
             )
 
         logger.error("ControllerAdvisor:handleCommonException: e.message - ${e.message}", e)
-        return ResponseEntity.status(e.code.status).body(body)
+        return ResponseEntity.status(e.code.status)
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(body)
     }
 
     @ExceptionHandler(Exception::class)
@@ -39,7 +42,9 @@ class ControllerAdvisor {
             )
 
         logger.error("ControllerAdvisor:handleException: e.message - ${e.message}", e)
-        return ResponseEntity.status(500).body(body)
+        return ResponseEntity.status(500)
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(body)
     }
 }
 
