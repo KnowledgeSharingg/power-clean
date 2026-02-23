@@ -19,4 +19,6 @@ interface PostLikeRepository {
     fun countByPostId(postId: UUID): Int
 
     fun findAllByAccountId(accountId: UUID): List<PostLike>
+
+    fun findAll(): List<PostLike>
 }

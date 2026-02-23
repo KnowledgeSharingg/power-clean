@@ -11,8 +11,6 @@ import com.example.powerclean.common.exception.CustomConflictException
 import com.example.powerclean.common.exception.CustomNotFoundException
 import com.example.powerclean.domain.model.Book
 import com.example.powerclean.domain.model.Post
-import com.example.powerclean.domain.model.PostBookmark
-import com.example.powerclean.domain.model.PostLike
 import com.example.powerclean.domain.model.PostTag
 import com.example.powerclean.domain.model.Tag
 import com.example.powerclean.presentation.dto.CreatePostReqDto
@@ -26,8 +24,6 @@ import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import org.webjars.NotFoundException
 import java.util.UUID
-
-// TODO: mapper class.
 
 @Service
 class PostService(
@@ -48,12 +44,13 @@ class PostService(
         val existingTags = tagRepository.findAllByNameIn(tagNames)
         val existingTagNames = existingTags.map { it.name }.toSet()
         val newTags =
-            tagNames.filter { it !in existingTagNames }.map { tagRepository.save(Tag(name = it)) }
+            tagNames.filter { it !in existingTagNames }
+                .map { tagRepository.save(Tag(name = it)) }
         return existingTags + newTags
     }
 
     private fun syncPostTags(
-        postId: java.util.UUID,
+        postId: UUID,
         tags: List<Tag>,
     ) {
         postTagRepository.deleteAllByPostId(postId)
@@ -62,7 +59,7 @@ class PostService(
         }
     }
 
-    private fun getTagNamesForPost(postId: java.util.UUID): List<String> {
+    private fun getTagNamesForPost(postId: UUID): List<String> {
         val postTags = postTagRepository.findAllByPostId(postId)
         if (postTags.isEmpty()) return emptyList()
         return postTags.mapNotNull { postTag ->
@@ -70,21 +67,27 @@ class PostService(
         }
     }
 
+    /**
+     * 여러 Post의 태그를 한 번에 조회 (N+1 방지)
+     */
+    private fun getTagNamesForPosts(postIds: List<UUID>): Map<UUID, List<String>> {
+        if (postIds.isEmpty()) return emptyMap()
+        val allTags = tagRepository.findAll().associateBy { it.id }
+        val allPostTags = postIds.flatMap { postTagRepository.findAllByPostId(it) }
+        return allPostTags
+            .groupBy { it.postId }
+            .mapValues { (_, postTags) ->
+                postTags.mapNotNull { allTags[it.tagId]?.name }
+            }
+    }
+
     fun createPost(requestDto: CreatePostReqDto): CreatePostResDto {
         bookRepository.findByTitle(
             requestDto.bookInfo.title,
         )?.let { throw CustomConflictException("Book already exists.") }
 
-        val savedPost =
-            postRepository.save(
-                Post.from(requestDto),
-            )
-
-        val savedBook =
-            bookRepository.save(
-                Book.from(requestDto.bookInfo, savedPost),
-            )
-
+        val savedPost = postRepository.save(Post.from(requestDto))
+        val savedBook = bookRepository.save(Book.from(requestDto.bookInfo, savedPost))
         val tags = findOrCreateTags(requestDto.tags)
         syncPostTags(savedPost.id, tags)
 
@@ -108,8 +111,9 @@ class PostService(
         postId: UUID,
         accountId: UUID?,
     ): GetPostDetailResDto {
-        logger.debug("getPostDetail: postId={}, accountId={}", postId, accountId)
-        val foundPost = postRepository.findById(postId).orElse(null) ?: throw CustomNotFoundException("Post not found")
+        val foundPost =
+            postRepository.findByIdWithBook(postId).orElse(null)
+                ?: throw CustomNotFoundException("Post not found")
         return GetPostDetailResDto(
             id = foundPost.id,
             title = foundPost.title,
@@ -126,29 +130,36 @@ class PostService(
                     author = foundPost.book?.author,
                 ),
             likedByMe =
-                accountId?.let { postLikeService.existsByPostIdAndAccountId(foundPost.id, it) } ?: false,
+                accountId?.let {
+                    postLikeService.existsByPostIdAndAccountId(foundPost.id, it)
+                } ?: false,
             bookmarkedByMe =
-                accountId?.let { postBookmarkService.existsByPostIdAndAccountId(foundPost.id, it) } ?: false,
+                accountId?.let {
+                    postBookmarkService.existsByPostIdAndAccountId(foundPost.id, it)
+                } ?: false,
             likeCount = postLikeService.countLikes(foundPost.id).toInt(),
             bookmarkCount = postBookmarkService.countBookmarks(foundPost.id),
             tags = getTagNamesForPost(foundPost.id),
         )
     }
 
-    // TODO: Paging.
     fun getPostList(
         page: Int,
         size: Int,
         accountId: UUID?,
         tag: String? = null,
     ): GetPostListResDto {
-        val allPosts: List<Post> = postRepository.findAll()
+        // 1. Book과 함께 한 번에 로드 (JOIN FETCH)
+        val allPosts: List<Post> = postRepository.findAllWithBook()
+
+        // 2. 태그 필터링
         val foundPosts: List<Post> =
             if (tag != null) {
                 val foundTag = tagRepository.findByName(tag)
                 if (foundTag != null) {
-                    val postTagList = postTagRepository.findAllByTagId(foundTag.id)
-                    val postIds = postTagList.map { it.postId }.toSet()
+                    val postIds =
+                        postTagRepository.findAllByTagId(foundTag.id)
+                            .map { it.postId }.toSet()
                     allPosts.filter { it.id in postIds }
                 } else {
                     emptyList()
@@ -156,29 +167,37 @@ class PostService(
             } else {
                 allPosts
             }
-        val foundPostLikes: List<PostLike> =
-            if (accountId !== null) {
-                postLikeRepository.findAllByAccountId(
-                    accountId,
-                )
+
+        val postIds = foundPosts.map { it.id }
+
+        // 3. 좋아요/북마크 상태 배치 조회 (1쿼리씩)
+        val likedPostIds: Set<UUID> =
+            if (accountId != null) {
+                postLikeRepository.findAllByAccountId(accountId)
+                    .map { it.postId }.toSet()
             } else {
-                emptyList()
+                emptySet()
             }
-        val foundPostBookmarks: List<PostBookmark> =
-            if (accountId !== null) {
-                postBookmarkRepository.findAllByAccountId(
-                    accountId,
-                )
+        val bookmarkedPostIds: Set<UUID> =
+            if (accountId != null) {
+                postBookmarkRepository.findAllByAccountId(accountId)
+                    .map { it.postId }.toSet()
             } else {
-                emptyList()
+                emptySet()
             }
-        val postIdAndIsLikedMap: Map<UUID, Boolean> = foundPostLikes.associate { it.postId to true }
-        val postIdAndIsBookmarkedMap: Map<UUID, Boolean> = foundPostBookmarks.associate { it.postId to true }
-        val postIdAndLikeCountMap: Map<UUID, Int> = foundPosts.associate { it.id to postLikeService.countLikes(it.id) }
-        val postIdAndBookmarkCountMap: Map<UUID, Int> =
-            foundPosts.associate {
-                it.id to postBookmarkService.countBookmarks(it.id)
-            }
+
+        // 4. 좋아요/북마크 카운트 배치 조회 (1쿼리씩, groupBy)
+        val likeCountMap: Map<UUID, Int> =
+            postLikeRepository.findAll()
+                .groupBy { it.postId }
+                .mapValues { it.value.size }
+        val bookmarkCountMap: Map<UUID, Int> =
+            postBookmarkRepository.findAll()
+                .groupBy { it.postId }
+                .mapValues { it.value.size }
+
+        // 5. 태그 배치 조회
+        val tagMap = getTagNamesForPosts(postIds)
 
         return GetPostListResDto(
             postList =
@@ -198,11 +217,11 @@ class PostService(
                                 coverImageUrl = it.book?.coverImageUrl,
                                 author = it.book?.author,
                             ),
-                        likedByMe = postIdAndIsLikedMap[it.id] ?: false,
-                        bookmarkedByMe = postIdAndIsBookmarkedMap[it.id] ?: false,
-                        likeCount = postIdAndLikeCountMap[it.id] ?: 0,
-                        bookmarkCount = postIdAndBookmarkCountMap[it.id] ?: 0,
-                        tags = getTagNamesForPost(it.id),
+                        likedByMe = it.id in likedPostIds,
+                        bookmarkedByMe = it.id in bookmarkedPostIds,
+                        likeCount = likeCountMap[it.id] ?: 0,
+                        bookmarkCount = bookmarkCountMap[it.id] ?: 0,
+                        tags = tagMap[it.id] ?: emptyList(),
                     )
                 },
         )
@@ -222,13 +241,10 @@ class PostService(
                         requestDto.bookInfo.link,
                     )
                 }
-                .also {
-                    postRepository.save(it)
-                }
+                .also { postRepository.save(it) }
 
         val tags = findOrCreateTags(requestDto.tags)
         syncPostTags(post.id, tags)
-
         return "ok"
     }
 

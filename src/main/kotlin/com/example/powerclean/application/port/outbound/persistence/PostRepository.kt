@@ -13,5 +13,7 @@ public interface PostRepository {
 
     fun findAll(): List<Post>
 
+    fun findAllWithBook(): List<Post>
+
     fun deleteById(id: UUID)
 }
