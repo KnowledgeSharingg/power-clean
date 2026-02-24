@@ -1,0 +1,339 @@
+<!doctype html>
+<html class="dark" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Book Post Details</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+      rel="stylesheet"
+    />
+    <script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              primary: "#137fec",
+              "background-light": "#f6f7f8",
+              "background-dark": "#101922",
+            },
+            fontFamily: {
+              display: ["Plus Jakarta Sans", "sans-serif"],
+            },
+            borderRadius: {
+              DEFAULT: "0.25rem",
+              lg: "0.5rem",
+              xl: "0.75rem",
+              full: "9999px",
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      body {
+        font-family: "Plus Jakarta Sans", sans-serif;
+      }
+      .hide-scrollbar::-webkit-scrollbar {
+        display: none;
+      }
+    </style>
+    <style>
+      body {
+        min-height: max(884px, 100dvh);
+      }
+    </style>
+    <style>
+      body {
+        min-height: max(884px, 100dvh);
+      }
+    </style>
+  </head>
+  <body
+    class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-white min-h-screen flex flex-col"
+  >
+    <nav
+      class="sticky top-0 z-50 flex items-center bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-md p-4 justify-between border-b border-gray-200 dark:border-gray-800"
+    >
+      <div class="flex items-center gap-4">
+        <button
+          class="text-slate-900 dark:text-white flex size-10 items-center justify-center rounded-full hover:bg-gray-200 dark:hover:bg-gray-800"
+        >
+          <span class="material-symbols-outlined">arrow_back_ios_new</span>
+        </button>
+        <h2
+          class="text-slate-900 dark:text-white text-lg font-bold leading-tight tracking-tight"
+        >
+          Post Details
+        </h2>
+      </div>
+      <div class="flex gap-2">
+        <button
+          class="flex size-10 items-center justify-center rounded-full hover:bg-gray-200 dark:hover:bg-gray-800"
+        >
+          <span class="material-symbols-outlined">share</span>
+        </button>
+        <button
+          class="flex size-10 items-center justify-center rounded-full hover:bg-gray-200 dark:hover:bg-gray-800"
+        >
+          <span class="material-symbols-outlined">more_horiz</span>
+        </button>
+      </div>
+    </nav>
+    <main class="flex-1 overflow-y-auto pb-32">
+      <div class="relative w-full aspect-[3/4] @container">
+        <div
+          class="w-full h-full bg-center bg-cover bg-no-repeat"
+          style="
+            background-image: url(&quot;https://lh3.googleusercontent.com/aida-public/AB6AXuDhH3SQ8INviwVChjkQYo7zC6SXGntTNw5PG3eD2Y2A1BEgTlxQX_Cfd7XcgDMB7ZCBai4IgZgjmL7SPCtZOKUObZ3pw_RCUL_vO-sWwaKsay8H4BpnJxEC0MFVSbvVZAIuEmDzQpmqnAyG_kows9ZOR-gJV9VHpaMcyBteTavT8CzCIOOGUmhQLvWHAaRPsZgSUdc3hWmVGkFM11YqycrYTjVaRuX5kZi1glw4x_PCf9qoPy6diC_8qkMPNiZPpNOQqWdaPMDCc3U&quot;);
+          "
+        >
+          <div
+            class="absolute inset-0 bg-gradient-to-t from-background-dark via-transparent to-transparent"
+          ></div>
+        </div>
+      </div>
+      <div class="px-4 -mt-20 relative z-10">
+        <div
+          class="bg-white dark:bg-[#1a2632] rounded-xl p-5 shadow-xl border border-gray-100 dark:border-gray-800"
+        >
+          <div class="flex justify-between items-start mb-4">
+            <div class="flex gap-3">
+              <div
+                class="size-12 rounded-full overflow-hidden border-2 border-primary"
+              >
+                <img
+                  alt="User Avatar"
+                  class="w-full h-full object-cover"
+                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuCRitjtKmArPOvOgXxZVR2sQDMs02TV_auh7Gn1drDCPnKsWhmS0KjC2L4qRl8ZmKB1l7K90Nv3sdRKRywOWSYHMAHGRx5mKikGweNI22IDmsrUe3nQKu7e5S1i645qer5C_uZzdWs8bs-KfKzwDpSrNDTcPYFs2vS5LdrjohLqYoyhxwUK0aUtNr10c4KG5rdX98fcMxJuBAjpuxEqWRxQpNARahyzMQ2-CdpnrNAWcZOIfbLOBxW7ShnRcqDqkIdYWpkZyQw6Y14"
+                />
+              </div>
+              <div>
+                <p class="font-bold text-sm">Sarah Chen</p>
+                <p class="text-xs text-gray-500 dark:text-gray-400">
+                  shared 2 hours ago
+                </p>
+              </div>
+            </div>
+            <div
+              class="flex items-center gap-1 bg-primary text-white px-3 py-1 rounded-full text-xs font-bold"
+            >
+              <span class="material-symbols-outlined text-[14px] fill-1"
+                >star</span
+              >
+              4.8
+            </div>
+          </div>
+          <h1 class="text-2xl font-extrabold tracking-tight mb-1">
+            Project Hail Mary
+          </h1>
+          <h2 class="text-gray-600 dark:text-gray-300 font-medium mb-4">
+            by Andy Weir
+          </h2>
+          <div class="flex gap-2 flex-wrap mb-4">
+            <div
+              class="flex h-7 items-center justify-center rounded-lg bg-primary/20 px-3"
+            >
+              <p class="text-primary text-xs font-bold">Sci-Fi</p>
+            </div>
+            <div
+              class="flex h-7 items-center justify-center rounded-lg bg-gray-100 dark:bg-gray-800 px-3"
+            >
+              <p class="text-gray-600 dark:text-gray-400 text-xs font-bold">
+                Hard Science
+              </p>
+            </div>
+            <div
+              class="flex h-7 items-center justify-center rounded-lg bg-gray-100 dark:bg-gray-800 px-3"
+            >
+              <p class="text-gray-600 dark:text-gray-400 text-xs font-bold">
+                Adventure
+              </p>
+            </div>
+          </div>
+          <p class="text-sm leading-relaxed text-gray-700 dark:text-gray-300">
+            This book is absolutely incredible. The science is hard but
+            accessible, and the emotional core of the story caught me off guard.
+            My favorite read of 2024 so far! 🚀
+          </p>
+        </div>
+      </div>
+      <div class="px-4 mt-6">
+        <h3
+          class="text-sm font-bold uppercase tracking-widest text-gray-500 mb-3 px-1"
+        >
+          Poster's Perspective
+        </h3>
+        <div
+          class="w-full aspect-video rounded-xl overflow-hidden shadow-md border border-gray-100 dark:border-gray-800"
+        >
+          <div
+            class="w-full h-full bg-center bg-cover"
+            style="
+              background-image: url(&quot;https://lh3.googleusercontent.com/aida-public/AB6AXuASCJiROyjTtUs__MJ4CJcgYnYzgOYGkxQzfeKd1QAc1NB2EU5anbsQz7EUxXesvIKxF9N0Dp3LujIOoo5LKC247eCNgnvorEbDm0_agofQXN1BWYqqhFeGpLCe9eM94UBwxW6m_hSmngXjz7vW7EuL5GOtI3NEE1fq0aWNbOZXcGMe1C4yyuvOtdVARWaFB9OuAiwV2fJmL82Wqsc8O0gEnoqrVyyIQP-gSFddu3c86NnxMtjrxD6zwrLJ2d6dNVy0_RLZLVdrpDc&quot;);
+            "
+          ></div>
+        </div>
+      </div>
+      <div
+        class="flex items-center justify-between px-6 py-4 mt-2 border-b border-gray-100 dark:border-gray-800"
+      >
+        <div class="flex items-center gap-6">
+          <button class="flex items-center gap-2 group">
+            <span class="material-symbols-outlined text-red-500 fill-1"
+              >favorite</span
+            >
+            <span class="text-sm font-bold">1,240</span>
+          </button>
+          <div class="flex items-center gap-2">
+            <span class="material-symbols-outlined text-gray-500">reviews</span>
+            <span class="text-sm font-bold">42 Reviews</span>
+          </div>
+        </div>
+        <button
+          class="flex items-center justify-center text-gray-500 hover:text-primary"
+        >
+          <span class="material-symbols-outlined">bookmark</span>
+        </button>
+      </div>
+      <div class="px-4 py-6">
+        <h3 class="text-lg font-bold mb-4">Reader Reviews</h3>
+        <div class="space-y-4">
+          <div
+            class="flex gap-3 bg-white dark:bg-[#1a2632] p-4 rounded-xl border border-gray-200 dark:border-gray-800 shadow-sm"
+          >
+            <div
+              class="size-10 rounded-full overflow-hidden shrink-0 border border-gray-200 dark:border-gray-700"
+            >
+              <img
+                alt="Me"
+                class="w-full h-full object-cover"
+                src="https://lh3.googleusercontent.com/aida-public/AB6AXuCAUSHCeRsWbph4XM1TVk2oLYU8Jx4LCrjYtf4beWJ8vIkx5UNL9TS-eHgAh9RWfB2qbYKDe-BfdR-AozhlZjFC9S0mJCwDQ0BvFaFhFM3I1jM8GHaYxJBhp65veutGGSaxmriEgzMSZtUtoF8_Uh3YvKYHvLhj04ciV8IoR8ACcuzdTsS8hWvpoJv-F6bKPg5bsBASGOECA7ORSjCnDT0gzMCQv7PevjhTomg67bOUcwb4d2KvCBdZ_a8NuVyyMLHqLzXUix_PB-Q"
+              />
+            </div>
+            <div class="flex-1">
+              <div class="flex justify-between items-start mb-1">
+                <div>
+                  <div class="flex items-center gap-2">
+                    <p class="text-sm font-bold">Me</p>
+                    <div class="flex items-center gap-0.5 text-yellow-500">
+                      <span class="material-symbols-outlined text-sm fill-1"
+                        >star</span
+                      >
+                      <span
+                        class="text-xs font-bold text-gray-900 dark:text-gray-100"
+                        >5.0</span
+                      >
+                    </div>
+                  </div>
+                  <p class="text-[10px] text-gray-500">15m ago</p>
+                </div>
+                <div class="flex gap-3">
+                  <button class="text-xs font-bold text-primary">Edit</button>
+                  <button class="text-xs font-bold text-red-500">Delete</button>
+                </div>
+              </div>
+              <p class="text-sm text-gray-700 dark:text-gray-300 mt-2">
+                Adding this to my 'Must Read' list immediately. The cover alone
+                is stunning and I've heard only great things!
+              </p>
+            </div>
+          </div>
+          <div class="flex gap-3 p-4">
+            <div class="size-10 rounded-full overflow-hidden shrink-0">
+              <img
+                alt="Elena"
+                class="w-full h-full object-cover"
+                src="https://lh3.googleusercontent.com/aida-public/AB6AXuChwu8yp__8__h4IUz0Ny0NxbXLThFUgXGHymCg5bKv81EvhV-fxxEgSbrFL00otgu2Uc2B_-MFYIsfQ5GM09dekR827War56ymuXRAQdC3xbqAQNOc35oUFfHlXDRTfdUpJhwF6MOpRo-z_BR8dDyfue3buZpSvZ5TZbTrksn_dfKKNNwRl09u8APzBrjbMzQF85KfBI-upob_mN19kFrGHkWhrZ6MVx18LAUPZHZDdveeYy2BJ532RDiknXPRVWIbCsZEkfM3Tjk"
+              />
+            </div>
+            <div
+              class="flex-1 border-b border-gray-100 dark:border-gray-800 pb-4"
+            >
+              <div class="flex justify-between items-start mb-1">
+                <div>
+                  <div class="flex items-center gap-2">
+                    <p class="text-sm font-bold">Elena Rodriguez</p>
+                    <div class="flex items-center gap-0.5 text-yellow-500">
+                      <span class="material-symbols-outlined text-sm fill-1"
+                        >star</span
+                      >
+                      <span
+                        class="text-xs font-bold text-gray-900 dark:text-gray-100"
+                        >4.5</span
+                      >
+                    </div>
+                  </div>
+                  <p class="text-[10px] text-gray-500">1h ago</p>
+                </div>
+              </div>
+              <p class="text-sm text-gray-700 dark:text-gray-300 mt-2">
+                The plot twist halfway through literally made me drop my phone.
+                You're in for a treat. Definitely recommend for sci-fi lovers.
+              </p>
+            </div>
+          </div>
+          <div class="flex gap-3 p-4">
+            <div class="size-10 rounded-full overflow-hidden shrink-0">
+              <img
+                alt="Marcus"
+                class="w-full h-full object-cover"
+                src="https://lh3.googleusercontent.com/aida-public/AB6AXuDWdXH0hVrBIzys_LRn8SL0PVrNpVaYgZjsg4C2LVkuZnmycYTMylxqffGBH9iVP-d73VpBkbC7rkJy3sLhuBEkeH8V6SL_IcHsLk7z6e33fymCsalPQ0cpGybgL6wKVtUIL0CAoME7j-uglk3qwH1TQ9GlcI_0jmWkl6vqlFGTav_jdERkvouTyl1xxmB3Zui7RQMbk8UWvkkTSVfM5nrrMPXvJ4NylNeDbBmWw-_WYRvxUcgd-YBQcnOfiRBYpqgs5hgFVPiLO00"
+              />
+            </div>
+            <div class="flex-1">
+              <div class="flex justify-between items-start mb-1">
+                <div>
+                  <div class="flex items-center gap-2">
+                    <p class="text-sm font-bold">Marcus Thorne</p>
+                    <div class="flex items-center gap-0.5 text-yellow-500">
+                      <span class="material-symbols-outlined text-sm fill-1"
+                        >star</span
+                      >
+                      <span
+                        class="text-xs font-bold text-gray-900 dark:text-gray-100"
+                        >5.0</span
+                      >
+                    </div>
+                  </div>
+                  <p class="text-[10px] text-gray-500">3h ago</p>
+                </div>
+              </div>
+              <p class="text-sm text-gray-700 dark:text-gray-300 mt-2">
+                If you liked 'The Martian', you'll love this even more. Weir at
+                his absolute best. Hard to put down!
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+    <div
+      class="fixed bottom-0 left-0 right-0 bg-white/95 dark:bg-[#101922]/95 backdrop-blur-md border-t border-gray-200 dark:border-gray-800 p-4 pb-8 z-50"
+    >
+      <div class="max-w-md mx-auto flex gap-3 items-center">
+        <div class="flex-1 relative flex items-center">
+          <input
+            class="w-full bg-gray-100 dark:bg-gray-800 border-none rounded-full pl-5 pr-12 py-3 text-sm focus:ring-2 focus:ring-primary outline-none"
+            placeholder="Write a review..."
+            type="text"
+          />
+          <div class="absolute right-4 flex items-center text-yellow-500">
+            <span class="material-symbols-outlined text-xl">grade</span>
+          </div>
+        </div>
+        <button
+          class="bg-primary text-white size-11 flex items-center justify-center rounded-full shadow-lg shadow-primary/30 shrink-0"
+        >
+          <span class="material-symbols-outlined">send</span>
+        </button>
+      </div>
+    </div>
+  </body>
+</html>

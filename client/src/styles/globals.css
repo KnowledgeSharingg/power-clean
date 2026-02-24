@@ -1,0 +1,80 @@
+@import "tailwindcss";
+@theme {
+  --color-link: #000000;
+  --color-primary: #000000;
+  --color-primary-light: #f5f5f5;
+  --color-background: #ffffff;
+  --color-border: #e5e5e5;
+  --color-text-secondary: #6b7280;
+  --color-tag-bg: #f5f5f5;
+  --color-tag-text: #000000;
+  --color-tag-border: #d4d4d4;
+}
+
+/* Clean input field */
+.input-field {
+  @apply w-full bg-white border border-border rounded-lg h-12 px-4 text-black placeholder:text-black/40 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all;
+}
+
+/* Material Symbols filled variant */
+.font-variation-fill {
+  font-variation-settings: "FILL" 1;
+}
+
+/* Hide scrollbar utility */
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Genre/mood tag chip */
+.tag-chip {
+  @apply inline-block px-3 py-1 text-xs font-medium rounded-full border border-tag-border bg-tag-bg text-tag-text;
+}
+
+@layer base {
+  html {
+    color-scheme: light;
+    -webkit-text-size-adjust: 100%;
+  }
+  body {
+    @apply bg-white text-black antialiased font-sans;
+  }
+
+  a {
+    @apply text-primary hover:underline;
+  }
+
+  /* Forms */
+  input,
+  textarea,
+  select {
+    @apply w-full rounded-lg border border-border bg-white text-black placeholder-black/40 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary;
+  }
+
+  /* Buttons */
+  .btn {
+    @apply inline-flex items-center justify-center rounded-lg border border-border bg-white text-black px-4 py-2 text-sm font-medium hover:bg-gray-50 transition;
+  }
+  .btn-primary {
+    @apply inline-flex items-center justify-center rounded-lg bg-primary text-white px-4 py-2 text-sm font-medium hover:bg-primary/90 transition;
+  }
+}
+
+@layer components {
+  .site-container {
+    @apply max-w-5xl mx-auto px-6;
+  }
+  .content-container {
+    @apply max-w-4xl mx-auto px-6;
+  }
+  .card {
+    @apply bg-white border border-border rounded-lg;
+  }
+  .card-padded {
+    @apply bg-white border border-border rounded-lg p-5 sm:p-6;
+  }
+}
