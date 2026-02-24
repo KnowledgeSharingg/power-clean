@@ -74,6 +74,9 @@ export default function Header() {
                   <div className="px-4 py-2 text-sm font-medium border-b border-border">
                     {nickname || "User"}
                   </div>
+                  <Link href="/mypage" className="block px-4 py-2 text-sm text-black/70 hover:bg-gray-50 no-underline">
+                    My Page
+                  </Link>
                   <Link href="/library" className="block px-4 py-2 text-sm text-black/70 hover:bg-gray-50 no-underline">
                     My Library
                   </Link>

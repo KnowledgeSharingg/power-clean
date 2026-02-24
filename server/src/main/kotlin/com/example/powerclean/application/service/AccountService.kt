@@ -26,19 +26,17 @@ class AccountService(
 ) : AccountRegisterUseCase {
     private val logger = org.slf4j.LoggerFactory.getLogger(AccountService::class.java)
 
-    override fun registerAccount(requestDto: RegisterAccountReqDto): Account {
-        return requestDto
+    override fun registerAccount(requestDto: RegisterAccountReqDto): Account =
+        requestDto
             .also {
                 if (accountRepository.findByEmail(it.email) != null) {
                     throw CustomConflictException(
                         "Email already exists.",
                     )
                 }
-            }
-            .apply { password = passwordEncoder.encode(password) }
+            }.apply { password = passwordEncoder.encode(password) }
             .let { Account.from(it) }
             .let { accountRepository.save(it) }
-    }
 
     // TODO: usecase 이 메소드에 해당되는걸 만들까 ? 아님 accountRegisterUseCase랑 합칠까 ? => 강의 코드 확인해보기.
     fun login(requestDto: LoginReqDto): LoginResDto {
@@ -62,6 +60,7 @@ class AccountService(
             this.accountRepository.findById(accountId).orElse(null)
                 ?: throw AccountNotFoundException()
         return GetAccountInfoResDto(
+            foundAccount.id,
             foundAccount.email,
             foundAccount.nickname,
             foundAccount.createdAt,
