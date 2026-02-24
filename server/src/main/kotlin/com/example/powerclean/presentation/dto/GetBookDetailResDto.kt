@@ -1,0 +1,12 @@
+package com.example.powerclean.presentation.dto
+
+import java.util.UUID
+
+data class GetBookDetailResDto(
+    val id: UUID?,
+    val title: String?,
+    val content: String?,
+    val link: String?,
+    val coverImageUrl: String?,
+    val author: String?,
+)

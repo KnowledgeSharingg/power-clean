@@ -1,0 +1,61 @@
+name: Build and Upload Coverage
+
+permissions:
+    checks: write
+    contents: read
+    issues: write
+    pull-requests: write
+
+on:
+    push:
+        branches: [main]
+    pull_request:
+
+jobs:
+    build:
+        env:
+            JWT_SECRET_KEY: ${{ secrets.JWT_SECRET_KEY }}
+            ACCESS_TOKEN_EXPIRATION_TIME: ${{ secrets.ACCESS_TOKEN_EXPIRATION_TIME }}
+            REFRESH_TOKEN_EXPIRATION_TIME: ${{secrets.REFRESH_TOKEN_EXPIRATION_TIME}}
+            SPRING_AI_OPENAI_API_KEY: ${{ secrets.SPRING_AI_OPENAI_API_KEY }}
+            GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+    test:
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v4
+
+            - name: Set up JDK
+              uses: actions/setup-java@v4
+              with:
+                  distribution: "temurin"
+                  java-version: "21"
+
+            - name: Grant execute permission for Gradle wrapper
+              run: chmod +x ./gradlew
+
+            - name: Build and run tests with coverage
+              run: ./gradlew test jacocoTestReport
+
+            - name: Upload to Codecov
+              uses: codecov/codecov-action@v5
+              with:
+                  token: ${{ secrets.CODECOV_TOKEN }} # 비공개 레포일 경우 필수
+                  files: ./build/reports/jacoco/test/jacocoTestReport.xml
+                  flags: unittests
+                  name: codecov-umbrella
+                  fail_ci_if_error: true
+                  verbose: true
+
+            - name: 테스트 결과 Report
+              uses: EnricoMi/publish-unit-test-result-action@v2
+              if: always() # 테스트가 실패하여도 Report를 보기 위해 `always`로 설정
+              with:
+                  files: "build/test-results/**/*.xml"
+
+            - name: 테스트 실패 Comment
+              uses: mikepenz/action-junit-report@v3
+              if: always()
+              with:
+                  report_paths: "build/test-results/test/TEST-*.xml"
