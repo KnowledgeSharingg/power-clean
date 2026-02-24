@@ -1,6 +1,5 @@
 import { getPostList, serverUrl } from "@/lib/api";
 import Link from "next/link";
-import Image from "next/image";
 
 function toAbsoluteUrl(url: string): string {
   if (!url) return "";
@@ -22,7 +21,7 @@ export default async function PostListPage() {
             <h2 className="text-xl font-semibold mb-2">{post.title}</h2>
             {post.bookInfo?.coverImageUrl && (
               <div className="mt-3">
-                <Image
+                <img
                   src={toAbsoluteUrl(post.bookInfo.coverImageUrl)}
                   alt={post.bookInfo.title || "Book cover"}
                   width={128}

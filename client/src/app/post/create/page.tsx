@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createPost, uploadImage, getCreatedPostByAI } from "@/lib/api";
-import Image from "next/image";
 import AIInputPopover from "@/app/components/AIInputPopover";
 import MaterialIcon from "@/app/components/MaterialIcon";
 import TagInput from "@/app/components/TagInput";
@@ -140,7 +139,7 @@ export default function CreatePost() {
       <div className="content-container py-8">
         <h1 className="text-2xl font-bold text-primary mb-8">Create New Post</h1>
 
-        <div className="max-w-2xl">
+        <div className="max-w-3xl mx-auto">
           <form onSubmit={handleSubmit} className="space-y-8">
             {/* 1. Book Search & AI */}
             <section className="card-padded space-y-4">
@@ -209,11 +208,10 @@ export default function CreatePost() {
               </h2>
               {form.bookInfo.coverImageUrl ? (
                 <div className="relative w-40 aspect-[3/4] rounded-lg overflow-hidden border border-border">
-                  <Image
+                  <img
                     src={form.bookInfo.coverImageUrl}
                     alt="Book Cover"
-                    fill
-                    className="object-cover"
+                    className="absolute inset-0 w-full h-full object-cover"
                   />
                   <button
                     type="button"

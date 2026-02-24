@@ -4,7 +4,7 @@ export const metadata = {
 
 export default function StyleGuidePage() {
   return (
-    <article className="prose-default">
+    <article className="prose-default site-container py-8">
       <header className="mb-10">
         <h1 className="post-title">Style Guide</h1>
         <p className="post-meta">A minimal blog-like look powered by Tailwind.</p>

@@ -12,6 +12,10 @@ RUN pnpm install
 
 COPY . .
 
+# NEXT_PUBLIC_* 변수는 빌드 타임에 인라인되므로 ARG로 전달
+ARG NEXT_PUBLIC_API_URL=http://localhost:8080
+ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
+
 RUN pnpm build
 
 # 실행용 이미지

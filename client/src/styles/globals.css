@@ -66,10 +66,10 @@
 
 @layer components {
   .site-container {
-    @apply max-w-5xl mx-auto px-6;
+    @apply max-w-7xl mx-auto px-6 lg:px-10;
   }
   .content-container {
-    @apply max-w-4xl mx-auto px-6;
+    @apply max-w-5xl mx-auto px-6 lg:px-10;
   }
   .card {
     @apply bg-white border border-border rounded-lg;

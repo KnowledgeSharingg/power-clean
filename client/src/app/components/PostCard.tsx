@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import Image from "next/image";
 import MaterialIcon from "./MaterialIcon";
 import { toggleLike, getToken } from "@/lib/api";
 
@@ -74,16 +73,15 @@ export default function PostCard({
   return (
     <div
       onClick={handleCardClick}
-      className="flex gap-5 py-6 cursor-pointer hover:bg-gray-50/50 transition-colors px-2 -mx-2 rounded-lg"
+      className="flex gap-5 lg:gap-8 py-6 cursor-pointer hover:bg-gray-50/50 transition-colors px-2 -mx-2 rounded-lg"
     >
       {/* Book Cover - Left */}
       {coverImageUrl ? (
         <div className="relative w-20 sm:w-24 flex-shrink-0 aspect-[3/4] rounded overflow-hidden bg-gray-100 shadow-sm">
-          <Image
+          <img
             src={coverImageUrl}
             alt="Cover"
-            fill
-            className="object-cover"
+            className="absolute inset-0 w-full h-full object-cover"
           />
         </div>
       ) : (

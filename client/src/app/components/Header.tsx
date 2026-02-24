@@ -58,7 +58,7 @@ export default function Header() {
             <input
               type="text"
               placeholder="Search all books..."
-              className="w-64 h-9 px-4 text-sm border border-border rounded-full bg-white placeholder:text-black/40 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary"
+              className="w-64 xl:w-80 h-9 px-4 text-sm border border-border rounded-full bg-white placeholder:text-black/40 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary"
             />
           </div>
 

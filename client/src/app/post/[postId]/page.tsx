@@ -10,7 +10,6 @@ import {
   toggleBookmark,
   getToken,
 } from "@/lib/api";
-import Image from "next/image";
 import { useRouter } from "next/navigation";
 import MaterialIcon from "@/app/components/MaterialIcon";
 import TagInput from "@/app/components/TagInput";
@@ -181,7 +180,7 @@ export default function PostDetailPage({
       <div className="site-container py-8">
         {isEditing ? (
           /* Edit Mode */
-          <div className="max-w-2xl mx-auto">
+          <div className="max-w-3xl mx-auto">
             <div className="card-padded space-y-6">
               <h2 className="text-xl font-bold">Edit Post</h2>
               <div>
@@ -219,16 +218,15 @@ export default function PostDetailPage({
         ) : (
           <>
             {/* TheStoryGraph-style 2-column layout */}
-            <div className="grid lg:grid-cols-[240px_1fr_240px] gap-8">
+            <div className="grid lg:grid-cols-[280px_1fr_240px] gap-8 lg:gap-12">
               {/* Left Column - Book Cover & Actions */}
               <div className="flex flex-col items-center lg:items-start gap-4">
                 {post.bookInfo?.coverImageUrl ? (
                   <div className="relative w-48 lg:w-full aspect-[3/4] rounded-lg overflow-hidden shadow-md">
-                    <Image
+                    <img
                       src={toAbsoluteUrl(post.bookInfo.coverImageUrl)}
                       alt="Cover"
-                      fill
-                      className="object-cover"
+                      className="absolute inset-0 w-full h-full object-cover"
                     />
                   </div>
                 ) : (

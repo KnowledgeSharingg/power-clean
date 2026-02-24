@@ -1,4 +1,17 @@
-export const serverUrl = process.env.SERVER_URL || "http://localhost:8080";
+// 브라우저에서 사용하는 공개 API URL (NEXT_PUBLIC_ 접두사로 빌드 시 인라인)
+export const serverUrl =
+  process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080";
+
+// Server Component(SSR)에서 사용하는 내부 API URL (Docker 네트워크 내부 통신용)
+// 브라우저 번들에 포함되지 않음 (NEXT_PUBLIC_ 접두사 없음)
+export const internalServerUrl =
+  process.env.INTERNAL_API_URL || serverUrl;
+
+// 실행 환경에 따라 적절한 base URL 반환 (서버 사이드면 internal, 클라이언트면 public)
+function getBaseUrl(): string {
+  if (typeof window === "undefined") return internalServerUrl;
+  return serverUrl;
+}
 
 export interface GetBookDetailResDto {
   id: number | null;
@@ -18,7 +31,7 @@ export interface GetCreatedPostByAIResDto {
 export async function getCreatedPostByAI(
   script: string
 ): Promise<GetCreatedPostByAIResDto> {
-  const url = `${serverUrl}/post/ai?script=${encodeURIComponent(script)}`;
+  const url = `${getBaseUrl()}/post/ai?script=${encodeURIComponent(script)}`;
   const res = await fetch(url, {
     method: "GET",
     headers: authHeadersNoContentType(),
@@ -48,7 +61,7 @@ export async function createPost(data: {
   };
 }) {
   try {
-    const response = await fetch(`${serverUrl}/post`, {
+    const response = await fetch(`${getBaseUrl()}/post`, {
       method: "POST",
       headers: authHeaders(),
       body: JSON.stringify(data),
@@ -62,7 +75,7 @@ export async function createPost(data: {
 }
 
 export async function getPostList(page: number = 1, size: number = 10, tag?: string) {
-  let url = `${serverUrl}/post/list?page=${page}&size=${size}`;
+  let url = `${getBaseUrl()}/post/list?page=${page}&size=${size}`;
   if (tag) url += `&tag=${encodeURIComponent(tag)}`;
   const res = await fetch(url, {
     headers: authHeaders(),
@@ -73,7 +86,7 @@ export async function getPostList(page: number = 1, size: number = 10, tag?: str
 }
 
 export async function getTags(): Promise<{ tags: { id: number; name: string }[] }> {
-  const res = await fetch(`${serverUrl}/tags`, {
+  const res = await fetch(`${getBaseUrl()}/tags`, {
     headers: authHeaders(),
     cache: "no-store",
   });
@@ -82,7 +95,7 @@ export async function getTags(): Promise<{ tags: { id: number; name: string }[] 
 }
 
 export async function getPostDetail(postId: string) {
-  const response = await fetch(`${serverUrl}/post/${postId}`, {
+  const response = await fetch(`${getBaseUrl()}/post/${postId}`, {
     headers: authHeaders(),
   });
   if (!response.ok) throw new Error("게시글 조회 실패");
@@ -109,7 +122,7 @@ export async function updatePost(data: {
   };
 }) {
   try {
-    const response = await fetch(`${serverUrl}/post`, {
+    const response = await fetch(`${getBaseUrl()}/post`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data),
@@ -129,7 +142,7 @@ export async function createReview(data: {
   creatorAccountId: string;
 }) {
   try {
-    const response = await fetch(`${serverUrl}/review`, {
+    const response = await fetch(`${getBaseUrl()}/review`, {
       method: "POST",
       headers: authHeaders(),
       body: JSON.stringify(data),
@@ -148,7 +161,7 @@ export async function getReviewsByPostId(
   size: number = 10
 ) {
   const res = await fetch(
-    `${serverUrl}/review/list/post/${postId}?page=${page}&size=${size}`,
+    `${getBaseUrl()}/review/list/post/${postId}?page=${page}&size=${size}`,
     { cache: "no-store" }
   );
   if (!res.ok) throw new Error("리뷰 조회 실패");
@@ -164,7 +177,7 @@ export async function updateReview({
   rating: number;
   reviewId: string;
 }) {
-  const res = await fetch(`${serverUrl}/review`, {
+  const res = await fetch(`${getBaseUrl()}/review`, {
     method: "PATCH",
     headers: authHeaders(),
     body: JSON.stringify({ content, rating, reviewId }),
@@ -174,7 +187,7 @@ export async function updateReview({
 }
 
 export async function deleteReview(reviewId: string) {
-  const res = await fetch(`${serverUrl}/review/${reviewId}`, {
+  const res = await fetch(`${getBaseUrl()}/review/${reviewId}`, {
     headers: authHeaders(),
     method: "DELETE",
   });
@@ -187,7 +200,7 @@ export async function uploadImage(file: File) {
   formData.append("file", file);
 
   try {
-    const response = await fetch(`${serverUrl}/upload`, {
+    const response = await fetch(`${getBaseUrl()}/upload`, {
       method: "POST",
       // Important: do NOT set Content-Type for FormData; browser will set the correct boundary.
       headers: authHeadersNoContentType(),
@@ -260,7 +273,7 @@ export async function signUp(data: {
   nickname: string;
 }) {
   try {
-    const res = await fetch(`${serverUrl}/account/register`, {
+    const res = await fetch(`${getBaseUrl()}/account/register`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data),
@@ -282,7 +295,7 @@ export async function signUp(data: {
 
 export async function login(data: { email: string; password: string }) {
   try {
-    const res = await fetch(`${serverUrl}/account/login`, {
+    const res = await fetch(`${getBaseUrl()}/account/login`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data),
@@ -317,7 +330,7 @@ export function logout() {
 
 export async function getMyInfo() {
   try {
-    const res = await fetch(`${serverUrl}/account/info`, {
+    const res = await fetch(`${getBaseUrl()}/account/info`, {
       method: "GET",
       headers: authHeaders(),
       cache: "no-store",
@@ -333,7 +346,7 @@ export async function getMyInfo() {
 
 export async function updateNickname(nickname: string) {
   try {
-    const res = await fetch(`${serverUrl}/account/nickname/${nickname}`, {
+    const res = await fetch(`${getBaseUrl()}/account/nickname/${nickname}`, {
       method: "PATCH",
       headers: authHeaders(),
     });
@@ -350,7 +363,7 @@ export async function updateNickname(nickname: string) {
 // =========================
 export async function likePost(postId: string): Promise<boolean> {
   try {
-    const res = await fetch(`${serverUrl}/post/${postId}/like`, {
+    const res = await fetch(`${getBaseUrl()}/post/${postId}/like`, {
       method: "POST",
       headers: authHeaders(),
     });
@@ -364,7 +377,7 @@ export async function likePost(postId: string): Promise<boolean> {
 
 export async function unlikePost(postId: string): Promise<boolean> {
   try {
-    const res = await fetch(`${serverUrl}/post/${postId}/like`, {
+    const res = await fetch(`${getBaseUrl()}/post/${postId}/like`, {
       method: "DELETE",
       headers: authHeaders(),
     });
@@ -388,7 +401,7 @@ export async function toggleLike(
 // =========================
 export async function bookmarkPost(postId: string): Promise<boolean> {
   try {
-    const res = await fetch(`${serverUrl}/post/${postId}/bookmark`, {
+    const res = await fetch(`${getBaseUrl()}/post/${postId}/bookmark`, {
       method: "POST",
       headers: authHeaders(),
     });
@@ -402,7 +415,7 @@ export async function bookmarkPost(postId: string): Promise<boolean> {
 
 export async function unbookmarkPost(postId: string): Promise<boolean> {
   try {
-    const res = await fetch(`${serverUrl}/post/${postId}/bookmark`, {
+    const res = await fetch(`${getBaseUrl()}/post/${postId}/bookmark`, {
       method: "DELETE",
       headers: authHeaders(),
     });
@@ -438,7 +451,7 @@ export interface Post {
 
 export async function getMyBookmarks(): Promise<{ postList: Post[] }> {
   try {
-    const res = await fetch(`${serverUrl}/post/bookmark/list`, {
+    const res = await fetch(`${getBaseUrl()}/post/bookmark/list`, {
       method: "GET",
       headers: authHeaders(),
       cache: "no-store",

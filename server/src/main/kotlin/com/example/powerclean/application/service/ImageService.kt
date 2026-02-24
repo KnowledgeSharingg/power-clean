@@ -22,6 +22,6 @@ class ImageService(
         val filePath = uploadDir.resolve(originalFilename)
         file.transferTo(filePath)
 
-        return "http://localhost:8080/BookCoverImages/$originalFilename"
+        return "/BookCoverImages/$originalFilename"
     }
 }
