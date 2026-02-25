@@ -14,5 +14,5 @@ data class CreateReviewReqDto(
     @get:Max(5)
     val rating: Int,
     val postId: UUID,
-    var creatorAccountId: UUID,
+    var creatorAccountId: UUID? = null,
 )

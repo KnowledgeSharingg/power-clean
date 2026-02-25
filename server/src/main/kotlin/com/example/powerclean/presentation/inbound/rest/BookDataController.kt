@@ -2,8 +2,8 @@ package com.example.powerclean.presentation.inbound.rest
 
 import com.example.powerclean.application.port.outbound.persistence.BookRepository
 import com.example.powerclean.application.service.BookCollectorService
-import com.example.powerclean.presentation.dto.BookDataResDto
 import com.example.powerclean.domain.model.Book
+import com.example.powerclean.presentation.dto.BookDataResDto
 import com.example.powerclean.presentation.dto.RegisterPostsReqDto
 import com.example.powerclean.presentation.dto.RegisterPostsResDto
 import com.example.powerclean.presentation.outbound.persistence.jpa.JpaBookRepository

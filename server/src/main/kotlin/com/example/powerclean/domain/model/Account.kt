@@ -28,6 +28,6 @@ class Account(
 ) : BaseEntity() {
     companion object {
         fun from(requestDto: RegisterAccountReqDto): Account =
-            Account(email = requestDto.email, nickname = requestDto.email, password = requestDto.password)
+            Account(email = requestDto.email, nickname = requestDto.nickname, password = requestDto.password)
     }
 }
