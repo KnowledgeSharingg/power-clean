@@ -9,13 +9,16 @@ data class RegisterAccountReqDto(
     val email: String,
     @get:NotBlank
     var password: String,
+    @get:NotBlank
+    val nickname: String,
 ) {
     companion object {
         fun of(
             email: String,
             password: String,
+            nickname: String,
         ): RegisterAccountReqDto {
-            return RegisterAccountReqDto(email, password)
+            return RegisterAccountReqDto(email, password, nickname)
         }
     }
 }
