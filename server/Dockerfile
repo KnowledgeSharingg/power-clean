@@ -4,7 +4,7 @@ FROM eclipse-temurin:21-jdk-jammy
 
 WORKDIR /app
 
-COPY build.gradle settings.gradle gradlew ./
+COPY build.gradle settings.gradle gradlew .editorconfig ./
 COPY gradle ./gradle
 COPY src ./src
 
