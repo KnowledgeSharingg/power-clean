@@ -50,14 +50,8 @@ class JwtAuthorizationFilter(
                     }
                 }
             } catch (ex: Exception) {
-                response.status = HttpServletResponse.SC_UNAUTHORIZED
-                response.contentType = "application/json"
-                response.characterEncoding = "UTF-8"
-                response.writer.write(
-                    "{\"error\": \"Filter Authorization error: ${ex.message?.replace("\"", "\\\"")
-                        ?: "unknown error"}\"}",
-                )
-                return
+                logger.warn("JWT authentication failed: ${ex.message}")
+                SecurityContextHolder.clearContext()
             }
         }
 
