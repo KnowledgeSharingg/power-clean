@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import { useTranslations } from "next-intl";
 
 type AIInputPopoverProps = {
   open: boolean;
@@ -21,6 +22,8 @@ export default function AIInputPopover({
   isLoading = false,
   error,
 }: AIInputPopoverProps) {
+  const t = useTranslations();
+
   if (!open) return null;
 
   return (
@@ -31,26 +34,25 @@ export default function AIInputPopover({
       />
       <div className="relative z-10 w-full max-w-md rounded-lg bg-white shadow-lg p-4">
         <div className="flex items-center justify-between mb-2">
-          <h3 className="text-lg font-semibold">AI Auto-fill</h3>
+          <h3 className="text-lg font-semibold">{t("ai.title")}</h3>
           <button
             type="button"
             onClick={onClose}
             disabled={isLoading}
             className="px-2 py-1 text-sm rounded hover:bg-black/5 disabled:opacity-50"
-            aria-label="Close"
+            aria-label={t("common.close")}
           >
             ✕
           </button>
         </div>
         <p className="text-sm text-black/70 mb-3">
-          Enter a script (book title or topic). The AI will fill in the form for
-          you.
+          {t("ai.description")}
         </p>
         <input
           type="text"
           value={script}
           onChange={(e) => onChange(e.target.value)}
-          placeholder="e.g. The Great Gatsby"
+          placeholder={t("ai.placeholder")}
           className="w-full input mb-3"
           disabled={isLoading}
         />
@@ -64,7 +66,7 @@ export default function AIInputPopover({
             disabled={isLoading}
             className="btn btn-secondary disabled:opacity-50"
           >
-            Cancel
+            {t("common.cancel")}
           </button>
           <button
             type="button"
@@ -75,7 +77,7 @@ export default function AIInputPopover({
             {isLoading ? (
               <span className="inline-block w-4 h-4 border-2 border-black/30 border-t-black rounded-full animate-spin" />
             ) : null}
-            Confirm
+            {t("common.confirm")}
           </button>
         </div>
       </div>

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { createPost, uploadImage, getCreatedPostByAI } from "@/lib/api";
 import AIInputPopover from "@/app/components/AIInputPopover";
 import MaterialIcon from "@/app/components/MaterialIcon";
@@ -9,6 +10,8 @@ import TagInput from "@/app/components/TagInput";
 
 export default function CreatePost() {
   const router = useRouter();
+  const t = useTranslations("createPost");
+  const tc = useTranslations("common");
   const [aiOpen, setAiOpen] = useState(false);
   const [aiScript, setAiScript] = useState("");
   const [isLoadingAI, setIsLoadingAI] = useState(false);
@@ -93,9 +96,9 @@ export default function CreatePost() {
       }));
       setAiOpen(false);
     } catch (err: unknown) {
-      console.error("AI 자동 채우기 실패:", err);
+      console.error("AI auto-fill failed:", err);
       setAiError(
-        err instanceof Error ? err.message : "Failed to auto-fill. Please try again."
+        err instanceof Error ? err.message : t("aiFillFailed")
       );
     } finally {
       setIsLoadingAI(false);
@@ -112,8 +115,8 @@ export default function CreatePost() {
         bookInfo: { ...prev.bookInfo, coverImageUrl: imageUrl },
       }));
     } catch (error) {
-      console.error("이미지 업로드 실패:", error);
-      alert("이미지 업로드에 실패했습니다.");
+      console.error("Image upload failed:", error);
+      alert(t("imageUploadFailed"));
     }
   };
 
@@ -127,28 +130,28 @@ export default function CreatePost() {
     };
     const success = await createPost(postData);
     if (success) {
-      alert("Post successfully created!");
+      alert(t("postCreated"));
       router.push("/");
     } else {
-      alert("Failed to create post.");
+      alert(t("postFailed"));
     }
   };
 
   return (
     <div className="bg-white text-black min-h-screen">
       <div className="content-container py-8">
-        <h1 className="text-2xl font-bold text-primary mb-8">Create New Post</h1>
+        <h1 className="text-2xl font-bold text-primary mb-8">{t("title")}</h1>
 
         <div className="max-w-3xl mx-auto">
           <form onSubmit={handleSubmit} className="space-y-8">
             {/* 1. Book Search & AI */}
             <section className="card-padded space-y-4">
               <h2 className="text-sm font-bold uppercase tracking-wider text-text-secondary">
-                Book Search
+                {t("bookSearch")}
               </h2>
               <input
                 className="w-full"
-                placeholder="Enter book name..."
+                placeholder={t("bookNamePlaceholder")}
                 name="bookInfo.title"
                 value={form.bookInfo.title}
                 onChange={handleChange}
@@ -159,30 +162,30 @@ export default function CreatePost() {
                 className="btn-primary w-full py-3 gap-2"
               >
                 <MaterialIcon name="auto_awesome" size="sm" />
-                AI Auto-Fill Details
+                {t("aiAutoFill")}
               </button>
             </section>
 
             {/* 2. Book Information */}
             <section className="card-padded space-y-4">
               <h2 className="text-sm font-bold uppercase tracking-wider text-text-secondary">
-                Book Information
+                {t("bookInformation")}
               </h2>
               <div>
-                <label className="block text-sm font-medium mb-1.5">Book Title</label>
+                <label className="block text-sm font-medium mb-1.5">{t("bookTitle")}</label>
                 <input
                   type="text"
                   name="bookInfo.title"
                   value={form.bookInfo.title}
                   onChange={handleChange}
-                  placeholder="Enter book title"
+                  placeholder={t("bookTitlePlaceholder")}
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium mb-1.5">Summary / Review</label>
+                <label className="block text-sm font-medium mb-1.5">{t("summaryReview")}</label>
                 <textarea
                   className="min-h-[120px] resize-y"
-                  placeholder="Share your thoughts about this book..."
+                  placeholder={t("summaryPlaceholder")}
                   name="bookInfo.content"
                   value={form.bookInfo.content}
                   onChange={handleChange}
@@ -190,10 +193,10 @@ export default function CreatePost() {
               </div>
               <div>
                 <label className="block text-sm font-medium mb-1.5">
-                  Book Link <span className="text-xs text-text-secondary font-normal">(optional)</span>
+                  {t("bookLink")} <span className="text-xs text-text-secondary font-normal">{t("bookLinkOptional")}</span>
                 </label>
                 <input
-                  placeholder="https://goodreads.com/book/..."
+                  placeholder={t("bookLinkPlaceholder")}
                   name="bookInfo.link"
                   value={form.bookInfo.link}
                   onChange={handleChange}
@@ -204,13 +207,13 @@ export default function CreatePost() {
             {/* 3. Book Cover */}
             <section className="card-padded space-y-4">
               <h2 className="text-sm font-bold uppercase tracking-wider text-text-secondary">
-                Book Cover Photo
+                {t("bookCoverPhoto")}
               </h2>
               {form.bookInfo.coverImageUrl ? (
                 <div className="relative w-40 aspect-[3/4] rounded-lg overflow-hidden border border-border">
                   <img
                     src={form.bookInfo.coverImageUrl}
-                    alt="Book Cover"
+                    alt={t("bookCoverPhoto")}
                     className="absolute inset-0 w-full h-full object-cover"
                   />
                   <button
@@ -230,7 +233,7 @@ export default function CreatePost() {
                 <label className="block w-40 aspect-[3/4] rounded-lg border-2 border-dashed border-border hover:border-primary/50 transition cursor-pointer">
                   <div className="h-full flex flex-col items-center justify-center gap-2 text-text-secondary">
                     <MaterialIcon name="add_a_photo" size="lg" />
-                    <p className="text-xs">Upload cover</p>
+                    <p className="text-xs">{t("uploadCover")}</p>
                   </div>
                   <input
                     type="file"
@@ -245,7 +248,7 @@ export default function CreatePost() {
             {/* 4. Tags */}
             <section className="card-padded space-y-4">
               <h2 className="text-sm font-bold uppercase tracking-wider text-text-secondary">
-                Tags
+                {t("tags")}
               </h2>
               <TagInput tags={tags} onChange={setTags} />
             </section>
@@ -253,10 +256,10 @@ export default function CreatePost() {
             {/* Submit */}
             <div className="flex gap-3">
               <button type="button" onClick={() => router.back()} className="btn flex-1 py-3">
-                Cancel
+                {tc("cancel")}
               </button>
               <button type="submit" className="btn-primary flex-1 py-3 gap-2">
-                Create Post
+                {t("createPost")}
                 <MaterialIcon name="publish" size="sm" />
               </button>
             </div>

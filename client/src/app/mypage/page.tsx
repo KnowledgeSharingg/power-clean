@@ -2,12 +2,16 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useTranslations, useLocale } from "next-intl";
 import { useAuth } from "@/app/auth/useAuth";
 import { updateNickname } from "@/lib/api";
 import MaterialIcon from "@/app/components/MaterialIcon";
 
 export default function MyPage() {
   const router = useRouter();
+  const t = useTranslations("myPage");
+  const tc = useTranslations("common");
+  const locale = useLocale();
   const { me, loading, logout, isLoggedIn } = useAuth();
 
   const [isEditing, setIsEditing] = useState(false);
@@ -46,7 +50,7 @@ export default function MyPage() {
   const handleSave = async () => {
     const trimmed = newNickname.trim();
     if (!trimmed) {
-      setMessage({ type: "error", text: "닉네임을 입력해주세요." });
+      setMessage({ type: "error", text: t("nicknameRequired") });
       return;
     }
     if (trimmed === me.nickname) {
@@ -60,12 +64,11 @@ export default function MyPage() {
     setSaving(false);
 
     if (success) {
-      setMessage({ type: "success", text: "닉네임이 변경되었습니다." });
+      setMessage({ type: "success", text: t("nicknameChanged") });
       setIsEditing(false);
-      // useAuth가 window focus 시 자동 refetch하므로, 강제로 focus 이벤트 발생
       window.dispatchEvent(new Event("focus"));
     } else {
-      setMessage({ type: "error", text: "닉네임 변경에 실패했습니다." });
+      setMessage({ type: "error", text: t("nicknameFailed") });
     }
   };
 
@@ -75,7 +78,7 @@ export default function MyPage() {
   };
 
   const joinDate = me.createdAt
-    ? new Date(me.createdAt).toLocaleDateString("ko-KR", {
+    ? new Date(me.createdAt).toLocaleDateString(locale === "ko" ? "ko-KR" : "en-US", {
         year: "numeric",
         month: "long",
         day: "numeric",
@@ -85,7 +88,7 @@ export default function MyPage() {
   return (
     <div className="bg-white text-black min-h-screen">
       <div className="site-container py-8">
-        <h1 className="text-2xl font-bold text-primary mb-8">My Page</h1>
+        <h1 className="text-2xl font-bold text-primary mb-8">{t("title")}</h1>
 
         <div className="max-w-2xl mx-auto space-y-6">
           {/* Profile Card */}
@@ -107,7 +110,7 @@ export default function MyPage() {
               <div className="flex items-start justify-between gap-4 py-3 border-t border-border">
                 <div className="min-w-0 flex-1">
                   <label className="block text-xs font-medium uppercase tracking-wider text-text-secondary mb-1">
-                    Nickname
+                    {t("nickname")}
                   </label>
                   {isEditing ? (
                     <div className="flex items-center gap-2">
@@ -118,7 +121,7 @@ export default function MyPage() {
                         onKeyDown={handleKeyDown}
                         autoFocus
                         className="flex-1 h-10 px-3 text-sm"
-                        placeholder="새 닉네임 입력"
+                        placeholder={t("newNicknamePlaceholder")}
                         maxLength={20}
                       />
                       <button
@@ -126,14 +129,14 @@ export default function MyPage() {
                         disabled={saving}
                         className="btn-primary text-xs px-4 py-2 disabled:opacity-50"
                       >
-                        {saving ? "저장 중..." : "저장"}
+                        {saving ? tc("saving") : tc("save")}
                       </button>
                       <button
                         onClick={handleEditCancel}
                         disabled={saving}
                         className="btn text-xs px-4 py-2"
                       >
-                        취소
+                        {tc("cancel")}
                       </button>
                     </div>
                   ) : (
@@ -142,7 +145,7 @@ export default function MyPage() {
                       <button
                         onClick={handleEditStart}
                         className="text-text-secondary hover:text-primary transition-colors"
-                        title="닉네임 수정"
+                        title={t("editNickname")}
                       >
                         <MaterialIcon name="edit" size="sm" />
                       </button>
@@ -154,7 +157,7 @@ export default function MyPage() {
               {/* Email */}
               <div className="py-3 border-t border-border">
                 <label className="block text-xs font-medium uppercase tracking-wider text-text-secondary mb-1">
-                  Email
+                  {t("email")}
                 </label>
                 <span className="text-base">{me.email}</span>
               </div>
@@ -163,7 +166,7 @@ export default function MyPage() {
               {joinDate && (
                 <div className="py-3 border-t border-border">
                   <label className="block text-xs font-medium uppercase tracking-wider text-text-secondary mb-1">
-                    Joined
+                    {t("joined")}
                   </label>
                   <span className="text-base">{joinDate}</span>
                 </div>
@@ -187,7 +190,7 @@ export default function MyPage() {
           {/* Danger Zone */}
           <div className="card-padded">
             <h3 className="text-sm font-bold uppercase tracking-wider text-text-secondary mb-4">
-              Account
+              {t("account")}
             </h3>
             <button
               onClick={() => {
@@ -197,7 +200,7 @@ export default function MyPage() {
               className="btn text-sm text-red-500 border-red-200 hover:bg-red-50 gap-2"
             >
               <MaterialIcon name="logout" size="sm" />
-              Sign out
+              {tc("signOut")}
             </button>
           </div>
         </div>

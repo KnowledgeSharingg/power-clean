@@ -1,0 +1,169 @@
+{
+  "common": {
+    "appName": "서책의 파도",
+    "appDescription": "A platform to gain insights on what to read next",
+    "loading": "Loading...",
+    "cancel": "Cancel",
+    "save": "Save",
+    "saving": "Saving...",
+    "delete": "Delete",
+    "edit": "Edit",
+    "confirm": "Confirm",
+    "close": "Close",
+    "signOut": "Sign out",
+    "anonymous": "Anonymous",
+    "anonymousUser": "Anonymous User"
+  },
+  "time": {
+    "justNow": "just now",
+    "minutesAgo": "{minutes}m ago",
+    "hoursAgo": "{hours}h ago",
+    "daysAgo": "{days}d ago"
+  },
+  "header": {
+    "explore": "Explore",
+    "library": "Library",
+    "newPost": "New Post",
+    "searchPlaceholder": "Search all books...",
+    "myPage": "My Page",
+    "myLibrary": "My Library"
+  },
+  "footer": {
+    "copyright": "© 2026 서책의 파도 · Made by Rengoku & BB"
+  },
+  "home": {
+    "title": "Explore",
+    "filterBooks": "▸ Filter all books",
+    "searchPlaceholder": "Search books, authors...",
+    "noPostsYet": "No posts yet",
+    "beFirstToShare": "Be the first to share a book!",
+    "noPostsWithTag": "No posts with tag \"{tag}\"",
+    "clearFilter": "Clear filter",
+    "filteredBy": "Filtered by:"
+  },
+  "library": {
+    "title": "My Library",
+    "description": "Your saved books and bookmarked posts",
+    "noBookmarks": "No bookmarks yet",
+    "noBookmarksHelp": "Save posts you want to read later by clicking the bookmark icon on any post"
+  },
+  "postCard": {
+    "cover": "Cover",
+    "readMore": "Read more"
+  },
+  "postDetail": {
+    "editPost": "Edit Post",
+    "title": "Title",
+    "content": "Content",
+    "tags": "Tags",
+    "titlePlaceholder": "Post title",
+    "contentPlaceholder": "Share your thoughts...",
+    "saveChanges": "Save Changes",
+    "description": "DESCRIPTION",
+    "communityReviews": "COMMUNITY REVIEWS",
+    "like": "Like",
+    "liked": "Liked",
+    "bookmarkSave": "Save",
+    "bookmarkSaved": "Saved",
+    "editSuccess": "Edit successful!",
+    "editFailed": "Edit failed!"
+  },
+  "createPost": {
+    "title": "Create New Post",
+    "bookSearch": "Book Search",
+    "bookNamePlaceholder": "Enter book name...",
+    "aiAutoFill": "AI Auto-Fill Details",
+    "bookInformation": "Book Information",
+    "bookTitle": "Book Title",
+    "bookTitlePlaceholder": "Enter book title",
+    "summaryReview": "Summary / Review",
+    "summaryPlaceholder": "Share your thoughts about this book...",
+    "bookLink": "Book Link",
+    "bookLinkOptional": "(optional)",
+    "bookLinkPlaceholder": "https://goodreads.com/book/...",
+    "bookCoverPhoto": "Book Cover Photo",
+    "uploadCover": "Upload cover",
+    "tags": "Tags",
+    "createPost": "Create Post",
+    "postCreated": "Post successfully created!",
+    "postFailed": "Failed to create post.",
+    "imageUploadFailed": "Image upload failed.",
+    "aiFillFailed": "Failed to auto-fill. Please try again."
+  },
+  "auth": {
+    "signIn": "Sign In",
+    "signInAction": "Sign In",
+    "signingIn": "Signing in...",
+    "signUp": "Sign Up",
+    "signUpAction": "Sign Up",
+    "tagline": "Sign in to continue to your library",
+    "email": "Email",
+    "emailPlaceholder": "Enter your email",
+    "password": "Password",
+    "passwordPlaceholder": "Enter your password",
+    "nickname": "Nickname",
+    "nicknamePlaceholder": "Enter nickname",
+    "forgotPassword": "Forgot your password?",
+    "terms": "Terms",
+    "privacy": "Privacy",
+    "support": "Support",
+    "processing": "Processing...",
+    "loginComplete": "Logged in",
+    "updateNickname": "Update nickname",
+    "newNickname": "New nickname",
+    "signUpFailed": "Sign up failed.",
+    "loginFailed": "Login failed.",
+    "nicknameFailed": "Failed to change nickname.",
+    "signUpSuccess": "Sign up successful! Please sign in."
+  },
+  "authConfirm": {
+    "title": "Sign Up Confirmation",
+    "message": "Account does not exist. Would you like to sign up?",
+    "signUpFailed": "Sign up failed. Please try again later.",
+    "signUpSuccessLoginFailed": "Sign up succeeded but login failed. Please sign in again.",
+    "signUpError": "An error occurred during sign up."
+  },
+  "myPage": {
+    "title": "My Page",
+    "nickname": "Nickname",
+    "email": "Email",
+    "joined": "Joined",
+    "newNicknamePlaceholder": "Enter new nickname",
+    "editNickname": "Edit nickname",
+    "nicknameRequired": "Please enter a nickname.",
+    "nicknameChanged": "Nickname has been changed.",
+    "nicknameFailed": "Failed to change nickname.",
+    "account": "Account"
+  },
+  "review": {
+    "writeReview": "Write a review",
+    "reviewPlaceholder": "Share your thoughts about this book...",
+    "postReview": "Post Review",
+    "posting": "Posting...",
+    "noReviews": "No reviews yet",
+    "beFirstToReview": "Be the first to review!",
+    "me": "Me",
+    "deleteConfirm": "Are you sure you want to delete this review?"
+  },
+  "ai": {
+    "title": "AI Auto-fill",
+    "description": "Enter a script (book title or topic). The AI will fill in the form for you.",
+    "placeholder": "e.g. The Great Gatsby"
+  },
+  "tags": {
+    "inputPlaceholder": "Enter tags and press Enter (max {maxTags})",
+    "addMore": "Add tags...",
+    "maxReached": "You can add up to {maxTags} tags."
+  },
+  "bottomTab": {
+    "home": "Home",
+    "discover": "Discover",
+    "library": "Library",
+    "profile": "Profile"
+  },
+  "language": {
+    "ko": "한국어",
+    "en": "English",
+    "switchLanguage": "Switch language"
+  }
+}

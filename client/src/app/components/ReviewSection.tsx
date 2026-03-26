@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
+import { useTranslations } from "next-intl";
 import {
   createReview,
   deleteReview,
@@ -8,6 +9,7 @@ import {
   updateReview,
 } from "@/lib/api";
 import MaterialIcon from "./MaterialIcon";
+import { getTimeAgoParams } from "@/lib/timeAgo";
 
 interface Review {
   id: string;
@@ -26,6 +28,7 @@ export default function ReviewSection({
   postId,
   creatorAccountId,
 }: ReviewSectionProps) {
+  const t = useTranslations();
   const [reviews, setReviews] = useState<Review[]>([]);
   const [content, setContent] = useState("");
   const [rating, setRating] = useState(5);
@@ -35,7 +38,7 @@ export default function ReviewSection({
   const [editRating, setEditRating] = useState(5);
 
   const handleDelete = async (reviewId: string) => {
-    const ok = confirm("Are you sure you want to delete this review?");
+    const ok = confirm(t("review.deleteConfirm"));
     if (!ok) return;
     const success = await deleteReview(reviewId);
     if (success) fetchReviews();
@@ -90,18 +93,10 @@ export default function ReviewSection({
     setLoading(false);
   };
 
-  const getTimeAgo = (dateString: string): string => {
-    const date = new Date(dateString);
-    const now = new Date();
-    const diffMs = now.getTime() - date.getTime();
-    const diffMins = Math.floor(diffMs / 60000);
-    const diffHours = Math.floor(diffMins / 60);
-    const diffDays = Math.floor(diffHours / 24);
-    if (diffMins < 1) return "just now";
-    if (diffMins < 60) return `${diffMins}m ago`;
-    if (diffHours < 24) return `${diffHours}h ago`;
-    if (diffDays < 7) return `${diffDays}d ago`;
-    return date.toLocaleDateString();
+  const formatTimeAgo = (dateString: string): string => {
+    const params = getTimeAgoParams(dateString);
+    if (params.key === "fallback") return params.fallbackDate!;
+    return t(`time.${params.key}`, params.values);
   };
 
   return (
@@ -112,14 +107,14 @@ export default function ReviewSection({
           <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
             <MaterialIcon name="person" size="sm" className="text-primary" />
           </div>
-          <p className="text-sm font-medium">Write a review</p>
+          <p className="text-sm font-medium">{t("review.writeReview")}</p>
         </div>
-        
+
         <textarea
           value={content}
           onChange={(e) => setContent(e.target.value)}
           className="w-full min-h-[80px] p-3 text-sm resize-y"
-          placeholder="Share your thoughts about this book..."
+          placeholder={t("review.reviewPlaceholder")}
         />
 
         <div className="flex items-center justify-between">
@@ -147,7 +142,7 @@ export default function ReviewSection({
             disabled={loading || !content}
             className="btn-primary text-sm px-5 py-2 disabled:opacity-50"
           >
-            {loading ? "Posting..." : "Post Review"}
+            {loading ? t("review.posting") : t("review.postReview")}
           </button>
         </div>
       </div>
@@ -157,8 +152,8 @@ export default function ReviewSection({
         {reviews.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-10 text-text-secondary">
             <MaterialIcon name="rate_review" size="3xl" className="mb-2 opacity-40" />
-            <p className="text-sm">No reviews yet</p>
-            <p className="text-xs mt-1">Be the first to review!</p>
+            <p className="text-sm">{t("review.noReviews")}</p>
+            <p className="text-xs mt-1">{t("review.beFirstToReview")}</p>
           </div>
         ) : (
           reviews.map((review) => {
@@ -176,7 +171,7 @@ export default function ReviewSection({
                       <div>
                         <div className="flex items-center gap-2">
                           <p className="text-sm font-medium">
-                            {isOwner ? "Me" : "Anonymous"}
+                            {isOwner ? t("review.me") : t("common.anonymous")}
                           </p>
                           <div className="flex items-center gap-0.5 text-yellow-500">
                             <MaterialIcon name="star" size="xs" filled />
@@ -187,7 +182,7 @@ export default function ReviewSection({
                         </div>
                         {review.createdAt && (
                           <p className="text-xs text-text-secondary">
-                            {getTimeAgo(review.createdAt)}
+                            {formatTimeAgo(review.createdAt)}
                           </p>
                         )}
                       </div>
@@ -197,13 +192,13 @@ export default function ReviewSection({
                             onClick={() => startEdit(review)}
                             className="text-xs font-medium text-primary hover:underline"
                           >
-                            Edit
+                            {t("common.edit")}
                           </button>
                           <button
                             onClick={() => handleDelete(review.id)}
                             className="text-xs font-medium text-red-500 hover:underline"
                           >
-                            Delete
+                            {t("common.delete")}
                           </button>
                         </div>
                       )}
@@ -236,10 +231,10 @@ export default function ReviewSection({
                           </div>
                           <div className="ml-auto flex gap-2">
                             <button onClick={handleEditSubmit} className="btn-primary text-sm px-4 py-1.5">
-                              Save
+                              {t("common.save")}
                             </button>
                             <button onClick={() => setEditingId(null)} className="btn text-sm px-4 py-1.5">
-                              Cancel
+                              {t("common.cancel")}
                             </button>
                           </div>
                         </div>
