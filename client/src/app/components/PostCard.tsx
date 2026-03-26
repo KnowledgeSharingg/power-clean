@@ -2,8 +2,10 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import MaterialIcon from "./MaterialIcon";
 import { toggleLike, getToken } from "@/lib/api";
+import { getTimeAgoParams } from "@/lib/timeAgo";
 
 interface PostCardProps {
   id: number;
@@ -27,13 +29,17 @@ export default function PostCard({
   likeCount,
   likedByMe = false,
   createdAt,
-  authorName = "Anonymous",
+  authorName,
   coverImageUrl,
   tags,
   onLikeChange,
 }: PostCardProps) {
   const router = useRouter();
-  const timeAgo = getTimeAgo(createdAt);
+  const t = useTranslations();
+  const timeParams = getTimeAgoParams(createdAt);
+  const timeAgo = timeParams.key === "fallback"
+    ? timeParams.fallbackDate!
+    : t(`time.${timeParams.key}`, timeParams.values);
   const [liked, setLiked] = useState(likedByMe);
   const [currentLikeCount, setCurrentLikeCount] = useState(likeCount);
   const [isLikeLoading, setIsLikeLoading] = useState(false);
@@ -80,7 +86,7 @@ export default function PostCard({
         <div className="relative w-20 sm:w-24 flex-shrink-0 aspect-[3/4] rounded overflow-hidden bg-gray-100 shadow-sm">
           <img
             src={coverImageUrl}
-            alt="Cover"
+            alt={t("postCard.cover")}
             className="absolute inset-0 w-full h-full object-cover"
           />
         </div>
@@ -100,7 +106,7 @@ export default function PostCard({
         </h3>
 
         {/* Author */}
-        <p className="text-sm text-text-secondary mb-1">{authorName}</p>
+        <p className="text-sm text-text-secondary mb-1">{authorName || t("common.anonymous")}</p>
 
         {/* Meta */}
         <p className="text-xs text-text-secondary mb-3">{timeAgo}</p>
@@ -155,7 +161,7 @@ export default function PostCard({
         </div>
       </div>
 
-      {/* Action Buttons - Right (TheStoryGraph style) */}
+      {/* Action Buttons - Right */}
       <div className="hidden sm:flex flex-col gap-2 flex-shrink-0">
         <button
           onClick={(e) => {
@@ -164,26 +170,11 @@ export default function PostCard({
           }}
           className="btn-primary text-xs px-4 py-2"
         >
-          Read more
+          {t("postCard.readMore")}
         </button>
       </div>
     </div>
   );
-}
-
-function getTimeAgo(dateString: string): string {
-  const date = new Date(dateString);
-  const now = new Date();
-  const diffMs = now.getTime() - date.getTime();
-  const diffMins = Math.floor(diffMs / 60000);
-  const diffHours = Math.floor(diffMins / 60);
-  const diffDays = Math.floor(diffHours / 24);
-
-  if (diffMins < 1) return "just now";
-  if (diffMins < 60) return `${diffMins}m ago`;
-  if (diffHours < 24) return `${diffHours}h ago`;
-  if (diffDays < 7) return `${diffDays}d ago`;
-  return date.toLocaleDateString();
 }
 
 function formatCount(count: number): string {

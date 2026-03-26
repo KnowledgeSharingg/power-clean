@@ -1,14 +1,19 @@
 import "@/styles/globals.css";
+import { NextIntlClientProvider } from "next-intl";
+import { getLocale, getMessages } from "next-intl/server";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const locale = await getLocale();
+  const messages = await getMessages();
+
   return (
-    <html lang="en">
+    <html lang={locale}>
       <head>
         <title>서책의 파도</title>
         <meta
@@ -27,9 +32,11 @@ export default function RootLayout({
         />
       </head>
       <body className="min-h-screen bg-white text-black font-sans">
-        <Header />
-        <main>{children}</main>
-        <Footer />
+        <NextIntlClientProvider messages={messages}>
+          <Header />
+          <main>{children}</main>
+          <Footer />
+        </NextIntlClientProvider>
       </body>
     </html>
   );

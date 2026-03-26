@@ -4,15 +4,18 @@ import Link from "next/link";
 import Image from "next/image";
 import { useAuth } from "@/app/auth/useAuth";
 import { usePathname } from "next/navigation";
+import { useTranslations } from "next-intl";
+import LanguageSwitcher from "./LanguageSwitcher";
 
 export default function Header() {
   const { isLoggedIn, nickname, logout } = useAuth();
   const pathname = usePathname();
+  const t = useTranslations();
 
   const navLinks = [
-    { href: "/", label: "Explore" },
-    { href: "/library", label: "Library" },
-    { href: "/post/create", label: "New Post" },
+    { href: "/", label: t("header.explore") },
+    { href: "/library", label: t("header.library") },
+    { href: "/post/create", label: t("header.newPost") },
   ];
 
   return (
@@ -23,13 +26,13 @@ export default function Header() {
           <Link href="/" className="flex items-center gap-2 no-underline">
             <Image
               src="/logo.png"
-              alt="서책의 파도"
+              alt={t("common.appName")}
               width={32}
               height={32}
               className="object-contain"
             />
             <span className="text-lg font-bold text-black tracking-tight hidden sm:inline">
-              서책의 파도
+              {t("common.appName")}
             </span>
           </Link>
 
@@ -51,16 +54,19 @@ export default function Header() {
           </nav>
         </div>
 
-        {/* Right: Search + Auth */}
+        {/* Right: Search + Lang + Auth */}
         <div className="flex items-center gap-4">
           {/* Search */}
           <div className="hidden lg:block">
             <input
               type="text"
-              placeholder="Search all books..."
+              placeholder={t("header.searchPlaceholder")}
               className="w-64 xl:w-80 h-9 px-4 text-sm border border-border rounded-full bg-white placeholder:text-black/40 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary"
             />
           </div>
+
+          {/* Language Switcher */}
+          <LanguageSwitcher />
 
           {/* Auth */}
           {isLoggedIn ? (
@@ -75,16 +81,16 @@ export default function Header() {
                     {nickname || "User"}
                   </div>
                   <Link href="/mypage" className="block px-4 py-2 text-sm text-black/70 hover:bg-gray-50 no-underline">
-                    My Page
+                    {t("header.myPage")}
                   </Link>
                   <Link href="/library" className="block px-4 py-2 text-sm text-black/70 hover:bg-gray-50 no-underline">
-                    My Library
+                    {t("header.myLibrary")}
                   </Link>
                   <button
                     onClick={logout}
                     className="w-full text-left px-4 py-2 text-sm text-black/70 hover:bg-gray-50"
                   >
-                    Sign out
+                    {t("common.signOut")}
                   </button>
                 </div>
               </div>

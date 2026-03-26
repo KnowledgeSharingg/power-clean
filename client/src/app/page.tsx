@@ -2,6 +2,7 @@
 
 import { Suspense, useState, useEffect } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { getPostList, getTags, serverUrl } from "@/lib/api";
 import PostCard from "./components/PostCard";
 import MaterialIcon from "./components/MaterialIcon";
@@ -44,6 +45,7 @@ export default function Home() {
 function HomeContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
+  const t = useTranslations();
   const activeTag = searchParams.get("tag") || "";
 
   const [posts, setPosts] = useState<Post[]>([]);
@@ -78,12 +80,12 @@ function HomeContent() {
     <div className="bg-white text-black min-h-screen">
       <div className="site-container py-8">
         {/* Page Title */}
-        <h1 className="text-2xl font-bold text-primary mb-6">Explore</h1>
+        <h1 className="text-2xl font-bold text-primary mb-6">{t("home.title")}</h1>
 
         {/* Active Tag Filter */}
         {activeTag && (
           <div className="flex items-center gap-2 mb-4">
-            <span className="text-sm text-text-secondary">Filtered by:</span>
+            <span className="text-sm text-text-secondary">{t("home.filteredBy")}</span>
             <span className="inline-flex items-center gap-1.5 bg-black text-white text-sm px-3 py-1.5 rounded-full">
               {activeTag}
               <button
@@ -117,12 +119,12 @@ function HomeContent() {
         <div className="card-padded mb-6">
           <details>
             <summary className="cursor-pointer text-sm font-medium text-black/70 hover:text-black">
-              ▸ Filter all books
+              {t("home.filterBooks")}
             </summary>
             <div className="mt-4 flex gap-3">
               <input
                 className="flex-1 h-10 px-4 text-sm border border-border rounded-lg bg-white placeholder:text-black/40 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary"
-                placeholder="Search books, authors..."
+                placeholder={t("home.searchPlaceholder")}
                 type="text"
               />
             </div>
@@ -141,15 +143,15 @@ function HomeContent() {
                 <path d="M21 5c-1.11-.35-2.33-.5-3.5-.5-1.95 0-4.05.4-5.5 1.5-1.45-1.1-3.55-1.5-5.5-1.5S2.45 4.9 1 6v14.65c0 .25.25.5.5.5.1 0 .15-.05.25-.05C3.1 20.45 5.05 20 6.5 20c1.95 0 4.05.4 5.5 1.5 1.35-.85 3.8-1.5 5.5-1.5 1.65 0 3.35.3 4.75 1.05.1.05.15.05.25.05.25 0 .5-.25.5-.5V6c-.6-.45-1.25-.75-2-1zm0 13.5c-1.1-.35-2.3-.5-3.5-.5-1.7 0-4.15.65-5.5 1.5V8c1.35-.85 3.8-1.5 5.5-1.5 1.2 0 2.4.15 3.5.5v11.5z"/>
               </svg>
               <p className="text-lg font-medium">
-                {activeTag ? `No posts with tag "${activeTag}"` : "No posts yet"}
+                {activeTag ? t("home.noPostsWithTag", { tag: activeTag }) : t("home.noPostsYet")}
               </p>
               <p className="text-sm mt-1">
                 {activeTag ? (
                   <button onClick={() => router.push("/")} className="underline hover:text-black">
-                    Clear filter
+                    {t("home.clearFilter")}
                   </button>
                 ) : (
-                  "Be the first to share a book!"
+                  t("home.beFirstToShare")
                 )}
               </p>
             </div>
@@ -164,7 +166,7 @@ function HomeContent() {
                 likedByMe={post.likedByMe}
                 createdAt={post.createdAt}
                 tags={post.tags}
-                authorName={post.bookInfo?.author || "Anonymous"}
+                authorName={post.bookInfo?.author}
                 coverImageUrl={
                   post.bookInfo?.coverImageUrl
                     ? toAbsoluteUrl(post.bookInfo.coverImageUrl)
