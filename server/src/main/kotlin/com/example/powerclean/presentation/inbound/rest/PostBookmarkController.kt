@@ -32,7 +32,7 @@ class PostBookmarkController(
     ): String = postBookmarkService.removeBookmark(postId, accountId)
 
     @Operation(summary = "내 북마크 목록 조회 API.", description = "인증된 사용자의 북마크한 포스트 목록 조회.")
-    @GetMapping("/me/bookmarks")
+    @GetMapping("/bookmark/list")
     fun getMyBookmarks(
         @AuthenticationPrincipal(expression = "id") accountId: UUID,
     ): GetPostListResDto = postBookmarkService.findBookmarksByAccount(accountId)
