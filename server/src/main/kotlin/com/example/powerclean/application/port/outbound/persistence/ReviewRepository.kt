@@ -19,4 +19,6 @@ public interface ReviewRepository {
     ): Page<Review>
 
     fun deleteById(id: UUID): Unit
+
+    fun findAverageRatingByPostId(postId: UUID): Double?
 }

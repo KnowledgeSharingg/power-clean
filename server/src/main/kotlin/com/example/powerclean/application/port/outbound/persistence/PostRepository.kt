@@ -16,4 +16,6 @@ public interface PostRepository {
     fun findAllWithBook(): List<Post>
 
     fun deleteById(id: UUID)
+
+    fun searchByKeyword(keyword: String): List<Post>
 }

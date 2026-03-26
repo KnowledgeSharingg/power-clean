@@ -449,6 +449,15 @@ export interface Post {
   };
 }
 
+export async function searchPosts(keyword: string): Promise<{ postList: Post[] }> {
+  const res = await fetch(
+    `${getBaseUrl()}/post/search?keyword=${encodeURIComponent(keyword)}`,
+    { headers: authHeaders(), cache: "no-store" }
+  );
+  if (!res.ok) throw new Error("검색 실패");
+  return res.json();
+}
+
 export async function getMyBookmarks(): Promise<{ postList: Post[] }> {
   try {
     const res = await fetch(`${getBaseUrl()}/post/bookmark/list`, {
