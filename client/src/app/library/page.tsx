@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { getMyBookmarks, getToken, serverUrl } from "@/lib/api";
 import MaterialIcon from "@/app/components/MaterialIcon";
 import PostCard from "@/app/components/PostCard";
@@ -27,6 +28,7 @@ const toAbsoluteUrl = (url: string): string => {
 
 export default function LibraryPage() {
   const router = useRouter();
+  const t = useTranslations("library");
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -55,11 +57,11 @@ export default function LibraryPage() {
   return (
     <div className="bg-white text-black min-h-screen">
       <div className="site-container py-8">
-        <h1 className="text-2xl font-bold text-primary mb-6">My Library</h1>
+        <h1 className="text-2xl font-bold text-primary mb-6">{t("title")}</h1>
 
         <div className="card-padded mb-6">
           <p className="text-sm text-text-secondary">
-            Your saved books and bookmarked posts
+            {t("description")}
           </p>
         </div>
 
@@ -71,9 +73,9 @@ export default function LibraryPage() {
           ) : posts.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-20 text-text-secondary">
               <MaterialIcon name="bookmark_border" size="3xl" className="mb-4 opacity-40" />
-              <p className="text-lg font-medium mb-2">No bookmarks yet</p>
+              <p className="text-lg font-medium mb-2">{t("noBookmarks")}</p>
               <p className="text-sm text-center max-w-md">
-                Save posts you want to read later by clicking the bookmark icon on any post
+                {t("noBookmarksHelp")}
               </p>
             </div>
           ) : (

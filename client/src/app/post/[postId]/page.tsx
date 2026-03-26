@@ -1,6 +1,7 @@
 "use client";
 
 import { use, useEffect, useState } from "react";
+import { useTranslations } from "next-intl";
 import ReviewSection from "@/app/components/ReviewSection";
 import {
   getPostDetail,
@@ -14,6 +15,7 @@ import {
 import { useRouter } from "next/navigation";
 import MaterialIcon from "@/app/components/MaterialIcon";
 import TagInput from "@/app/components/TagInput";
+import { getTimeAgoParams } from "@/lib/timeAgo";
 
 function toAbsoluteUrl(url: string): string {
   if (!url) return "";
@@ -57,6 +59,7 @@ export default function PostDetailPage({
   }
 
   const router = useRouter();
+  const t = useTranslations();
   const [post, setPost] = useState<Post | null>(null);
   const [isEditing, setIsEditing] = useState(false);
   const [myAccountId, setMyAccountId] = useState<string | null>(null);
@@ -163,12 +166,12 @@ export default function PostDetailPage({
       bookInfo: updatedBookInfo,
     });
     if (success) {
-      alert("수정 성공!");
+      alert(t("postDetail.editSuccess"));
       setPost({ ...post, title, content, bookInfo: updatedBookInfo, tags });
       setBookInfo(updatedBookInfo);
       setIsEditing(false);
     } else {
-      alert("수정 실패!");
+      alert(t("postDetail.editFailed"));
     }
   };
 
@@ -180,7 +183,10 @@ export default function PostDetailPage({
     );
   }
 
-  const timeAgo = getTimeAgo(post.createdAt);
+  const timeParams = getTimeAgoParams(post.createdAt);
+  const timeAgo = timeParams.key === "fallback"
+    ? timeParams.fallbackDate!
+    : t(`time.${timeParams.key}`, timeParams.values);
 
   return (
     <div className="bg-white text-black min-h-screen">
@@ -189,35 +195,35 @@ export default function PostDetailPage({
           /* Edit Mode */
           <div className="max-w-3xl mx-auto">
             <div className="card-padded space-y-6">
-              <h2 className="text-xl font-bold">Edit Post</h2>
+              <h2 className="text-xl font-bold">{t("postDetail.editPost")}</h2>
               <div>
-                <label className="block text-sm font-medium mb-2">Title</label>
+                <label className="block text-sm font-medium mb-2">{t("postDetail.title")}</label>
                 <input
                   className="w-full text-lg font-bold"
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
-                  placeholder="Post title"
+                  placeholder={t("postDetail.titlePlaceholder")}
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium mb-2">Content</label>
+                <label className="block text-sm font-medium mb-2">{t("postDetail.content")}</label>
                 <textarea
                   className="w-full min-h-[200px] resize-y"
                   value={content}
                   onChange={(e) => setContent(e.target.value)}
-                  placeholder="Share your thoughts..."
+                  placeholder={t("postDetail.contentPlaceholder")}
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium mb-2">Tags</label>
+                <label className="block text-sm font-medium mb-2">{t("postDetail.tags")}</label>
                 <TagInput tags={tags} onChange={setTags} />
               </div>
               <div className="flex gap-3 pt-4">
                 <button className="btn-primary flex-1 py-3" onClick={handleUpdate}>
-                  Save Changes
+                  {t("postDetail.saveChanges")}
                 </button>
                 <button className="btn flex-1 py-3" onClick={() => setIsEditing(false)}>
-                  Cancel
+                  {t("common.cancel")}
                 </button>
               </div>
             </div>
@@ -232,7 +238,7 @@ export default function PostDetailPage({
                   <div className="relative w-48 lg:w-full aspect-[3/4] rounded-lg overflow-hidden shadow-md">
                     <img
                       src={toAbsoluteUrl(post.bookInfo.coverImageUrl)}
-                      alt="Cover"
+                      alt={t("postCard.cover")}
                       className="absolute inset-0 w-full h-full object-cover"
                     />
                   </div>
@@ -250,7 +256,7 @@ export default function PostDetailPage({
                       className="btn w-full text-sm gap-2"
                     >
                       <MaterialIcon name="edit" size="sm" />
-                      Edit Post
+                      {t("postDetail.editPost")}
                     </button>
                   </div>
                 )}
@@ -263,7 +269,7 @@ export default function PostDetailPage({
                   <h1 className="text-3xl font-bold tracking-tight mb-2">
                     {post.title}
                   </h1>
-                  <p className="text-text-secondary">Anonymous User · {timeAgo}</p>
+                  <p className="text-text-secondary">{t("common.anonymousUser")} · {timeAgo}</p>
                   {tags.length > 0 && (
                     <div className="flex flex-wrap gap-1.5 mt-3">
                       {tags.map((tag) => (
@@ -282,7 +288,7 @@ export default function PostDetailPage({
                 {/* Description */}
                 <div className="card-padded">
                   <h2 className="text-sm font-bold uppercase tracking-wider text-text-secondary mb-3">
-                    DESCRIPTION
+                    {t("postDetail.description")}
                   </h2>
                   <p className="text-base leading-relaxed text-black/80">
                     {post.content}
@@ -292,7 +298,7 @@ export default function PostDetailPage({
                 {/* Community Reviews */}
                 <div className="card-padded">
                   <h2 className="text-sm font-bold uppercase tracking-wider text-text-secondary mb-4">
-                    COMMUNITY REVIEWS
+                    {t("postDetail.communityReviews")}
                   </h2>
                   <ReviewSection
                     postId={postId}
@@ -311,7 +317,7 @@ export default function PostDetailPage({
                   }`}
                 >
                   <MaterialIcon name="favorite" size="sm" filled={liked} />
-                  {liked ? "Liked" : "Like"} ({likeCount})
+                  {liked ? t("postDetail.liked") : t("postDetail.like")} ({likeCount})
                 </button>
 
                 <button
@@ -322,7 +328,7 @@ export default function PostDetailPage({
                   }`}
                 >
                   <MaterialIcon name="bookmark" size="sm" filled={bookmarked} />
-                  {bookmarked ? "Saved" : "Save"} ({bookmarkCount})
+                  {bookmarked ? t("postDetail.bookmarkSaved") : t("postDetail.bookmarkSave")} ({bookmarkCount})
                 </button>
               </div>
             </div>
@@ -337,7 +343,7 @@ export default function PostDetailPage({
                 }`}
               >
                 <MaterialIcon name="favorite" size="sm" filled={liked} />
-                {liked ? "Liked" : "Like"} ({likeCount})
+                {liked ? t("postDetail.liked") : t("postDetail.like")} ({likeCount})
               </button>
               <button
                 onClick={handleBookmarkClick}
@@ -347,7 +353,7 @@ export default function PostDetailPage({
                 }`}
               >
                 <MaterialIcon name="bookmark" size="sm" filled={bookmarked} />
-                {bookmarked ? "Saved" : "Save"} ({bookmarkCount})
+                {bookmarked ? t("postDetail.bookmarkSaved") : t("postDetail.bookmarkSave")} ({bookmarkCount})
               </button>
             </div>
           </>
@@ -355,18 +361,4 @@ export default function PostDetailPage({
       </div>
     </div>
   );
-}
-
-function getTimeAgo(dateString: string): string {
-  const date = new Date(dateString);
-  const now = new Date();
-  const diffMs = now.getTime() - date.getTime();
-  const diffMins = Math.floor(diffMs / 60000);
-  const diffHours = Math.floor(diffMins / 60);
-  const diffDays = Math.floor(diffHours / 24);
-  if (diffMins < 1) return "just now";
-  if (diffMins < 60) return `${diffMins}m ago`;
-  if (diffHours < 24) return `${diffHours}h ago`;
-  if (diffDays < 7) return `${diffDays}d ago`;
-  return date.toLocaleDateString();
 }

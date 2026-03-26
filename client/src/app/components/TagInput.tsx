@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+import { useTranslations } from "next-intl";
 import { getTags } from "@/lib/api";
 import MaterialIcon from "./MaterialIcon";
 
@@ -11,6 +12,7 @@ interface TagInputProps {
 }
 
 export default function TagInput({ tags, onChange, maxTags = 5 }: TagInputProps) {
+  const t = useTranslations("tags");
   const [input, setInput] = useState("");
   const [suggestions, setSuggestions] = useState<string[]>([]);
   const [allTags, setAllTags] = useState<string[]>([]);
@@ -103,7 +105,7 @@ export default function TagInput({ tags, onChange, maxTags = 5 }: TagInputProps)
             onFocus={() => {
               if (suggestions.length > 0) setShowSuggestions(true);
             }}
-            placeholder={tags.length === 0 ? "태그를 입력하고 Enter로 추가 (최대 5개)" : "태그 추가..."}
+            placeholder={tags.length === 0 ? t("inputPlaceholder", { maxTags }) : t("addMore")}
             className="w-full"
           />
           {showSuggestions && (
@@ -123,7 +125,7 @@ export default function TagInput({ tags, onChange, maxTags = 5 }: TagInputProps)
         </div>
       )}
       {tags.length >= maxTags && (
-        <p className="text-xs text-text-secondary mt-1">최대 {maxTags}개 태그까지 추가할 수 있습니다.</p>
+        <p className="text-xs text-text-secondary mt-1">{t("maxReached", { maxTags })}</p>
       )}
     </div>
   );

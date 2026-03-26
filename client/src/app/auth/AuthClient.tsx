@@ -3,11 +3,13 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import { useTranslations } from "next-intl";
 import AuthConfirmModal from "../components/AuthConfirmModal";
 import { login } from "@/lib/api";
 
 export default function AuthClient({ redirect = "/" }: { redirect?: string }) {
   const router = useRouter();
+  const t = useTranslations();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -44,17 +46,17 @@ export default function AuthClient({ redirect = "/" }: { redirect?: string }) {
             <div className="flex justify-center mb-4">
               <Image
                 src="/logo.png"
-                alt="서책의 파도"
+                alt={t("common.appName")}
                 width={48}
                 height={48}
                 className="object-contain"
               />
             </div>
             <h1 className="text-2xl font-bold tracking-tight text-black mb-1">
-              서책의 파도
+              {t("common.appName")}
             </h1>
             <p className="text-text-secondary text-sm">
-              Sign in to continue to your library
+              {t("auth.tagline")}
             </p>
           </div>
 
@@ -62,12 +64,12 @@ export default function AuthClient({ redirect = "/" }: { redirect?: string }) {
           <form onSubmit={handleContinue} className="space-y-4">
             <div>
               <label className="block text-sm font-medium text-black mb-1.5">
-                Email
+                {t("auth.email")}
               </label>
               <input
                 type="email"
                 autoComplete="email"
-                placeholder="Enter your email"
+                placeholder={t("auth.emailPlaceholder")}
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 disabled={loading}
@@ -76,12 +78,12 @@ export default function AuthClient({ redirect = "/" }: { redirect?: string }) {
 
             <div>
               <label className="block text-sm font-medium text-black mb-1.5">
-                Password
+                {t("auth.password")}
               </label>
               <input
                 type="password"
                 autoComplete="current-password"
-                placeholder="Enter your password"
+                placeholder={t("auth.passwordPlaceholder")}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 disabled={loading}
@@ -93,19 +95,19 @@ export default function AuthClient({ redirect = "/" }: { redirect?: string }) {
               disabled={loading || !email || !password}
               className="btn-primary w-full py-3 mt-6 disabled:opacity-50"
             >
-              {loading ? "Signing in..." : "Sign In"}
+              {loading ? t("auth.signingIn") : t("auth.signInAction")}
             </button>
           </form>
 
           {/* Footer */}
           <div className="mt-6 pt-6 border-t border-border text-center">
             <button type="button" className="text-sm text-text-secondary hover:text-primary transition">
-              Forgot your password?
+              {t("auth.forgotPassword")}
             </button>
             <div className="flex justify-center gap-6 mt-4 text-xs text-text-secondary">
-              <a href="#" className="hover:text-primary transition no-underline">Terms</a>
-              <a href="#" className="hover:text-primary transition no-underline">Privacy</a>
-              <a href="#" className="hover:text-primary transition no-underline">Support</a>
+              <a href="#" className="hover:text-primary transition no-underline">{t("auth.terms")}</a>
+              <a href="#" className="hover:text-primary transition no-underline">{t("auth.privacy")}</a>
+              <a href="#" className="hover:text-primary transition no-underline">{t("auth.support")}</a>
             </div>
           </div>
         </div>

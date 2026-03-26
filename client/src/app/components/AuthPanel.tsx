@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { useTranslations } from "next-intl";
 import {
   getMyInfo,
   login,
@@ -21,6 +22,7 @@ export default function AuthPanel() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const redirectParam = searchParams?.get("redirect") || null;
+  const t = useTranslations();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -36,15 +38,12 @@ export default function AuthPanel() {
   };
 
   useEffect(() => {
-    // 앱 로드 시 토큰이 있으면 내 정보 조회
     fetchMe();
   }, []);
 
-  // 로그인 혹은 이미 로그인된 상태에서 redirect 쿼리가 있으면 원래 페이지로 이동
   useEffect(() => {
     if (me && redirectParam) {
       const target = safeDecode(redirectParam) || "/";
-      // replace로 히스토리를 깔끔하게 유지
       router.replace(target);
     }
   }, [me, redirectParam, router]);
@@ -52,7 +51,6 @@ export default function AuthPanel() {
   const safeDecode = (value: string) => {
     try {
       const decoded = decodeURIComponent(value);
-      // 보안상 내부 경로만 허용
       if (decoded.startsWith("/")) return decoded;
       return "/";
     } catch {
@@ -65,8 +63,8 @@ export default function AuthPanel() {
     setLoading(true);
     const ok = await signUp({ email, password, nickname });
     setLoading(false);
-    if (!ok) setError("회원가입에 실패했습니다.");
-    else alert("회원가입 성공! 로그인 해주세요.");
+    if (!ok) setError(t("auth.signUpFailed"));
+    else alert(t("auth.signUpSuccess"));
   };
 
   const handleLogin = async () => {
@@ -75,11 +73,10 @@ export default function AuthPanel() {
     const token = await login({ email, password });
     setLoading(false);
     if (!token) {
-      setError("로그인에 실패했습니다.");
+      setError(t("auth.loginFailed"));
       return;
     }
     await fetchMe();
-    // 로그인 성공 시 redirect 처리
     const target = redirectParam ? safeDecode(redirectParam) : "/";
     router.replace(target);
   };
@@ -90,7 +87,7 @@ export default function AuthPanel() {
     setLoading(true);
     const ok = await updateNickname(nickname);
     setLoading(false);
-    if (!ok) setError("닉네임 변경에 실패했습니다.");
+    if (!ok) setError(t("auth.nicknameFailed"));
     await fetchMe();
   };
 
@@ -107,16 +104,16 @@ export default function AuthPanel() {
       {!me ? (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="border rounded p-3">
-            <h3 className="font-bold mb-2">로그인</h3>
+            <h3 className="font-bold mb-2">{t("auth.signIn")}</h3>
             <input
               className="border p-2 w-full mb-2"
-              placeholder="email"
+              placeholder={t("auth.email")}
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
             <input
               className="border p-2 w-full mb-2"
-              placeholder="password"
+              placeholder={t("auth.password")}
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
@@ -126,28 +123,28 @@ export default function AuthPanel() {
               onClick={handleLogin}
               className="bg-link hover:bg-link/90 text-white px-4 py-2 rounded"
             >
-              {loading ? "처리중..." : "로그인"}
+              {loading ? t("auth.processing") : t("auth.signInAction")}
             </button>
           </div>
 
           <div className="border rounded p-3">
-            <h3 className="font-bold mb-2">회원가입</h3>
+            <h3 className="font-bold mb-2">{t("auth.signUp")}</h3>
             <input
               className="border p-2 w-full mb-2"
-              placeholder="email"
+              placeholder={t("auth.email")}
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
             <input
               className="border p-2 w-full mb-2"
-              placeholder="password"
+              placeholder={t("auth.password")}
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
             <input
               className="border p-2 w-full mb-2"
-              placeholder="nickname"
+              placeholder={t("auth.nickname")}
               value={nickname}
               onChange={(e) => setNickname(e.target.value)}
             />
@@ -156,14 +153,14 @@ export default function AuthPanel() {
               onClick={handleSignUp}
               className="bg-green-600 text-white px-4 py-2 rounded"
             >
-              {loading ? "처리중..." : "회원가입"}
+              {loading ? t("auth.processing") : t("auth.signUpAction")}
             </button>
           </div>
         </div>
       ) : (
         <div className="space-y-3">
           <div>
-            <p className="text-sm text-gray-600">로그인 완료</p>
+            <p className="text-sm text-gray-600">{t("auth.loginComplete")}</p>
             <p>
               <strong>{me.nickname}</strong> ({me.email})
             </p>
@@ -171,7 +168,7 @@ export default function AuthPanel() {
           <div className="flex gap-2 items-center">
             <input
               className="border p-2 rounded"
-              placeholder="새 닉네임"
+              placeholder={t("auth.newNickname")}
               value={nickname}
               onChange={(e) => setNickname(e.target.value)}
             />
@@ -180,13 +177,13 @@ export default function AuthPanel() {
               onClick={handleUpdateNickname}
               className="bg-link hover:bg-link/90 text-white px-3 py-2 rounded"
             >
-              닉네임 변경
+              {t("auth.updateNickname")}
             </button>
             <button
               onClick={handleLogout}
               className="bg-gray-700 text-white px-3 py-2 rounded"
             >
-              로그아웃
+              {t("common.signOut")}
             </button>
           </div>
         </div>
