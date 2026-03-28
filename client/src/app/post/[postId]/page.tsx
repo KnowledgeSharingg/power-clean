@@ -10,6 +10,7 @@ import {
   toggleLike,
   toggleBookmark,
   getToken,
+  getMyInfo,
 } from "@/lib/api";
 import { useRouter } from "next/navigation";
 import MaterialIcon from "@/app/components/MaterialIcon";
@@ -54,12 +55,14 @@ export default function PostDetailPage({
     bookmarkCount?: number;
     likedByMe?: boolean;
     bookmarkedByMe?: boolean;
+    creatorAccountId?: string;
   }
 
   const router = useRouter();
   const t = useTranslations();
   const [post, setPost] = useState<Post | null>(null);
   const [isEditing, setIsEditing] = useState(false);
+  const [myAccountId, setMyAccountId] = useState<string | null>(null);
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [liked, setLiked] = useState(false);
@@ -93,7 +96,10 @@ export default function PostDetailPage({
   useEffect(() => {
     const fetchPost = async () => {
       try {
-        const postData = await getPostDetail(postId);
+        const [postData, myInfo] = await Promise.all([
+          getPostDetail(postId),
+          getMyInfo(),
+        ]);
         setPost(postData);
         setTitle(postData.title);
         setContent(postData.content);
@@ -103,6 +109,7 @@ export default function PostDetailPage({
         setBookmarked(postData.bookmarkedByMe || false);
         setLikeCount(postData.likeCount || 0);
         setBookmarkCount(postData.bookmarkCount || 0);
+        setMyAccountId(myInfo?.id ?? null);
       } catch (error) {
         console.error(error);
       }
@@ -242,15 +249,17 @@ export default function PostDetailPage({
                 )}
 
                 {/* Side Actions */}
-                <div className="w-full space-y-2">
-                  <button
-                    onClick={() => setIsEditing(true)}
-                    className="btn w-full text-sm gap-2"
-                  >
-                    <MaterialIcon name="edit" size="sm" />
-                    {t("postDetail.editPost")}
-                  </button>
-                </div>
+                {myAccountId && post.creatorAccountId === myAccountId && (
+                  <div className="w-full space-y-2">
+                    <button
+                      onClick={() => setIsEditing(true)}
+                      className="btn w-full text-sm gap-2"
+                    >
+                      <MaterialIcon name="edit" size="sm" />
+                      {t("postDetail.editPost")}
+                    </button>
+                  </div>
+                )}
               </div>
 
               {/* Center Column - Main Content */}

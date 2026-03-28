@@ -14,4 +14,6 @@ data class GetPostDetailResDto(
     val likedByMe: Boolean,
     val bookmarkedByMe: Boolean,
     val tags: List<String> = emptyList(),
+    val averageRating: Double? = null,
+    val creatorAccountId: UUID? = null,
 )

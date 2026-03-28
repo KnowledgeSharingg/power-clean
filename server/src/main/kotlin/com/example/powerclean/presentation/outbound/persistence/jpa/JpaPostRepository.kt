@@ -13,4 +13,12 @@ public interface JpaPostRepository : JpaRepository<Post, UUID>, PostRepository {
 
     @Query("SELECT p FROM Post p LEFT JOIN FETCH p.book")
     override fun findAllWithBook(): List<Post>
+
+    @Query(
+        "SELECT p FROM Post p LEFT JOIN FETCH p.book b " +
+            "WHERE LOWER(p.title) LIKE LOWER(CONCAT('%', :keyword, '%')) " +
+            "OR LOWER(p.content) LIKE LOWER(CONCAT('%', :keyword, '%')) " +
+            "OR LOWER(b.title) LIKE LOWER(CONCAT('%', :keyword, '%'))",
+    )
+    override fun searchByKeyword(keyword: String): List<Post>
 }

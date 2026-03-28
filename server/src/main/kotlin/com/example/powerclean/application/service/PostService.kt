@@ -6,6 +6,7 @@ import com.example.powerclean.application.port.outbound.persistence.PostBookmark
 import com.example.powerclean.application.port.outbound.persistence.PostLikeRepository
 import com.example.powerclean.application.port.outbound.persistence.PostRepository
 import com.example.powerclean.application.port.outbound.persistence.PostTagRepository
+import com.example.powerclean.application.port.outbound.persistence.ReviewRepository
 import com.example.powerclean.application.port.outbound.persistence.TagRepository
 import com.example.powerclean.common.exception.CustomConflictException
 import com.example.powerclean.common.exception.CustomNotFoundException
@@ -33,6 +34,7 @@ class PostService(
     private val postBookmarkRepository: PostBookmarkRepository,
     private val tagRepository: TagRepository,
     private val postTagRepository: PostTagRepository,
+    private val reviewRepository: ReviewRepository,
     private val aiProvider: AiProvider,
     private val postLikeService: PostLikeService,
     private val postBookmarkService: PostBookmarkService,
@@ -140,6 +142,8 @@ class PostService(
             likeCount = postLikeService.countLikes(foundPost.id).toInt(),
             bookmarkCount = postBookmarkService.countBookmarks(foundPost.id),
             tags = getTagNamesForPost(foundPost.id),
+            averageRating = reviewRepository.findAverageRatingByPostId(foundPost.id),
+            creatorAccountId = foundPost.creatorAccountId,
         )
     }
 
@@ -246,6 +250,60 @@ class PostService(
         val tags = findOrCreateTags(requestDto.tags)
         syncPostTags(post.id, tags)
         return "ok"
+    }
+
+    fun searchPosts(
+        keyword: String,
+        accountId: UUID?,
+    ): GetPostListResDto {
+        val foundPosts = postRepository.searchByKeyword(keyword)
+        val postIds = foundPosts.map { it.id }
+
+        val likedPostIds: Set<UUID> =
+            if (accountId != null) {
+                postLikeRepository.findAllByAccountId(accountId).map { it.postId }.toSet()
+            } else {
+                emptySet()
+            }
+        val bookmarkedPostIds: Set<UUID> =
+            if (accountId != null) {
+                postBookmarkRepository.findAllByAccountId(accountId).map { it.postId }.toSet()
+            } else {
+                emptySet()
+            }
+        val likeCountMap: Map<UUID, Int> =
+            postLikeRepository.findAll().groupBy { it.postId }.mapValues { it.value.size }
+        val bookmarkCountMap: Map<UUID, Int> =
+            postBookmarkRepository.findAll().groupBy { it.postId }.mapValues { it.value.size }
+        val tagMap = getTagNamesForPosts(postIds)
+
+        return GetPostListResDto(
+            postList =
+                foundPosts.map {
+                    GetPostDetailResDto(
+                        id = it.id,
+                        title = it.title,
+                        content = it.content,
+                        createdAt = it.createdAt.toString(),
+                        updatedAt = it.updatedAt.toString(),
+                        bookInfo =
+                            GetBookDetailResDto(
+                                id = it.book?.id,
+                                title = it.book?.title,
+                                content = it.book?.content,
+                                link = it.book?.link,
+                                coverImageUrl = it.book?.coverImageUrl,
+                                author = it.book?.author,
+                            ),
+                        likedByMe = it.id in likedPostIds,
+                        bookmarkedByMe = it.id in bookmarkedPostIds,
+                        likeCount = likeCountMap[it.id] ?: 0,
+                        bookmarkCount = bookmarkCountMap[it.id] ?: 0,
+                        tags = tagMap[it.id] ?: emptyList(),
+                        creatorAccountId = it.creatorAccountId,
+                    )
+                },
+        )
     }
 
     fun getAllTags(): List<String> = tagRepository.findAll().map { it.name }

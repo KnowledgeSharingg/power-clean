@@ -3,7 +3,7 @@
 import { Suspense, useState, useEffect } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { getPostList, getTags, serverUrl } from "@/lib/api";
+import { getPostList, getTags, searchPosts, serverUrl } from "@/lib/api";
 import PostCard from "./components/PostCard";
 import MaterialIcon from "./components/MaterialIcon";
 
@@ -51,6 +51,7 @@ function HomeContent() {
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(false);
   const [popularTags, setPopularTags] = useState<string[]>([]);
+  const [searchKeyword, setSearchKeyword] = useState("");
 
   useEffect(() => {
     getTags()
@@ -126,6 +127,29 @@ function HomeContent() {
                 className="flex-1 h-10 px-4 text-sm border border-border rounded-lg bg-white placeholder:text-black/40 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary"
                 placeholder={t("home.searchPlaceholder")}
                 type="text"
+                value={searchKeyword}
+                onChange={(e) => setSearchKeyword(e.target.value)}
+                onKeyDown={async (e) => {
+                  if (e.key === "Enter" && searchKeyword.trim()) {
+                    setLoading(true);
+                    try {
+                      const data = await searchPosts(searchKeyword.trim());
+                      setPosts(data.postList);
+                    } catch {
+                      setPosts([]);
+                    } finally {
+                      setLoading(false);
+                    }
+                  } else if (e.key === "Enter" && !searchKeyword.trim()) {
+                    setLoading(true);
+                    try {
+                      const data = await getPostList(1, 10, activeTag || undefined);
+                      setPosts(data.postList);
+                    } finally {
+                      setLoading(false);
+                    }
+                  }
+                }}
               />
             </div>
           </details>

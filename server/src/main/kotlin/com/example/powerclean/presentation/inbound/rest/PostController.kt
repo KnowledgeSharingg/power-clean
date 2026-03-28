@@ -60,6 +60,15 @@ class PostController(private val postService: PostService) {
         return postService.getPostList(page, size, accountId, tag)
     }
 
+    @Operation(summary = "Post 검색 API.", description = "키워드로 포스트 검색 (제목, 내용, 책 제목).")
+    @GetMapping("/search")
+    fun searchPosts(
+        @RequestParam keyword: String,
+    ): GetPostListResDto {
+        val accountId = (SecurityContextHolder.getContext().authentication?.principal as? CustomUser)?.id
+        return postService.searchPosts(keyword, accountId)
+    }
+
     @Operation(summary = "Post 수정 API.", description = "포스트 수정.")
     @PatchMapping()
     fun updatePost(
