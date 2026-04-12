@@ -7,6 +7,6 @@ import org.springframework.data.jpa.repository.Query
 import java.util.UUID
 
 public interface JpaReviewRepository : JpaRepository<Review, UUID>, ReviewRepository {
-    @Query("SELECT AVG(r.rating) FROM Review r WHERE r.postId = :postId")
+    @Query("SELECT AVG(r.rating) FROM Review r WHERE r.post.id = :postId")
     override fun findAverageRatingByPostId(postId: UUID): Double?
 }

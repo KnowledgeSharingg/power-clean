@@ -24,7 +24,7 @@ import jakarta.persistence.Table
 class Book(
     @Column(nullable = false)
     var title: String,
-    @Column(length = 10000)
+    @Column(columnDefinition = "TEXT")
     var content: String = "",
     var link: String = "",
     var coverImageUrl: String = DEFAULT_BOOK_COVER_IMAGE_URL,
@@ -35,7 +35,7 @@ class Book(
     @JoinColumn(name = "post_id", foreignKey = ForeignKey(ConstraintMode.NO_CONSTRAINT))
     var post: Post? = null,
     // --- Fields from BookData ---
-    @Column(length = 5000)
+    @Column(columnDefinition = "TEXT")
     var description: String = "",
     @Column(unique = true)
     var isbn13: String = "",
